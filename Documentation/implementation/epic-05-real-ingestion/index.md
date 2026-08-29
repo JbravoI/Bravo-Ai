@@ -18,7 +18,7 @@ Replace the simulated `/api/scan` with a real pipeline. The first live connector
 - Each item is matched using an FCA source identifier. New items are inserted into `regulations`; changed content is updated and recorded in `regulation_versions`; unchanged content only receives an updated retrieval time.
 - Every completed run creates a `scan_runs` record and exactly one append-only `audit_log` entry with the actual new/changed counts.
 - `POST /api/scan` starts the authenticated scan. `GET /api/scan` reports the latest completed run to the TopBar, which now shows a real timestamp and refreshes the current view after a manual scan.
-- `app/vercel.json` schedules `GET /api/scan` every six hours. Vercel Cron must be configured with the same `CRON_SECRET` set in the deployment environment.
+- `app/vercel.json` schedules `GET /api/scan` daily at 02:00 UTC, which is compatible with Vercel Hobby. Vercel Cron must be configured with the same `CRON_SECRET` set in the deployment environment.
 
 ## Acceptance Criteria
 

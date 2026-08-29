@@ -35,6 +35,6 @@ Repo → **Settings → Secrets and variables → Actions**:
 
 ## Other
 
-Cloud cron (Epic 05's scheduled ingestion) uses **Vercel Cron Jobs**, configured via a `vercel.json` inside `app/` hitting `/api/scan` on a schedule — not yet added.
+Cloud cron (Epic 05's scheduled ingestion) uses **Vercel Cron Jobs**, configured in `app/vercel.json` (the configured Vercel Root Directory) to call `/api/scan` daily at 02:00 UTC. This daily schedule is compatible with the Vercel Hobby plan; a more frequent schedule requires Vercel Pro. Add the same high-entropy `CRON_SECRET` value to Vercel Project Environment Variables before relying on the scheduled run.
 
 This is buildable and deployable today (Epics 01-02 are complete) — the workflow exists and is verified to parse as valid YAML, but hasn't been run against real Vercel credentials yet since those are being supplied outside this session. See `implementation/CURRENT_STATUS.md` for what's real once it is.
