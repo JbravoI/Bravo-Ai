@@ -1,0 +1,47 @@
+import type { Metadata } from "next";
+import { DM_Mono, DM_Sans, Syne } from "next/font/google";
+import "./globals.css";
+import TopBar from "@/components/TopBar";
+import Sidebar from "@/components/Sidebar";
+import RegulationModal from "@/components/RegulationModal";
+import { RegulationModalProvider } from "@/context/RegulationModalContext";
+
+const syne = Syne({
+  subsets: ["latin"],
+  weight: ["400", "600", "700", "800"],
+  variable: "--font-syne",
+});
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-dm-sans",
+});
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-dm-mono",
+});
+
+export const metadata: Metadata = {
+  title: "Bravo Ai — Regulatory Intelligence",
+  description: "UK financial regulatory monitoring and compliance dashboard.",
+};
+
+export default function RootLayout({ children }: LayoutProps<"/">) {
+  return (
+    <html lang="en" className={`${syne.variable} ${dmSans.variable} ${dmMono.variable}`}>
+      <body suppressHydrationWarning>
+        <RegulationModalProvider>
+          <div className="app-shell">
+            <TopBar />
+            <div className="body">
+              <Sidebar />
+              <div className="content">{children}</div>
+            </div>
+          </div>
+          <RegulationModal />
+        </RegulationModalProvider>
+      </body>
+    </html>
+  );
+}
