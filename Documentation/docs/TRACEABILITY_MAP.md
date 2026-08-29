@@ -12,9 +12,9 @@ Use this map to connect product intent, executable scenarios, implementation epi
 | Audit trail | `features/04-operations/audit-trail.md` | `../features/04-operations/audit-trail.feature` | `../implementation/epic-01-app-skeleton/`, `../implementation/epic-05-real-ingestion/` | `app/src/app/audit/page.tsx`, `app/src/components/AuditLog.tsx`, `app/src/app/api/audit/route.ts` |
 | Preferences and jurisdictions | `features/04-operations/preferences-and-jurisdictions.md` | `../features/04-operations/preferences-and-jurisdictions.feature` | `../implementation/epic-03-auth-persistence/` | `app/src/app/prefs/page.tsx`, `app/src/components/JuriGrid.tsx`, `app/src/components/PrefsIndustryFocus.tsx`, `app/src/lib/preferences.ts`, `app/src/app/api/preferences/route.ts`, `app/src/app/api/jurisdictions/route.ts` |
 | API and Swagger docs | `features/05-platform/api-and-docs.md` | `../features/05-platform/api-and-docs.feature` | `../implementation/epic-02-backend-data-model/` | `app/src/app/api/**/route.ts`, `app/src/app/api/openapi.json/route.ts`, `app/src/app/api-docs/page.tsx`, `app/src/app/swagger-static/[file]/route.ts` |
-| Regulatory source scanning | `../STRATEGY.md` (Phase 5) | *(none yet — add before building)* | `../implementation/epic-05-real-ingestion/` | `app/src/app/api/scan/route.ts` (currently simulated) |
+| Regulatory source scanning | `../STRATEGY.md` (Phase 5) | `../features/04-operations/audit-trail.feature` | `../implementation/epic-05-real-ingestion/` | `app/src/lib/ingest/fca.ts`, `app/src/app/api/scan/route.ts` |
 | Deployment | `../deployment.md` | *(none — operational, not user-facing behavior)* | `../implementation/epic-07-deploy-operate/` | `.github/workflows/deploy.yml` (repo root); Vercel project configuration (not yet linked) |
 
 ## Update Rule
 
-When changing user-visible behavior, update at least one file in each applicable column: product docs, Gherkin spec, implementation status and code. If a column has no file yet, create it or explain why it is intentionally absent (as with regulatory source scanning above — no acceptance scenarios exist yet because Phase 5 hasn't started).
+When changing user-visible behavior, update at least one file in each applicable column: product docs, Gherkin spec, implementation status and code. If a column has no file yet, create it or explain why it is intentionally absent.

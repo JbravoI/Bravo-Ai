@@ -46,9 +46,9 @@ A documented REST API (`/api/regulations`, `/api/audit`, `/api/impact`, `/api/ju
 
 Detailed doc: `../features/05-platform/api-and-docs.md`
 
-## 9. Regulatory Source Scanning (Planned)
+## 9. Regulatory Source Scanning
 
-Real ingestion from FCA/PRA/HM Treasury/EU sources, replacing the seed data and the simulated `/api/scan`. Not yet built. See `../../STRATEGY.md` Phase 5.
+The first live connector ingests FCA's public RSS feed into the regulatory database, preserving the original source URL and retrieval date, detecting content changes, and appending a scan audit record. PRA, HM Treasury and EU connectors remain planned. See `../../STRATEGY.md` Phase 5.
 
 ## 10. Secure AI Q&A
 

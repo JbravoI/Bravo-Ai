@@ -16,6 +16,10 @@ export interface Regulation {
   tags: string[];
   deadline: string;
   readiness: number;
+  sourceUrl?: string;
+  retrievedAt?: string;
+  sourceId?: string;
+  contentHash?: string;
 }
 
 export interface Jurisdiction {
@@ -29,6 +33,15 @@ export interface AuditEntry {
   ts: string;
   label: string;
   detail: string;
+}
+
+export interface ScanRun {
+  source: Source;
+  startedAt: string;
+  completedAt: string;
+  fetched: number;
+  newRecords: number;
+  changedRecords: number;
 }
 
 export type ImpactLevel = "High" | "Medium" | "Low" | "None";

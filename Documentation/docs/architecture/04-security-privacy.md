@@ -17,7 +17,7 @@ Source: findings from `../../REGWATCH_CODE_REVIEW.md`, carried forward as bindin
 ## Auth (Built — Epic 03)
 
 - Auth.js v5, Credentials provider (email/password, `bcryptjs`-hashed, JWT session) — see `../decisions/0006-authjs-credentials-not-oauth.md`. Passwords are never stored or logged in plaintext; only the bcrypt hash is persisted (`users` collection).
-- `app/src/proxy.ts` gates every UI page behind a valid session, redirecting unauthenticated visitors to `/login`. **`/api/**` is deliberately excluded** — it remains the public, independently-testable surface Epic 02 built (Swagger UI's "Try it out" depends on this staying unauthenticated). `/api/preferences` is the one exception: it checks `auth()` itself and returns `401` without a session, since preferences are inherently per-user and have no meaningful unauthenticated response.
+- `app/src/proxy.ts` gates every UI page behind a valid session, redirecting unauthenticated visitors to `/login`. **`/api/**` is deliberately excluded** — it remains the public, independently-testable surface Epic 02 built (Swagger UI's "Try it out" depends on this staying unauthenticated). `/api/preferences` and `/api/scan` are exceptions: they check `auth()` and return `401` without a session. Scan runs may alternatively be triggered by Vercel Cron using the server-only `CRON_SECRET` bearer token.
 - `AUTH_SECRET` (JWT signing key) is a required environment variable, handled with the same care as `MONGODB_URI` — never committed, required in `app/.env.local`, Vercel's dashboard, and GitHub Actions secrets. See `../../deployment.md`.
 
 ## AI Q&A Server Controls (Phase 4 — Built)
@@ -29,7 +29,7 @@ Source: findings from `../../REGWATCH_CODE_REVIEW.md`, carried forward as bindin
 ## Data Retention And Dates
 
 - Use ISO 8601 (`2026-08-29`) for all dates stored or passed between server and client; format for display only at the render boundary. The database (MongoDB Atlas, live as of Epic 02) currently still stores the original display-formatted strings (`"28 Apr 2025"`) carried over from the seed script — reformatting these is Epic 06 (hardening) work, now that a real database exists to reformat.
-- Source documents ingested in Phase 5 must retain `document_url` and `retrieved_at` so every claim is traceable back to the original regulator publication — required for a compliance tool to be trustworthy, not optional polish.
+- FCA items ingested in Phase 5 retain `sourceUrl` and `retrievedAt` so each record can be traced back to the original regulator publication. The connector accepts only HTTPS links on `www.fca.org.uk`; externally supplied text remains React-escaped at render time.
 
 ## Non-Goals (Explicitly Out Of Scope For Now)
 

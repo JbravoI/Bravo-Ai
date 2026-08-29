@@ -37,6 +37,12 @@ export default function RegulationModal() {
         <div className="modal-meta">
           {regulation.regulator} · {regulation.type} · Published {regulation.date} · Deadline: {regulation.deadline}
         </div>
+        {regulation.sourceUrl && (
+          <div className="modal-meta">
+            Source: <a href={regulation.sourceUrl} target="_blank" rel="noreferrer">View the original {regulation.regulator} publication</a>
+            {regulation.retrievedAt && ` · Retrieved ${new Date(regulation.retrievedAt).toLocaleString()}`}
+          </div>
+        )}
         <div className="modal-section">
           <div className="modal-section-title">AI Summary</div>
           <div className="modal-body">{regulation.summary}</div>

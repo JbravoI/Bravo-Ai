@@ -49,7 +49,7 @@ const spec = {
       "UK financial regulatory monitoring API. **Current status:** regulations/audit/impact/jurisdictions " +
       "are backed by MongoDB Atlas (Epic 02). `/api/preferences` and `/api/query` require a signed-in " +
       "session (Auth.js, Epic 03) — see the sessionCookie security scheme below; every other endpoint " +
-      "here is intentionally public. `/api/scan` is simulated (Phase 5). `/api/query` calls Gemini 3.6 " +
+      "here is intentionally public. `/api/scan` requires a signed-in session and ingests the FCA's public RSS feed. `/api/query` calls Gemini 3.6 " +
       "Flash server-side, grounded in tracked regulations (Epic 04).",
   },
   servers: [{ url: "/" }],
@@ -244,9 +244,19 @@ const spec = {
       },
     },
     "/api/scan": {
+      get: {
+        tags: ["Scan"],
+        summary: "Read the most recently completed regulatory-source scan. Requires a signed-in session.",
+        security: [{ sessionCookie: [] }],
+        responses: {
+          "200": { description: "OK" },
+          "401": { description: "Not signed in", content: { "application/json": { schema: errorSchema } } },
+        },
+      },
       post: {
         tags: ["Scan"],
-        summary: "Trigger a regulatory source scan (simulated — see Phase 5)",
+        summary: "Trigger an FCA regulatory-source scan. Requires a signed-in session.",
+        security: [{ sessionCookie: [] }],
         responses: {
           "200": {
             description: "OK",
@@ -256,15 +266,19 @@ const spec = {
                   type: "object",
                   properties: {
                     ok: { type: "boolean" },
-                    simulated: { type: "boolean" },
-                    scannedAt: { type: "string", format: "date-time" },
+                    source: { type: "string", example: "fca" },
+                    startedAt: { type: "string", format: "date-time" },
+                    completedAt: { type: "string", format: "date-time" },
+                    fetched: { type: "integer" },
                     newRecords: { type: "integer" },
-                    message: { type: "string" },
+                    changedRecords: { type: "integer" },
                   },
                 },
               },
             },
           },
+          "401": { description: "Not signed in", content: { "application/json": { schema: errorSchema } } },
+          "502": { description: "FCA source unavailable", content: { "application/json": { schema: errorSchema } } },
         },
       },
     },

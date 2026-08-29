@@ -10,7 +10,8 @@ Every document's shape matches the corresponding type in `app/src/lib/types.ts` 
 
 ```
 regulations         — id, regulator, source, priority, status, title, date, type,
-                       summary, impact, tags[], deadline, readiness
+                       summary, impact, tags[], deadline, readiness, sourceUrl?,
+                       retrievedAt?, sourceId?, contentHash?
 jurisdictions        — code, label, color, active
 audit_log            — ts, label, detail
 impact_rows          — reg, banking, invest, insure, comp, ops
@@ -27,7 +28,10 @@ Seeded via `npm run seed` (`app/scripts/seed.mjs`), which is idempotent — it c
 
 ```
 regulation_versions   — track what changed between scans (Epic 05; not yet built)
-                         { regulation_id, diff_summary, captured_at }
+                         { regulationId, source, sourceUrl, previousContentHash,
+                           contentHash, diffSummary, capturedAt } (built for FCA)
+scan_runs              — completed source-ingestion runs (Epic 05; built for FCA)
+                         { source, startedAt, completedAt, fetched, newRecords, changedRecords }
 qa_log                — completed Q&A exchanges (Epic 04; built)
                          { userId, userEmail, provider, model, question, answer, ts }
 ```
@@ -38,6 +42,6 @@ The original Postgres plan (ADR 0001) was chosen partly for relational filtering
 
 ## Open Decisions
 
-- **Regulatory data sourcing**: are FCA/PRA/HMT/EU feeds scraped, or is there a licensed provider? Scraping public regulator sites is generally fine but should be checked against each site's terms before Epic 05 builds against it.
+- **Regulatory data sourcing**: the FCA public news-and-warnings RSS feed is the first live connector. PRA, HM Treasury and EU coverage still needs a connector or licensed-provider decision; regulator feed terms should be reviewed before adding each source.
 - **Multi-tenant or single-org?** Determines whether an `org_id` field is needed on `audit_log`/`qa_log` at launch or can be added later.
 - **Atlas tier/scaling**: the current cluster is whatever Atlas's onboarding flow provisioned by default — revisit before real traffic (Epic 07).

@@ -1,20 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
 export default function TopBar() {
   const { data: session } = useSession();
+  const router = useRouter();
   const [scanning, setScanning] = useState(false);
   const [label, setLabel] = useState("Last scan: —");
+
+  function setLastScanLabel(value: string) {
+    setLabel(`Last scan: ${new Date(value).toLocaleString()}`);
+  }
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/scan")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (active && data?.lastRun?.completedAt) setLastScanLabel(data.lastRun.completedAt);
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, []);
 
   async function scan() {
     setScanning(true);
     try {
       const res = await fetch("/api/scan", { method: "POST" });
       const data = await res.json();
-      const when = new Date(data.scannedAt).toLocaleTimeString();
-      setLabel(data.simulated ? `Last scan: ${when} (simulated)` : `Last scan: ${when}`);
+      if (!res.ok) throw new Error(data.error || "Scan failed");
+      setLastScanLabel(data.completedAt);
+      router.refresh();
     } catch {
       setLabel("Last scan: failed");
     } finally {

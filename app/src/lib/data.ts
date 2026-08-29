@@ -7,7 +7,7 @@
 // once against a fresh database before relying on these functions returning
 // anything.
 import { getDb } from "./mongodb";
-import type { AuditEntry, ImpactRow, Jurisdiction, Regulation, Source } from "./types";
+import type { AuditEntry, ImpactRow, Jurisdiction, Regulation, ScanRun, Source } from "./types";
 
 // Mongo's own `_id` is never part of the public shape — every query excludes it.
 const NO_ID = { projection: { _id: 0 } } as const;
@@ -27,6 +27,12 @@ export async function getRegulationById(id: number): Promise<Regulation | undefi
 export async function getAuditEntries(): Promise<AuditEntry[]> {
   const db = await getDb();
   return db.collection<AuditEntry>("audit_log").find({}, NO_ID).sort({ ts: -1 }).toArray();
+}
+
+export async function getLatestScanRun(): Promise<ScanRun | undefined> {
+  const db = await getDb();
+  const run = await db.collection<ScanRun>("scan_runs").findOne({}, { ...NO_ID, sort: { completedAt: -1 } });
+  return run ?? undefined;
 }
 
 export async function getImpactRows(): Promise<ImpactRow[]> {

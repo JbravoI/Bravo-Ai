@@ -5,7 +5,6 @@ Feature: Audit trail
     Given a user opens the Audit Trail page
     Then they see a chronological list of entries with a timestamp, a short label and a detail line
 
-  @not-yet-built
   Scenario: A completed scan writes a real audit entry
     Given the ingestion pipeline completes a real scan of regulator sources
     When the scan finishes
