@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { getRegulation } from "@/lib/data";
 import { useRegulationModal } from "@/context/RegulationModalContext";
 
 export default function RegulationModal() {
-  const { openId, closeModal } = useRegulationModal();
+  const { regulations, openId, closeModal } = useRegulationModal();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
-  const regulation = openId != null ? getRegulation(openId) : undefined;
+  const regulation = openId != null ? regulations.find((r) => r.id === openId) : undefined;
 
   useEffect(() => {
     if (!regulation) return;

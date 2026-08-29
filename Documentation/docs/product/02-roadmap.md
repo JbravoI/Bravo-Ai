@@ -6,7 +6,7 @@ This roadmap mirrors the phase plan in `../../STRATEGY.md`, restated as epics tr
 | :--- | :--- | :---: |
 | 0 | Rebrand and baseline hygiene | `Completed` |
 | 1 | App skeleton (real routes, components, keyboard/focus basics) | `Completed` |
-| 2 | Backend and data model | `Ongoing` |
+| 2 | Backend and data model | `Completed` |
 | 3 | Auth and persistence | `Pending` |
 | 4 | Secure AI Q&A | `Pending` |
 | 5 | Real regulatory-source ingestion | `Pending` |

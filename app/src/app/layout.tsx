@@ -5,6 +5,7 @@ import TopBar from "@/components/TopBar";
 import Sidebar from "@/components/Sidebar";
 import RegulationModal from "@/components/RegulationModal";
 import { RegulationModalProvider } from "@/context/RegulationModalContext";
+import { getRegulations } from "@/lib/data";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -27,11 +28,13 @@ export const metadata: Metadata = {
   description: "UK financial regulatory monitoring and compliance dashboard.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const regulations = await getRegulations();
+
   return (
     <html lang="en" className={`${syne.variable} ${dmSans.variable} ${dmMono.variable}`}>
       <body suppressHydrationWarning>
-        <RegulationModalProvider>
+        <RegulationModalProvider regulations={regulations}>
           <div className="app-shell">
             <TopBar />
             <div className="body">

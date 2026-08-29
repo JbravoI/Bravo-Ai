@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted.
+Accepted, **except the Postgres database choice**, which `0004-mongodb-atlas-not-postgres.md` supersedes. The Next.js/Vercel/single-app/Firebase-rejection reasoning below still stands; wherever this document says "Postgres," the app now uses MongoDB Atlas instead — see ADR 0004 for why.
 
 ## Context
 
@@ -23,4 +23,4 @@ Use Next.js (App Router, TypeScript) as a single deployable application — UI a
 - `app/src/app/api/**/route.ts` Route Handlers are the backend; no separate API service or repo.
 - Scheduled ingestion (Phase 5) uses Vercel Cron Jobs, not Cloud Scheduler.
 - Auth (Phase 3) uses Auth.js or an equivalent Vercel/Next-native library, not Firebase Authentication.
-- The database is relational (Postgres) from day one — see `../architecture/03-data-model.md` — rather than a document store that would need denormalization for the compliance/impact views.
+- ~~The database is relational (Postgres) from day one~~ — superseded: the database is MongoDB Atlas. See `0004-mongodb-atlas-not-postgres.md` and `../architecture/03-data-model.md`.

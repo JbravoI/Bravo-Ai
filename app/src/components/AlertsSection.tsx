@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { REGULATIONS } from "@/lib/data";
 import type { Source } from "@/lib/types";
+import { useRegulationModal } from "@/context/RegulationModalContext";
 import AlertCard from "./AlertCard";
 
 type FilterValue = "all" | Source;
@@ -16,8 +16,9 @@ const FILTERS: { value: FilterValue; label: string }[] = [
 ];
 
 export default function AlertsSection({ title, subtitle }: { title: string; subtitle?: string }) {
+  const { regulations } = useRegulationModal();
   const [filter, setFilter] = useState<FilterValue>("all");
-  const list = filter === "all" ? REGULATIONS : REGULATIONS.filter((r) => r.source === filter);
+  const list = filter === "all" ? regulations : regulations.filter((r) => r.source === filter);
 
   return (
     <div>

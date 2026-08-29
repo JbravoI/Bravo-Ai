@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getRegulation } from "@/lib/data";
+import { getRegulationById } from "@/lib/data";
 
 export async function GET(_req: NextRequest, ctx: RouteContext<"/api/regulations/[id]">) {
   const { id } = await ctx.params;
@@ -9,7 +9,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext<"/api/regulations
     return NextResponse.json({ error: `Invalid regulation id "${id}".` }, { status: 400 });
   }
 
-  const regulation = getRegulation(regulationId);
+  const regulation = await getRegulationById(regulationId);
   if (!regulation) {
     return NextResponse.json({ error: `Regulation ${regulationId} not found.` }, { status: 404 });
   }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { REGULATIONS } from "@/lib/data";
+import { getRegulations } from "@/lib/data";
 import type { Source } from "@/lib/types";
 
 const VALID_SOURCES: Source[] = ["fca", "pra", "hmt", "eu"];
@@ -16,6 +16,6 @@ export async function GET(request: Request) {
     );
   }
 
-  const list = source ? REGULATIONS.filter((r) => r.source === source) : REGULATIONS;
+  const list = await getRegulations(source as Source | undefined);
   return NextResponse.json(list);
 }

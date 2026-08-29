@@ -3,16 +3,21 @@
 import { useState } from "react";
 
 export default function TopBar() {
-  // Simulated — Phase 5 wires this to a real ingestion run and a real timestamp.
   const [scanning, setScanning] = useState(false);
-  const [label, setLabel] = useState("Last scan: just now");
+  const [label, setLabel] = useState("Last scan: —");
 
-  function scan() {
+  async function scan() {
     setScanning(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/scan", { method: "POST" });
+      const data = await res.json();
+      const when = new Date(data.scannedAt).toLocaleTimeString();
+      setLabel(data.simulated ? `Last scan: ${when} (simulated)` : `Last scan: ${when}`);
+    } catch {
+      setLabel("Last scan: failed");
+    } finally {
       setScanning(false);
-      setLabel("Last scan: just now");
-    }, 2200);
+    }
   }
 
   return (

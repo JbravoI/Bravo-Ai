@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { JURISDICTIONS } from "@/lib/data";
+import type { Jurisdiction } from "@/lib/types";
 
-export default function JuriGrid() {
+export default function JuriGrid({ jurisdictions }: { jurisdictions: Jurisdiction[] }) {
   // Local UI state only — Phase 3 persists this per-user via /api/preferences.
-  const [active, setActive] = useState(JURISDICTIONS.map((j) => j.active));
+  const [active, setActive] = useState(jurisdictions.map((j) => j.active));
 
   return (
     <div className="juri-grid">
-      {JURISDICTIONS.map((j, i) => (
+      {jurisdictions.map((j, i) => (
         <button
           key={j.code}
           type="button"

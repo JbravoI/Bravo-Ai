@@ -11,7 +11,7 @@ The git repo is already connected to `https://github.com/JbravoI/Bravo-Ai.git`. 
 1. Push to the connected GitHub repo.
 2. In the Vercel dashboard: **New Project → Import** the repo.
 3. **Before deploying**, set **Root Directory** to `app` in the project's settings (Vercel auto-detects Next.js once it looks in the right folder).
-4. Add environment variables in **Project Settings → Environment Variables** — this is where `ANTHROPIC_API_KEY`, `DATABASE_URL` (your Postgres connection string), and any auth secrets will live once Epics 02-04 need them. These never go in the repo.
+4. Add environment variables in **Project Settings → Environment Variables** — `MONGODB_URI` and `MONGODB_DB` (already required, see `app/.env.example`), plus `ANTHROPIC_API_KEY` and any auth secrets once Epics 03-04 need them. These never go in the repo. Atlas's Network Access list will also need to permit Vercel's deployment IPs.
 5. Every push to `main` auto-deploys to production; every PR gets its own preview URL for free — useful for testing each phase in isolation (see `test.md`) before merging.
 6. Cloud cron (Epic 05's scheduled ingestion) uses **Vercel Cron Jobs**, configured via a `vercel.json` inside `app/` hitting `/api/scan` on a schedule.
 

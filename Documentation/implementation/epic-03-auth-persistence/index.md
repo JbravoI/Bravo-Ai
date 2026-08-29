@@ -2,7 +2,7 @@
 
 **Status:** `Pending`
 **Maps To:** `../../STRATEGY.md` Phase 3
-**Target Surface(s):** Auth.js (or equivalent), `app/src/app/api/**`, Postgres `user_preferences`
+**Target Surface(s):** Auth.js (or equivalent), `app/src/app/api/**`, MongoDB `user_preferences` collection
 
 ---
 
@@ -14,7 +14,7 @@ Gate the app behind login, then make preferences, jurisdictions and the audit tr
 
 ## Blocked On
 
-Epic 02's Postgres database — there is nowhere to persist a session or a preference until it exists.
+Nothing — Epic 02's database (MongoDB Atlas) is live. This epic just hasn't started yet.
 
 ---
 

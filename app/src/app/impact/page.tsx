@@ -1,12 +1,15 @@
 import ImpactTable from "@/components/ImpactTable";
+import { getImpactRows } from "@/lib/data";
 
-export default function ImpactPage() {
+export default async function ImpactPage() {
+  const rows = await getImpactRows();
+
   return (
     <div className="page">
       <div className="section-title" style={{ marginBottom: 12 }}>
         Regulatory Impact by Business Area
       </div>
-      <ImpactTable />
+      <ImpactTable rows={rows} />
     </div>
   );
 }

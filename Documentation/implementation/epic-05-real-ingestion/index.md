@@ -2,7 +2,7 @@
 
 **Status:** `Pending`
 **Maps To:** `../../STRATEGY.md` Phase 5
-**Target Surface(s):** `app/src/app/api/scan/route.ts`, a scheduled job, `regulations` / `regulation_versions` tables
+**Target Surface(s):** `app/src/app/api/scan/route.ts`, a scheduled job, `regulations` / `regulation_versions` collections
 
 ---
 
@@ -14,8 +14,9 @@ Replace the seed data and the simulated `/api/scan` with a real pipeline that fe
 
 ## Blocked On
 
-- Epic 02's Postgres database.
 - A sourcing decision: scrape public regulator sites (generally fine, but check each site's terms) vs. a licensed data provider. Not yet decided — see `../../docs/architecture/03-data-model.md`'s open decisions.
+
+Epic 02's database (MongoDB Atlas) is live, so that's no longer a blocker.
 
 ## Planned Work
 

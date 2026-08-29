@@ -12,7 +12,7 @@ For agent/LLM navigation, read `AGENT_START_HERE.md` first.
 
 - `architecture/01-architecture.md` - high-level architecture and layers.
 - `architecture/02-api-and-client-integration.md` - API contract and frontend/backend integration rules.
-- `architecture/03-data-model.md` - target Postgres schema.
+- `architecture/03-data-model.md` - MongoDB Atlas collections (live) and planned collections.
 - `architecture/04-security-privacy.md` - secrets handling, XSS, auth and data-retention notes.
 
 ## Decisions

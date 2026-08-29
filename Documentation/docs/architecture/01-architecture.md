@@ -10,9 +10,9 @@ A single Next.js application (App Router, TypeScript) serving both the frontend 
 
 Server Components by default; `"use client"` only where interactivity, browser APIs or React state require it (filter tabs, the regulation modal, forms, the Q&A panel). Shared page chrome (`TopBar`, `Sidebar`, `RegulationModal`) lives in the root layout, wrapped in `RegulationModalProvider` (`app/src/context/RegulationModalContext.tsx`) so any page can open the same regulation detail overlay.
 
-### Data (`app/src/lib/data.ts`, `app/src/lib/types.ts`)
+### Data (`app/src/lib/data.ts`, `app/src/lib/mongodb.ts`, `app/src/lib/types.ts`)
 
-Currently the single source of truth for regulations, audit entries, jurisdictions and impact rows — explicitly commented as seed data standing in for Phase 2's Postgres store. `app/src/lib/types.ts` defines the shapes (`Regulation`, `AuditEntry`, `Jurisdiction`, `ImpactRow`, `ChatMessage`) that both the UI components and the API routes consume.
+`app/src/lib/data.ts` exports async accessor functions backed by a live MongoDB Atlas database (not Postgres — see `../decisions/0004-mongodb-atlas-not-postgres.md`) via the cached client connection in `app/src/lib/mongodb.ts`. `app/src/lib/types.ts` defines the shapes (`Regulation`, `AuditEntry`, `Jurisdiction`, `ImpactRow`, `ChatMessage`) that both the UI components and the API routes consume — every Mongo document matches these shapes exactly.
 
 ### API (`app/src/app/api/**/route.ts`)
 
@@ -20,12 +20,12 @@ Route Handlers exposing the same data over HTTP: `GET /api/regulations` (+ `/{id
 
 ### Frontend/API Coupling (Current State)
 
-As of Epic 02, the UI pages still import `app/src/lib/data.ts` directly rather than fetching from the API routes — the routes exist and work, but nothing in the UI calls them yet. This is a known, intentional gap; closing it (or replacing `app/src/lib/data.ts` with real Postgres queries behind both) is Epic 02's remaining work. Do not assume the API routes are in the render path just because they exist.
+The UI pages call `app/src/lib/data.ts`'s accessor functions directly (not the API routes over HTTP) — this is deliberate, not a gap; see `02-api-and-client-integration.md` for why. The Route Handlers call the same functions, so both surfaces read the same live data with no duplication.
 
-## Target Runtime Components (Not All Built Yet)
+## Target Runtime Components
 
-- Next.js app (UI + API routes) — **built**, seed-data-backed.
-- Postgres database (regulations, versions, audit log, preferences) — **not built**. See `03-data-model.md`.
+- Next.js app (UI + API routes) — **built**, MongoDB-backed.
+- MongoDB Atlas database (regulations, jurisdictions, audit log, impact rows; versions/preferences/qa_log planned) — **built**. See `03-data-model.md`.
 - Scheduled ingestion job hitting `/api/scan` — **not built**. See `../../STRATEGY.md` Phase 5.
 - Auth (Auth.js or equivalent) — **not built**. See `../../STRATEGY.md` Phase 3.
 - AI provider integration (Anthropic, called server-side) — **not built**. See `../decisions/0002-anthropic-server-side-ai.md`.

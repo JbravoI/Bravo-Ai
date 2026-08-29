@@ -1,6 +1,5 @@
 "use client";
 
-import { REGULATIONS } from "@/lib/data";
 import type { Regulation } from "@/lib/types";
 import { useRegulationModal } from "@/context/RegulationModalContext";
 
@@ -16,7 +15,7 @@ const STATUS_BADGE: Record<Regulation["status"], [string, string] | null> = {
 };
 
 export default function ComplianceTable() {
-  const { openModal } = useRegulationModal();
+  const { regulations, openModal } = useRegulationModal();
 
   return (
     <div className="table-wrap">
@@ -32,7 +31,7 @@ export default function ComplianceTable() {
           </tr>
         </thead>
         <tbody>
-          {REGULATIONS.map((r) => {
+          {regulations.map((r) => {
             const progressClass = r.readiness >= 70 ? "pf-green" : r.readiness >= 40 ? "pf-warn" : "pf-danger";
             const [priorityClass, priorityLabel] = PRIORITY_BADGE[r.priority];
             const statusBadge = STATUS_BADGE[r.status];

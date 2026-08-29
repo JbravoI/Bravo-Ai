@@ -10,17 +10,19 @@ const WELCOME: Record<"dashboard" | "search", string> = {
     "Search above or ask me anything about UK financial regulation. I can summarise legal text, explain compliance implications, and compare jurisdictions.",
 };
 
-// Placeholder call — Phase 4 moves this to a server route (/api/query) so the
-// Anthropic API key never reaches the browser. See STRATEGY.md.
-async function callPlaceholderAPI(question: string): Promise<string> {
-  const res = await fetch("https://api.bravoai.app/v1/query", {
+// Calls Bravo Ai's own /api/query route (server-side, holds the AI provider key —
+// see docs/decisions/0002-anthropic-server-side-ai.md). The endpoint itself isn't
+// implemented yet (Phase 4) and currently returns 501 with an explanatory message,
+// which is surfaced here rather than a generic "API error 501".
+async function askQuery(question: string): Promise<string> {
+  const res = await fetch("/api/query", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ question }),
   });
-  if (!res.ok) throw new Error(`API error ${res.status}`);
-  const data = await res.json();
-  return data.answer ?? "";
+  const data = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(data?.error ?? `API error ${res.status}`);
+  return data?.answer ?? "";
 }
 
 export default function QAPanel({
@@ -58,7 +60,7 @@ export default function QAPanel({
     const loadingId = `${uid}-${Date.now()}-loading`;
     setMessages((m) => [...m, { id: loadingId, role: "ai", text: "…" }]);
     try {
-      const answer = await callPlaceholderAPI(question);
+      const answer = await askQuery(question);
       setMessages((m) => m.filter((x) => x.id !== loadingId).concat({ id: `${loadingId}-a`, role: "ai", text: answer }));
     } catch (err) {
       setMessages((m) =>

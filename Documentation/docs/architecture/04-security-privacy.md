@@ -30,7 +30,7 @@ Once `/api/query` is real, it must:
 
 ## Data Retention And Dates
 
-- Use ISO 8601 (`2026-08-29`) for all dates stored or passed between server and client; format for display only at the render boundary. The seed data currently uses display-formatted strings (`"28 Apr 2025"`) as a placeholder — this must change when Postgres lands (Epic 02).
+- Use ISO 8601 (`2026-08-29`) for all dates stored or passed between server and client; format for display only at the render boundary. The database (MongoDB Atlas, live as of Epic 02) currently still stores the original display-formatted strings (`"28 Apr 2025"`) carried over from the seed script — reformatting these is Epic 06 (hardening) work, now that a real database exists to reformat.
 - Source documents ingested in Phase 5 must retain `document_url` and `retrieved_at` so every claim is traceable back to the original regulator publication — required for a compliance tool to be trustworthy, not optional polish.
 
 ## Non-Goals (Explicitly Out Of Scope For Now)

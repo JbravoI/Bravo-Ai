@@ -40,7 +40,7 @@ Bravo Ai is a UK financial regulatory monitoring dashboard, mid-migration from a
 
 - Rebrand and baseline hygiene: `../implementation/epic-00-rebrand-baseline/` — **Completed**.
 - App skeleton (real routes, components, a11y basics): `../implementation/epic-01-app-skeleton/` — **Completed**.
-- Backend and data model: `../implementation/epic-02-backend-data-model/` — **Ongoing** (API routes exist and are documented via OpenAPI/Swagger at `/api-docs`; every route is still backed by in-memory seed data, not Postgres).
-- Auth and persistence, secure AI Q&A, real ingestion, hardening, and deploy: **Pending** — see the corresponding epics.
+- Backend and data model: `../implementation/epic-02-backend-data-model/` — **Completed** (API routes documented via OpenAPI/Swagger at `/api-docs`, backed by a live MongoDB Atlas database — not Postgres, see `decisions/0004-mongodb-atlas-not-postgres.md`).
+- Auth and persistence, secure AI Q&A, real ingestion, hardening, and deploy: **Pending** — see the corresponding epics. Epics 03 and 05 were blocked on a live database; that's no longer the blocker.
 
-Do not infer that any endpoint is database-backed or that AI Q&A works from the UI alone — check `../implementation/CURRENT_STATUS.md` for the current, code-verified truth.
+Do not infer that AI Q&A works from the UI alone or that auth/persistence exist — check `../implementation/CURRENT_STATUS.md` for the current, code-verified truth.

@@ -1,5 +1,4 @@
-import { IMPACT } from "@/lib/data";
-import type { ImpactLevel } from "@/lib/types";
+import type { ImpactLevel, ImpactRow } from "@/lib/types";
 
 const COLOR: Record<ImpactLevel, string> = {
   High: "var(--danger)",
@@ -8,7 +7,7 @@ const COLOR: Record<ImpactLevel, string> = {
   None: "var(--text3)",
 };
 
-export default function ImpactTable() {
+export default function ImpactTable({ rows }: { rows: ImpactRow[] }) {
   return (
     <div className="table-wrap">
       <table>
@@ -23,7 +22,7 @@ export default function ImpactTable() {
           </tr>
         </thead>
         <tbody>
-          {IMPACT.map((row) => (
+          {rows.map((row) => (
             <tr key={row.reg}>
               <td style={{ color: "var(--text)", fontSize: 11 }}>{row.reg}</td>
               {[row.banking, row.invest, row.insure, row.comp, row.ops].map((v, i) => (
