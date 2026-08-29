@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { getLatestScanRun } from "@/lib/data";
 import { runFcaIngestion } from "@/lib/ingest/fca";
+import { runAdditionalSourceIngestion } from "@/lib/ingest/sources";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -23,8 +24,17 @@ async function runScan(request: Request) {
   }
 
   try {
-    const run = await runFcaIngestion();
-    return NextResponse.json({ ok: true, ...run });
+    const runs = [];
+    const errors: string[] = [];
+    for (const run of [runFcaIngestion, () => runAdditionalSourceIngestion("pra"), () => runAdditionalSourceIngestion("hmt"), () => runAdditionalSourceIngestion("eu")]) {
+      try {
+        runs.push(await run());
+      } catch (sourceError) {
+        errors.push(sourceError instanceof Error ? sourceError.message : "A regulatory source scan failed.");
+      }
+    }
+    if (!runs.length) throw new Error(errors.join(" ") || "All regulatory source scans failed.");
+    return NextResponse.json({ ok: errors.length === 0, runs, errors, completedAt: runs.at(-1)?.completedAt, newRecords: runs.reduce((total, run) => total + run.newRecords, 0), changedRecords: runs.reduce((total, run) => total + run.changedRecords, 0) });
   } catch (error) {
     const message = error instanceof Error ? error.message : "FCA ingestion failed.";
     return NextResponse.json({ error: message }, { status: 502 });

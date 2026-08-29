@@ -1,8 +1,22 @@
 import ImpactTable from "@/components/ImpactTable";
-import { getImpactRows } from "@/lib/data";
+import { getRegulations } from "@/lib/data";
+import type { ImpactLevel, ImpactRow } from "@/lib/types";
+
+function level(regulation: { priority: string; tags: string[] }, area: string): ImpactLevel {
+  if (!regulation.tags.some((tag) => tag.toLowerCase() === area.toLowerCase())) return "None";
+  return regulation.priority === "high" ? "High" : regulation.priority === "medium" ? "Medium" : "Low";
+}
 
 export default async function ImpactPage() {
-  const rows = await getImpactRows();
+  const regulations = await getRegulations();
+  const rows: ImpactRow[] = regulations.map((regulation) => ({
+    reg: regulation.title,
+    banking: level(regulation, "Banking"),
+    invest: level(regulation, "Investment"),
+    insure: level(regulation, "Insurance"),
+    comp: level(regulation, "Compliance"),
+    ops: level(regulation, "Operations"),
+  }));
 
   return (
     <div className="page">

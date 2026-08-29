@@ -8,13 +8,14 @@
 
 ## Overview
 
-Replace the simulated `/api/scan` with a real pipeline. The first live connector is the FCA's public news-and-warnings RSS feed; it establishes the reusable fetch, normalize, deduplicate, version and audit pattern for the remaining regulators.
+Replace the simulated `/api/scan` with a real pipeline. FCA, PRA, HM Treasury and ESMA (EU) public feeds now use the same fetch, normalize, deduplicate, version and audit pattern.
 
 ---
 
 ## Implemented
 
 - `app/src/lib/ingest/fca.ts` fetches FCA's public RSS feed (`https://www.fca.org.uk/news/rss.xml`) with a timeout, validates each source URL is HTTPS on `www.fca.org.uk`, normalizes up to 30 entries, and records `sourceUrl` plus `retrievedAt`.
+- `app/src/lib/ingest/sources.ts` adds public feeds for PRA (Bank of England), HM Treasury (GOV.UK Atom) and ESMA (EU RSS). A single scan runs all four sources and reports combined new/changed totals.
 - Each item is matched using an FCA source identifier. New items are inserted into `regulations`; changed content is updated and recorded in `regulation_versions`; unchanged content only receives an updated retrieval time.
 - Every completed run creates a `scan_runs` record and exactly one append-only `audit_log` entry with the actual new/changed counts.
 - `POST /api/scan` starts the authenticated scan. `GET /api/scan` reports the latest completed run to the TopBar, which shows the real timestamp plus the new/changed counts and refreshes the current view after a manual scan.
