@@ -341,7 +341,7 @@
                 <span class="section-title">Recent Regulatory Updates</span>
                 <span class="section-sub">— live</span>
               </div>
-              <div class="filter-tabs">
+              <div class="filter-tabs alert-filter">
                 <button class="ftab active" onclick="baFilter('all',this)">All</button>
                 <button class="ftab" onclick="baFilter('fca',this)">FCA</button>
                 <button class="ftab" onclick="baFilter('pra',this)">PRA</button>
@@ -374,7 +374,7 @@
         <div id="ba-page-alerts" class="page">
           <div class="section-header">
             <span class="section-title">All Alerts</span>
-            <div class="filter-tabs">
+            <div class="filter-tabs alert-filter">
               <button class="ftab active" onclick="baFilter('all',this)">All</button>
               <button class="ftab" onclick="baFilter('fca',this)">FCA</button>
               <button class="ftab" onclick="baFilter('pra',this)">PRA</button>
@@ -657,7 +657,7 @@ window.baPage = function(name, el){
 
 // ── FILTER ───────────────────────────────────────
 window.baFilter = function(filter, btn){
-  document.querySelectorAll('#bravo-app .ftab').forEach(t=>{
+  document.querySelectorAll('#bravo-app .alert-filter .ftab').forEach(t=>{
     const txt=t.textContent.trim().toLowerCase();
     t.classList.toggle('active',
       (filter==='all'&&txt==='all')||(filter==='fca'&&txt==='fca')||
