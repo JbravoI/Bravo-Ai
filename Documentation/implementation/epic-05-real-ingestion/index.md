@@ -17,7 +17,7 @@ Replace the simulated `/api/scan` with a real pipeline. The first live connector
 - `app/src/lib/ingest/fca.ts` fetches FCA's public RSS feed (`https://www.fca.org.uk/news/rss.xml`) with a timeout, validates each source URL is HTTPS on `www.fca.org.uk`, normalizes up to 30 entries, and records `sourceUrl` plus `retrievedAt`.
 - Each item is matched using an FCA source identifier. New items are inserted into `regulations`; changed content is updated and recorded in `regulation_versions`; unchanged content only receives an updated retrieval time.
 - Every completed run creates a `scan_runs` record and exactly one append-only `audit_log` entry with the actual new/changed counts.
-- `POST /api/scan` starts the authenticated scan. `GET /api/scan` reports the latest completed run to the TopBar, which now shows a real timestamp and refreshes the current view after a manual scan.
+- `POST /api/scan` starts the authenticated scan. `GET /api/scan` reports the latest completed run to the TopBar, which shows the real timestamp plus the new/changed counts and refreshes the current view after a manual scan.
 - `app/vercel.json` schedules `GET /api/scan` daily at 02:00 UTC, which is compatible with Vercel Hobby. Vercel Cron must be configured with the same `CRON_SECRET` set in the deployment environment.
 
 ## Acceptance Criteria
@@ -29,4 +29,4 @@ Replace the simulated `/api/scan` with a real pipeline. The first live connector
 ## Remaining Follow-up
 
 - Add PRA, HM Treasury and EU connectors after confirming their preferred public feeds or licensed-provider arrangements.
-- Configure `CRON_SECRET` in Vercel before relying on the six-hour scheduled scan; manual authenticated scans work without it.
+- Configure `CRON_SECRET` in Vercel before relying on the daily scheduled scan; manual authenticated scans work without it.

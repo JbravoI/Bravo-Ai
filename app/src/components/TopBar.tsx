@@ -10,8 +10,11 @@ export default function TopBar() {
   const [scanning, setScanning] = useState(false);
   const [label, setLabel] = useState("Last scan: —");
 
-  function setLastScanLabel(value: string) {
-    setLabel(`Last scan: ${new Date(value).toLocaleString()}`);
+  function setLastScanLabel(value: string, newRecords?: number, changedRecords?: number) {
+    const summary = typeof newRecords === "number" && typeof changedRecords === "number"
+      ? ` · ${newRecords} new, ${changedRecords} changed`
+      : "";
+    setLabel(`Last scan: ${new Date(value).toLocaleString()}${summary}`);
   }
 
   useEffect(() => {
@@ -19,7 +22,9 @@ export default function TopBar() {
     fetch("/api/scan")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (active && data?.lastRun?.completedAt) setLastScanLabel(data.lastRun.completedAt);
+        if (active && data?.lastRun?.completedAt) {
+          setLastScanLabel(data.lastRun.completedAt, data.lastRun.newRecords, data.lastRun.changedRecords);
+        }
       })
       .catch(() => undefined);
     return () => {
@@ -33,7 +38,7 @@ export default function TopBar() {
       const res = await fetch("/api/scan", { method: "POST" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Scan failed");
-      setLastScanLabel(data.completedAt);
+      setLastScanLabel(data.completedAt, data.newRecords, data.changedRecords);
       router.refresh();
     } catch {
       setLabel("Last scan: failed");
@@ -52,7 +57,7 @@ export default function TopBar() {
       </div>
       <div className="topbar-right">
         <span className="pill live">LIVE</span>
-        <span className="pill">{label}</span>
+        <span className="pill" title={label}>{label}</span>
         <button type="button" className="btn btn-primary" onClick={scan} disabled={scanning}>
           {scanning ? "⟳ Scanning…" : "⟳ Scan Now"}
         </button>
