@@ -36,4 +36,4 @@ Executable-style feature scenarios live in `../features/` at the Documentation r
 ## Operations
 
 - `operations/local-development.md` - running the app locally (Node setup, dev server, build, lint).
-- `../../deployment.md` - deploying to Vercel.
+- `../deployment.md` - deploying to Vercel.

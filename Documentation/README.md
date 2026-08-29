@@ -16,9 +16,9 @@ For agent/LLM navigation, read `docs/AGENT_START_HERE.md` first.
 
 This structure formalizes and supersedes-in-detail the planning documents that were written before it existed:
 
-- `../STRATEGY.md` — the original phased migration plan (prototype to production). Its phases map directly to the epics under `implementation/`. Kept as historical reference.
-- `../test.md` — per-phase manual testing checklist. Still current; referenced from `implementation/`.
-- `../deployment.md` — Vercel deployment steps. Still current; referenced from `docs/operations/`.
-- `../REGWATCH_CODE_REVIEW.md` — the original prototype code review. Its findings are the source for several `docs/decisions/` entries and `docs/architecture/04-security-privacy.md`.
+- `STRATEGY.md` — the original phased migration plan (prototype to production). Its phases map directly to the epics under `implementation/`. Kept as historical reference.
+- `test.md` — per-phase manual testing checklist. Still current; referenced from `implementation/`.
+- `deployment.md` — Vercel deployment steps. Still current; referenced from `docs/operations/`.
+- `REGWATCH_CODE_REVIEW.md` — the original prototype code review. Its findings are the source for several `docs/decisions/` entries and `docs/architecture/04-security-privacy.md`.
 
 Where this structure and an older root document disagree on current status, this structure wins — it is updated as code changes; the root documents are point-in-time snapshots.

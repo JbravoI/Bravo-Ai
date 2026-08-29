@@ -1,7 +1,7 @@
 # Epic 00: Rebrand And Baseline Hygiene
 
 **Status:** `Completed`
-**Maps To:** `../../../STRATEGY.md` Phase 0
+**Maps To:** `../../STRATEGY.md` Phase 0
 **Target Surface(s):** `bravo-ai.html` (static prototype)
 
 ---

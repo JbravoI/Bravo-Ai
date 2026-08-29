@@ -1,8 +1,8 @@
 # Epic 03: Auth And Persistence
 
 **Status:** `Pending`
-**Maps To:** `../../../STRATEGY.md` Phase 3
-**Target Surface(s):** Auth.js (or equivalent), `app/api/**`, Postgres `user_preferences`
+**Maps To:** `../../STRATEGY.md` Phase 3
+**Target Surface(s):** Auth.js (or equivalent), `app/src/app/api/**`, Postgres `user_preferences`
 
 ---
 
@@ -21,7 +21,7 @@ Epic 02's Postgres database — there is nowhere to persist a session or a prefe
 ## Planned Work
 
 - Add authentication (Auth.js or an equivalent Vercel/Next-native library — not yet chosen).
-- Wire `components/JuriGrid.tsx` and `components/PrefsIndustryFocus.tsx` to `user_preferences`, loaded on login and saved on change, replacing their current local `useState`.
+- Wire `app/src/components/JuriGrid.tsx` and `app/src/components/PrefsIndustryFocus.tsx` to `user_preferences`, loaded on login and saved on change, replacing their current local `useState`.
 - Audit trail re-renders from the database and updates immediately after any action (scan, preference change, Q&A) instead of only reflecting static seed content.
 - Decide: single-org or multi-tenant (`org_id` scoping) — currently an open question, see `../../docs/architecture/03-data-model.md`.
 

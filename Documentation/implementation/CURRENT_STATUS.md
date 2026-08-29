@@ -7,7 +7,7 @@ This file is the quickest implementation truth for what's real right now. Epic p
 | Capability | Frontend | API | Data | Verification |
 | :--- | :---: | :---: | :---: | :--- |
 | Bravo Ai branding | Complete | N/A | N/A | Manual: no "RegWatch" text/ids/functions remain in `bravo-ai.html` |
-| Dashboard, alerts, filtering | Complete | N/A | Seed (`lib/data.ts`) | Build + lint clean; all 7 routes return 200 |
+| Dashboard, alerts, filtering | Complete | N/A | Seed (`app/src/lib/data.ts`) | Build + lint clean; all 7 routes return 200 |
 | Regulation detail modal | Complete | N/A | Seed | Manual keyboard/click check |
 | Compliance readiness table | Complete | N/A | Seed | Build + lint clean |
 | Impact map | Complete | N/A | Seed | Build + lint clean |
@@ -17,17 +17,17 @@ This file is the quickest implementation truth for what's real right now. Epic p
 | `POST /api/scan` | N/A | Simulated | N/A | Hit directly, confirmed `"simulated": true` in body |
 | `POST /api/query` | N/A | Stub | N/A | Hit directly, confirmed `501` response |
 | OpenAPI spec + Swagger UI (`/api-docs`) | Complete | Complete | N/A | Hit directly; loaded in browser; no console errors |
-| UI calling its own API routes | Not started | — | — | UI still imports `lib/data.ts` directly |
+| UI calling its own API routes | Not started | — | — | UI still imports `app/src/lib/data.ts` directly |
 | Postgres database | Not started | — | — | — |
 | Auth / per-user persistence | Not started | — | — | — |
 | Real AI provider (Anthropic) wired up | Not started | — | — | — |
 | Real regulator-source scanning | Not started | — | — | — |
 | Automated test suite | Not started | — | — | — |
-| Vercel deployment of the real app | Not started | — | — | Only the static prototype has documented deploy steps (`../../deployment.md`) |
+| Vercel deployment of the real app | Not started | — | — | Only the static prototype has documented deploy steps (`../deployment.md`) |
 
 ## Explicitly Remaining
 
-- Epic 02: Postgres provisioning and migration off `lib/data.ts`; wiring the UI to call its own API routes instead of importing data directly.
+- Epic 02: Postgres provisioning and migration off `app/src/lib/data.ts`; wiring the UI to call its own API routes instead of importing data directly.
 - Epic 03: authentication and per-user persistence for preferences/jurisdictions/audit trail.
 - Epic 04: real Anthropic integration behind `/api/query`; reconciling `QAPanel.tsx`'s request shape with the real contract.
 - Epic 05: a sourcing decision (scrape vs. licensed provider) and the first real ingestion connector (start with one regulator).
@@ -37,5 +37,5 @@ This file is the quickest implementation truth for what's real right now. Epic p
 ## Verification Baseline
 
 - `npm run build` and `npm run lint`: clean as of Epic 02.
-- No automated unit/integration/e2e tests exist yet — manual verification only, per `../../test.md`.
+- No automated unit/integration/e2e tests exist yet — manual verification only, per `../test.md`.
 - Every API route has been exercised directly (not just via UI) with both success and error cases.

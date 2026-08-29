@@ -2,7 +2,7 @@
 
 ## Status
 
-Not built. This is the target Postgres schema for Epic 02's remaining work, restated from `../../../STRATEGY.md` §3 and aligned to the TypeScript shapes already defined in `lib/types.ts` so the eventual database rows map cleanly onto existing `Regulation`, `AuditEntry`, `Jurisdiction` and `ImpactRow` types.
+Not built. This is the target Postgres schema for Epic 02's remaining work, restated from `../../STRATEGY.md` §3 and aligned to the TypeScript shapes already defined in `app/src/lib/types.ts` so the eventual database rows map cleanly onto existing `Regulation`, `AuditEntry`, `Jurisdiction` and `ImpactRow` types.
 
 ## Tables
 
@@ -28,7 +28,7 @@ qa_log                         -- every Q&A exchange, for compliance traceabilit
   id, user_id, question, answer, cited_regulation_ids, ts
 ```
 
-## Mapping To Current Seed Data (`lib/data.ts`)
+## Mapping To Current Seed Data (`app/src/lib/data.ts`)
 
 | Seed export | Target table(s) |
 | :--- | :--- |

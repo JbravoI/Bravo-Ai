@@ -1,17 +1,17 @@
 # Security And Privacy
 
-Source: findings from `../../../REGWATCH_CODE_REVIEW.md`, carried forward as binding rules rather than historical notes.
+Source: findings from `../../REGWATCH_CODE_REVIEW.md`, carried forward as binding rules rather than historical notes.
 
 ## Secrets
 
 - No AI provider API key, database connection string, or regulator-source credential may ever be present in a client-side bundle or a browser-visible `fetch` call.
-- The original prototype had a placeholder API key (`YOUR-API-KEY-HERE`) called directly from browser JavaScript. This pattern must not recur. When Phase 4 wires up a real AI provider, the call happens inside `app/api/query/route.ts` (a Route Handler, which runs server-side only), reading the key from an environment variable.
-- `app/swagger-static/[file]/route.ts` reads from `node_modules` by an explicit filename allowlist — never widen it to accept an arbitrary path parameter.
+- The original prototype had a placeholder API key (`YOUR-API-KEY-HERE`) called directly from browser JavaScript. This pattern must not recur. When Phase 4 wires up a real AI provider, the call happens inside `app/src/app/api/query/route.ts` (a Route Handler, which runs server-side only), reading the key from an environment variable.
+- `app/src/app/swagger-static/[file]/route.ts` reads from `node_modules` by an explicit filename allowlist — never widen it to accept an arbitrary path parameter.
 
 ## XSS / Untrusted Content
 
 - Never use `innerHTML` or React's `dangerouslySetInnerHTML` with a string built from user input, AI output, or externally-fetched data (regulator source text, once Phase 5 ingests it).
-- Current components render all dynamic text as JSX children or `textContent`-equivalent (React's default escaping) — `components/AlertCard.tsx`, `components/RegulationModal.tsx`, `components/QAPanel.tsx`, `components/AuditLog.tsx` all follow this. `components/AuditLog.tsx` intentionally splits audit entries into a `label` + `detail` pair (see `lib/types.ts`'s `AuditEntry`) specifically so no markup-string parsing is ever needed to render a bold lead-in.
+- Current components render all dynamic text as JSX children or `textContent`-equivalent (React's default escaping) — `app/src/components/AlertCard.tsx`, `app/src/components/RegulationModal.tsx`, `app/src/components/QAPanel.tsx`, `app/src/components/AuditLog.tsx` all follow this. `app/src/components/AuditLog.tsx` intentionally splits audit entries into a `label` + `detail` pair (see `app/src/lib/types.ts`'s `AuditEntry`) specifically so no markup-string parsing is ever needed to render a bold lead-in.
 - If AI-generated Markdown ever needs rich rendering (bold, links, lists) in the Q&A panel, route it through a maintained sanitizer (e.g. DOMPurify) — do not hand-roll markdown-to-HTML.
 
 ## Auth (Not Yet Built)

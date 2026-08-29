@@ -34,9 +34,9 @@ Run `npm run build` and `npm run lint` after any structural change before consid
 There's no automated test suite yet (see `../architecture/01-architecture.md`). Until Epic 06 adds one, verify changes by:
 
 1. `npm run build` and `npm run lint` — must both pass clean.
-2. Manual click-through per the relevant row in `../../../test.md`.
+2. Manual click-through per the relevant row in `../../test.md`.
 3. For API changes, hit the route directly (`curl` / `Invoke-WebRequest`) and confirm status codes and body shape match `/api/openapi.json`.
 
 ## Deployment
 
-See `../../../deployment.md` for deploying the current static prototype or (once built) the real app to Vercel.
+See `../../deployment.md` for deploying the current static prototype or (once built) the real app to Vercel.

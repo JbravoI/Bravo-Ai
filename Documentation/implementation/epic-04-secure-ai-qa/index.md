@@ -1,8 +1,8 @@
 # Epic 04: Secure AI Q&A
 
 **Status:** `Pending`
-**Maps To:** `../../../STRATEGY.md` Phase 4
-**Target Surface(s):** `app/api/query/route.ts`, Anthropic API
+**Maps To:** `../../STRATEGY.md` Phase 4
+**Target Surface(s):** `app/src/app/api/query/route.ts`, Anthropic API
 
 ---
 
@@ -23,10 +23,10 @@ Epic 03 (auth) — the endpoint needs to authenticate the caller before it shoul
 
 ## Planned Work
 
-- Implement the real call inside `app/api/query/route.ts`, reading the API key from a server-only environment variable.
+- Implement the real call inside `app/src/app/api/query/route.ts`, reading the API key from a server-only environment variable.
 - Rate limiting, timeout/retry policy.
 - Log every exchange to `qa_log` (see `../../docs/architecture/03-data-model.md`) for cost/abuse monitoring and compliance traceability.
-- Reconcile `components/QAPanel.tsx`'s current placeholder request (`{ question } → { answer }`) with the real contract once defined — likely needs a citations field.
+- Reconcile `app/src/components/QAPanel.tsx`'s current placeholder request (`{ question } → { answer }`) with the real contract once defined — likely needs a citations field.
 - Evaluate Anthropic's web search tool as a supplement (not a replacement) for the ingestion pipeline — see the ADR for the reasoning on why it can't replace Epic 05's structured data.
 
 ## Acceptance Criteria

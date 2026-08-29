@@ -8,8 +8,8 @@ Give a compliance officer a single view of what's changed and what needs attenti
 
 - The dashboard (`/`) shows four stat cards (regulations tracked, high priority, pending review, compliance score) followed by the full alerts feed and the AI Q&A panel.
 - The alerts page (`/alerts`) shows the same feed at full width, without the stat cards.
-- Both pages filter by source (All/FCA/PRA/HM Treasury/EU/Global) via `components/AlertsSection.tsx`, which holds its own filter state — each route's filter is independent by construction, not shared.
-- Clicking an alert card opens `components/RegulationModal.tsx` via `context/RegulationModalContext.tsx`, showing the AI summary, business impact and affected-area tags for that regulation.
+- Both pages filter by source (All/FCA/PRA/HM Treasury/EU/Global) via `app/src/components/AlertsSection.tsx`, which holds its own filter state — each route's filter is independent by construction, not shared.
+- Clicking an alert card opens `app/src/components/RegulationModal.tsx` via `app/src/context/RegulationModalContext.tsx`, showing the AI summary, business impact and affected-area tags for that regulation.
 - Alert cards are real `<button>` elements (not clickable `<div>`s), keyboard-operable, with visible focus rings.
 
 ## Known Gaps

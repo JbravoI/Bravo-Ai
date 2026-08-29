@@ -44,12 +44,12 @@ Detailed doc: `../features/05-platform/api-and-docs.md`
 
 ## 8. Regulatory Source Scanning (Planned)
 
-Real ingestion from FCA/PRA/HM Treasury/EU sources, replacing the seed data and the simulated `/api/scan`. Not yet built. See `../../../STRATEGY.md` Phase 5.
+Real ingestion from FCA/PRA/HM Treasury/EU sources, replacing the seed data and the simulated `/api/scan`. Not yet built. See `../../STRATEGY.md` Phase 5.
 
 ## 9. Secure AI Q&A (Planned)
 
-Server-side proxy to an AI provider (Anthropic) so a real API key never reaches the browser, with responses grounded in and cited against the tracked regulation set. Not yet built. See `../../../STRATEGY.md` Phase 4 and `../decisions/0002-anthropic-server-side-ai.md`.
+Server-side proxy to an AI provider (Anthropic) so a real API key never reaches the browser, with responses grounded in and cited against the tracked regulation set. Not yet built. See `../../STRATEGY.md` Phase 4 and `../decisions/0002-anthropic-server-side-ai.md`.
 
 ## 10. Auth And Per-User Persistence (Planned)
 
-Real user accounts so preferences, jurisdictions and the audit trail persist per user instead of resetting on refresh. Not yet built. See `../../../STRATEGY.md` Phase 3.
+Real user accounts so preferences, jurisdictions and the audit trail persist per user instead of resetting on refresh. Not yet built. See `../../STRATEGY.md` Phase 3.

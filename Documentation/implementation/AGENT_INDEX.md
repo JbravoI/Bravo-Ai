@@ -21,7 +21,7 @@ Do not introduce additional status labels without updating `README.md`.
 | Epic 04 Secure AI Q&A | `Pending` | Provider chosen (Anthropic, see `../docs/decisions/0002-anthropic-server-side-ai.md`); not implemented. `/api/query` currently returns `501`. |
 | Epic 05 Real Regulatory-Source Ingestion | `Pending` | Depends on Epic 02 (database) and a sourcing decision (scrape vs. licensed provider). |
 | Epic 06 Hardening | `Pending` | CSP, full modal focus-trap/restore, mobile nav, ISO 8601 dates, first automated tests. |
-| Epic 07 Deploy And Operate | `Pending` | See `../../deployment.md` for the manual steps; this epic is about making it a repeatable, monitored deploy. |
+| Epic 07 Deploy And Operate | `Pending` | See `../deployment.md` for the manual steps; this epic is about making it a repeatable, monitored deploy. |
 
 ## Agent Workflow
 

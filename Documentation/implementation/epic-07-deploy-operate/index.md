@@ -1,7 +1,7 @@
 # Epic 07: Deploy And Operate
 
 **Status:** `Pending`
-**Maps To:** `../../../STRATEGY.md` Phase 7
+**Maps To:** `../../STRATEGY.md` Phase 7
 **Target Surface(s):** Vercel project
 
 ---
@@ -14,7 +14,7 @@ Turn "runs on my machine" into a real, repeatable, monitored production deployme
 
 ## Current State
 
-`../../../deployment.md` documents two different things:
+`../../deployment.md` documents two different things:
 
 1. Deploying the static `bravo-ai.html` prototype directly via the Vercel CLI — already actionable today, no dependencies.
 2. Deploying the real Next.js app via git-connected Vercel project — **not yet actionable**, because there's no git-connected Vercel project configured yet, and several prerequisite epics (02-05) need to be far enough along that deploying is meaningful.

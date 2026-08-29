@@ -1,6 +1,6 @@
 # Roadmap
 
-This roadmap mirrors the phase plan in `../../../STRATEGY.md`, restated as epics tracked under `../../implementation/`. Each phase there has a matching `implementation/epic-*/` folder with detailed status; this page is the short version.
+This roadmap mirrors the phase plan in `../../STRATEGY.md`, restated as epics tracked under `../../implementation/`. Each phase there has a matching `implementation/epic-*/` folder with detailed status; this page is the short version.
 
 | Phase | Epic | Status |
 | :--- | :--- | :---: |
@@ -15,13 +15,13 @@ This roadmap mirrors the phase plan in `../../../STRATEGY.md`, restated as epics
 
 ## Sequencing Rationale
 
-Phases 0-2 build the application shell and its own API surface against seed data before any external dependency (database, AI provider, regulator source) is wired in. This keeps every phase independently demoable and testable — see `../../../test.md` for the per-phase manual verification approach.
+Phases 0-2 build the application shell and its own API surface against seed data before any external dependency (database, AI provider, regulator source) is wired in. This keeps every phase independently demoable and testable — see `../../test.md` for the per-phase manual verification approach.
 
 Phases 3 and 4 are ordered before Phase 5 deliberately: persistence and a secure AI path are both prerequisites for real ingestion to be trustworthy (an audit trail that doesn't persist, or an AI answer path that leaks a key, would undermine the point of adding real regulatory data).
 
 ## Definition Of Done
 
-Restated from `../../../STRATEGY.md` §6 — the roadmap isn't complete until:
+Restated from `../../STRATEGY.md` §6 — the roadmap isn't complete until:
 
 - No `REGS`/`AUDIT`/`JURISDICTIONS`/`IMPACT` seed arrays are the source of truth shipped to the browser.
 - No API key or secret is present in any browser-visible bundle.

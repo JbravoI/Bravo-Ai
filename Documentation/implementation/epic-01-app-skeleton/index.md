@@ -1,8 +1,8 @@
 # Epic 01: App Skeleton
 
 **Status:** `Completed`
-**Maps To:** `../../../STRATEGY.md` Phase 1
-**Target Surface(s):** Next.js app (`app/`, `components/`, `context/`, `lib/`)
+**Maps To:** `../../STRATEGY.md` Phase 1
+**Target Surface(s):** Next.js app (`app/src/app/`, `app/src/components/`, `app/src/context/`, `app/src/lib/`)
 
 ---
 
@@ -17,9 +17,9 @@ Scaffold a real Next.js application and move the static prototype's markup into 
 - Scaffolded Next.js 16.3.3 (App Router, TypeScript) at the repo root; removed Tailwind (unused — the app has its own hand-rolled design system).
 - Seven real routes: `/`, `/alerts`, `/compliance`, `/search`, `/impact`, `/audit`, `/prefs`, replacing the original show/hide-div fake navigation.
 - All inline `onclick`/`onkeydown` replaced with React event handlers; all clickable `<div>`s replaced with real `<button>`s or `<tr role="button" tabIndex={0}>` with Enter/Space handling where a `<button>` can't legally wrap a table row.
-- `context/RegulationModalContext.tsx` — shared modal state so any page can open the same regulation detail overlay.
+- `app/src/context/RegulationModalContext.tsx` — shared modal state so any page can open the same regulation detail overlay.
 - Fonts moved to `next/font/google` (self-hosted) instead of a render-blocking Google Fonts `<link>`.
-- Seed data centralized in `lib/data.ts` / `lib/types.ts`, clearly commented as standing in for Phase 2's database.
+- Seed data centralized in `app/src/lib/data.ts` / `app/src/lib/types.ts`, clearly commented as standing in for Phase 2's database.
 
 ## Deliberate Deviations From A 1:1 Port
 

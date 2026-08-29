@@ -20,7 +20,7 @@ Use Next.js (App Router, TypeScript) as a single deployable application — UI a
 ## Consequences
 
 - One deployable app, one repository — matches the "single web app" requirement directly (see `../product/00-product-vision.md`).
-- `app/api/**/route.ts` Route Handlers are the backend; no separate API service or repo.
+- `app/src/app/api/**/route.ts` Route Handlers are the backend; no separate API service or repo.
 - Scheduled ingestion (Phase 5) uses Vercel Cron Jobs, not Cloud Scheduler.
 - Auth (Phase 3) uses Auth.js or an equivalent Vercel/Next-native library, not Firebase Authentication.
 - The database is relational (Postgres) from day one — see `../architecture/03-data-model.md` — rather than a document store that would need denormalization for the compliance/impact views.

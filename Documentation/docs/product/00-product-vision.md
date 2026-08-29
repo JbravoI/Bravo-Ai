@@ -31,7 +31,7 @@ The core loop is:
 4. **Answer questions** grounded in the tracked regulation set, with citations back to source documents.
 5. **Record everything** — scans, alerts, preference changes and Q&A exchanges — in an audit trail a compliance team can rely on.
 
-This is what separates the product from a demo: the same loop must work with a compliance officer's actual regulatory landscape, not seven hard-coded sample records. See `../../../STRATEGY.md` §1 for the concrete "not a demo" definition of done this vision is built against.
+This is what separates the product from a demo: the same loop must work with a compliance officer's actual regulatory landscape, not seven hard-coded sample records. See `../../STRATEGY.md` §1 for the concrete "not a demo" definition of done this vision is built against.
 
 ## Out Of Scope (For Now)
 

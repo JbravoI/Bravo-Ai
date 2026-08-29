@@ -6,13 +6,13 @@ Give a compliance team a reliable, chronological record of what the system did a
 
 ## Current Behavior
 
-- `/audit` renders `components/AuditLog.tsx`: a static, chronological list of seed entries, each with a timestamp, a bold label and a detail line.
-- Entries are structured as `{ ts, label, detail }` (see `lib/types.ts`'s `AuditEntry`) specifically so rendering never needs to parse a markup string — see `../../architecture/04-security-privacy.md`.
+- `/audit` renders `app/src/components/AuditLog.tsx`: a static, chronological list of seed entries, each with a timestamp, a bold label and a detail line.
+- Entries are structured as `{ ts, label, detail }` (see `app/src/lib/types.ts`'s `AuditEntry`) specifically so rendering never needs to parse a markup string — see `../../architecture/04-security-privacy.md`.
 
 ## Known Gaps
 
 - This is entirely static seed data. Nothing in the app currently appends a real entry — not a scan, not a preference change, not a Q&A exchange.
-- `components/TopBar.tsx`'s "Scan Now" button simulates a scan (a timed spinner) but does not write an audit entry, unlike the original prototype's in-memory mutation. This was a deliberate simplification during Epic 01 rather than porting a fake `AUDIT.unshift(...)` forward — see `../../../implementation/epic-01-app-skeleton/index.md`.
+- `app/src/components/TopBar.tsx`'s "Scan Now" button simulates a scan (a timed spinner) but does not write an audit entry, unlike the original prototype's in-memory mutation. This was a deliberate simplification during Epic 01 rather than porting a fake `AUDIT.unshift(...)` forward — see `../../../implementation/epic-01-app-skeleton/index.md`.
 - No pagination, search or date filtering.
 
 ## What "Real" Looks Like

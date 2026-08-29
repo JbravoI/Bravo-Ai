@@ -6,7 +6,7 @@ Show, at a glance, how prepared the firm is for every tracked regulation — sta
 
 ## Current Behavior
 
-- `/compliance` renders `components/ComplianceTable.tsx`: one row per regulation with title, regulator, status badge, deadline, a readiness progress bar (green ≥70%, amber ≥40%, red below), and priority badge.
+- `/compliance` renders `app/src/components/ComplianceTable.tsx`: one row per regulation with title, regulator, status badge, deadline, a readiness progress bar (green ≥70%, amber ≥40%, red below), and priority badge.
 - Rows open the same `RegulationModal` used by the alerts feed.
 - Table rows are keyboard-operable (`role="button"`, `tabIndex={0}`, Enter/Space handling) since a `<button>` cannot legally wrap a `<tr>`.
 
