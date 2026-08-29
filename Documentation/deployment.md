@@ -4,15 +4,36 @@ The Next.js app lives in the `app/` subfolder (not the repo root) — see the re
 
 > The static `bravo-ai.html` prototype that used to offer a quick no-backend preview has been removed — the real Next.js app (Epic 01) fully supersedes it and is what you should deploy/preview from now on.
 
-## Deploying the real Next.js app
+Firebase was evaluated as a deploy target (see `docs/decisions/0005-vercel-not-firebase-hosting.md`) and rejected: free Firebase Hosting is static-files-only and can't run `app/api/**` or per-request MongoDB queries; the Firebase products that can (App Hosting, Cloud Functions) require the paid Blaze plan. Vercel's free Hobby tier already supports everything this app does at no cost.
 
-The git repo is already connected to `https://github.com/JbravoI/Bravo-Ai.git`. Since the Next.js project lives in the `app/` subfolder, Vercel needs to know that:
+## One-time Vercel project setup
 
-1. Push to the connected GitHub repo.
-2. In the Vercel dashboard: **New Project → Import** the repo.
-3. **Before deploying**, set **Root Directory** to `app` in the project's settings (Vercel auto-detects Next.js once it looks in the right folder).
-4. Add environment variables in **Project Settings → Environment Variables** — `MONGODB_URI` and `MONGODB_DB` (already required, see `app/.env.example`), plus `ANTHROPIC_API_KEY` and any auth secrets once Epics 03-04 need them. These never go in the repo. Atlas's Network Access list will also need to permit Vercel's deployment IPs.
-5. Every push to `main` auto-deploys to production; every PR gets its own preview URL for free — useful for testing each phase in isolation (see `test.md`) before merging.
-6. Cloud cron (Epic 05's scheduled ingestion) uses **Vercel Cron Jobs**, configured via a `vercel.json` inside `app/` hitting `/api/scan` on a schedule.
+1. In the Vercel dashboard: **New Project → Import** the `JbravoI/Bravo-Ai` GitHub repo.
+2. **Before deploying**, set **Root Directory** to `app` in the project's settings (Vercel auto-detects Next.js once it looks in the right folder).
+3. Add environment variables in **Project Settings → Environment Variables** — `MONGODB_URI` and `MONGODB_DB` (already required, see `app/.env.example`), plus `ANTHROPIC_API_KEY` and any auth secrets once Epics 03-04 need them. These never go in the repo. Atlas's Network Access list needs to permit Vercel's deployment IPs (in practice, `0.0.0.0/0` — Vercel's serverless function IPs aren't fixed).
 
-This is buildable and deployable today (Epic 01 is complete) — it just isn't deployed yet. See `implementation/CURRENT_STATUS.md` for what's real once it is.
+## Automated deploy via GitHub Actions
+
+`.github/workflows/deploy.yml` (repo root) builds and deploys to production on every push to `main`, using the Vercel CLI (`vercel pull` → `vercel build` → `vercel deploy --prebuilt`) rather than Vercel's own passive Git integration — this gives explicit CI control (the workflow runs `npm run lint` as a fail-fast gate before deploying).
+
+**If Vercel's own Git integration is also connected** (step 1 above connects it by default), pushing to `main` triggers *two* deployments — Vercel's automatic one and this workflow's. They'll produce identical output, just redundant. To avoid that, either disable automatic Git deployments in **Project Settings → Git** (keep the Action as the sole deploy path), or remove `.github/workflows/deploy.yml` and rely on Vercel's own integration instead (simpler, but loses the explicit lint-gate-before-deploy behavior).
+
+### Required GitHub Actions secrets
+
+Repo → **Settings → Secrets and variables → Actions**:
+
+| Secret | Where to get it |
+| :--- | :--- |
+| `VERCEL_TOKEN` | vercel.com/account/tokens — create a token scoped to this project/team |
+| `VERCEL_ORG_ID` | Run `vercel link` once locally from inside `app/` (after `vercel login`) — reads from the generated `app/.vercel/project.json`. Also visible in the dashboard. |
+| `VERCEL_PROJECT_ID` | Same source as above, same file |
+| `MONGODB_URI` | Same Atlas connection string as `app/.env.local` — needed because several pages statically prerender against live data at build time, and `vercel build` runs locally in the Action, not on Vercel's servers, so Vercel's own dashboard env vars aren't injected into it |
+| `MONGODB_DB` | `bravo_ai` (or whatever you're using) |
+
+**Note the two separate places `MONGODB_URI`/`MONGODB_DB` need to exist**: once as a GitHub Actions secret (for the CI build step above), and once in Vercel's own **Project Settings → Environment Variables** (for the deployed serverless functions/SSR to actually connect at runtime). They're independent — setting one doesn't set the other.
+
+## Other
+
+Cloud cron (Epic 05's scheduled ingestion) uses **Vercel Cron Jobs**, configured via a `vercel.json` inside `app/` hitting `/api/scan` on a schedule — not yet added.
+
+This is buildable and deployable today (Epics 01-02 are complete) — the workflow exists and is verified to parse as valid YAML, but hasn't been run against real Vercel credentials yet since those are being supplied outside this session. See `implementation/CURRENT_STATUS.md` for what's real once it is.
