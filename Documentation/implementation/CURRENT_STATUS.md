@@ -6,7 +6,7 @@ This file is the quickest implementation truth for what's real right now. Epic p
 
 | Capability | Frontend | API | Data | Verification |
 | :--- | :---: | :---: | :---: | :--- |
-| Bravo Ai branding | Complete | N/A | N/A | Manual: no "RegWatch" text/ids/functions remain in `bravo-ai.html` |
+| Bravo Ai branding | Complete | N/A | N/A | Manual: no "RegWatch" text/ids/functions remain in the app (`app/src/app/layout.tsx` metadata, `TopBar.tsx` logo, all component/route names) |
 | Dashboard, alerts, filtering | Complete | N/A | Seed (`app/src/lib/data.ts`) | Build + lint clean; all 7 routes return 200 |
 | Regulation detail modal | Complete | N/A | Seed | Manual keyboard/click check |
 | Compliance readiness table | Complete | N/A | Seed | Build + lint clean |
@@ -23,7 +23,7 @@ This file is the quickest implementation truth for what's real right now. Epic p
 | Real AI provider (Anthropic) wired up | Not started | — | — | — |
 | Real regulator-source scanning | Not started | — | — | — |
 | Automated test suite | Not started | — | — | — |
-| Vercel deployment of the real app | Not started | — | — | Only the static prototype has documented deploy steps (`../deployment.md`) |
+| Vercel deployment of the real app | Not started | — | — | Deploy steps documented (`../deployment.md`) but not yet executed |
 
 ## Explicitly Remaining
 
@@ -32,7 +32,7 @@ This file is the quickest implementation truth for what's real right now. Epic p
 - Epic 04: real Anthropic integration behind `/api/query`; reconciling `QAPanel.tsx`'s request shape with the real contract.
 - Epic 05: a sourcing decision (scrape vs. licensed provider) and the first real ingestion connector (start with one regulator).
 - Epic 06: CSP, full modal focus-trap, mobile nav, ISO 8601 dates internally, first automated tests.
-- Epic 07: a real Vercel deployment of the Next.js app (not just the static prototype), with env vars and Cron configured.
+- Epic 07: a real Vercel deployment of the Next.js app, with env vars and Cron configured.
 
 ## Verification Baseline
 

@@ -2,7 +2,7 @@
 
 **Status:** `Completed`
 **Maps To:** `../../STRATEGY.md` Phase 0
-**Target Surface(s):** `bravo-ai.html` (static prototype)
+**Target Surface(s):** `bravo-ai.html` (static prototype — since removed; the rebrand work it captured now lives in the real app, see Epic 01)
 
 ---
 
@@ -23,3 +23,7 @@ Rebrand the RegWatch AI prototype to Bravo Ai, and fix the one concrete bug the 
 - [x] No `RegWatch`/`regwatch` string remains anywhere in the prototype file.
 - [x] Filtering alerts does not change the Industry Focus toggle state.
 - [x] The file opens correctly as a standalone page in a browser.
+
+## Superseded
+
+`bravo-ai.html` was removed once Epic 01's real Next.js app made it redundant — same routes and design, plus real API routes and Swagger docs, actively maintained going forward. This epic's history stays as a record of what was verified at the time; there is nothing left to run it against.

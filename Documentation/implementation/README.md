@@ -18,7 +18,7 @@ For agent/LLM navigation, read `AGENT_INDEX.md` first. For the fastest "what's a
 
 | Epic | Title | Status | Target Surface(s) |
 | :--- | :--- | :---: | :--- |
-| [Epic 00](epic-00-rebrand-baseline/index.md) | Rebrand And Baseline Hygiene | `Completed` | `bravo-ai.html` (static prototype) |
+| [Epic 00](epic-00-rebrand-baseline/index.md) | Rebrand And Baseline Hygiene | `Completed` | `bravo-ai.html` (static prototype — since removed, superseded by Epic 01) |
 | [Epic 01](epic-01-app-skeleton/index.md) | App Skeleton | `Completed` | Next.js app (`app/src/app/`, `app/src/components/`, `app/src/context/`) |
 | [Epic 02](epic-02-backend-data-model/index.md) | Backend And Data Model | `Ongoing` | `app/src/app/api/**`, `app/src/lib/data.ts`, Postgres (not yet provisioned) |
 | [Epic 03](epic-03-auth-persistence/index.md) | Auth And Persistence | `Pending` | Auth.js (or equivalent), `app/src/app/api/**` |

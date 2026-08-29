@@ -8,18 +8,15 @@
 
 ## Overview
 
-Turn "runs on my machine" into a real, repeatable, monitored production deployment of the Next.js app — not just the static prototype, which already has documented (but separate) deploy steps.
+Turn "runs on my machine" into a real, repeatable, monitored production deployment of the Next.js app.
 
 ---
 
 ## Current State
 
-`../../deployment.md` documents two different things:
+The static `bravo-ai.html` prototype that once offered a quick no-dependency deploy path has been removed (Epic 01's real app superseded it). `../../deployment.md` now documents only one path: deploying the real Next.js app via a git-connected Vercel project — **not yet actionable**, because there's no git-connected Vercel project configured yet, and several prerequisite epics (02-05) need to be far enough along that deploying is meaningful.
 
-1. Deploying the static `bravo-ai.html` prototype directly via the Vercel CLI — already actionable today, no dependencies.
-2. Deploying the real Next.js app via git-connected Vercel project — **not yet actionable**, because there's no git-connected Vercel project configured yet, and several prerequisite epics (02-05) need to be far enough along that deploying is meaningful.
-
-This epic is about making path 2 real.
+This epic is about making that real.
 
 ## Planned Work
 
