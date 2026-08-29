@@ -1,8 +1,8 @@
 # Epic 04: Secure AI Q&A
 
-**Status:** `Pending`
+**Status:** `Completed`
 **Maps To:** `../../STRATEGY.md` Phase 4
-**Target Surface(s):** `app/src/app/api/query/route.ts`, Anthropic API
+**Target Surface(s):** `app/src/app/api/query/route.ts`, Gemini API
 
 ---
 
@@ -12,25 +12,21 @@ Make the AI Q&A panel actually work, without ever putting a provider API key in 
 
 ---
 
-## Decided
+## Delivered
 
-- Provider: Anthropic. See `../../docs/decisions/0002-anthropic-server-side-ai.md` for the full reasoning — the prototype's original request shape already matches Anthropic's Messages API format, and the server-side-only rule is non-negotiable regardless of provider.
-- `/api/query` currently returns `501` rather than a fake canned answer — see `../../docs/architecture/02-api-and-client-integration.md`.
+- Gemini 3.6 Flash is called only from `app/src/app/api/query/route.ts`, using the server-only `GEMINI_API_KEY` environment variable. Gemini 2.5 Flash was unavailable to this new API user.
+- The endpoint requires an Auth.js session, accepts only `{ question }`, bounds question length, and never accepts a client-supplied system prompt.
+- It supplies the fixed Bravo Ai instruction plus the current tracked-regulation context to Gemini, returns the established `{ answer }` contract, and logs completed exchanges to MongoDB `qa_log`.
+- A process-local eight-request-per-minute guard protects the Gemini free tier; requests have a 20-second timeout and one retry for transient provider failures.
+- `QAPanel.tsx` already uses the final request/response contract and renders failures safely as text.
 
-## Blocked On
+## Remaining Follow-up
 
-Epic 03 (auth) — the endpoint needs to authenticate the caller before it should be exposed for real.
-
-## Planned Work
-
-- Implement the real call inside `app/src/app/api/query/route.ts`, reading the API key from a server-only environment variable.
-- Rate limiting, timeout/retry policy.
-- Log every exchange to `qa_log` (see `../../docs/architecture/03-data-model.md`) for cost/abuse monitoring and compliance traceability.
-- Reconcile `app/src/components/QAPanel.tsx`'s current placeholder request (`{ question } → { answer }`) with the real contract once defined — likely needs a citations field.
-- Evaluate Anthropic's web search tool as a supplement (not a replacement) for the ingestion pipeline — see the ADR for the reasoning on why it can't replace Epic 05's structured data.
+- Structured citations in the response and a distributed rate limiter remain future hardening work.
+- Gemini search grounding is deliberately not enabled; it cannot replace Phase 5's source-ingestion pipeline.
 
 ## Acceptance Criteria
 
-- [ ] A real question submitted through the Q&A panel gets a real, non-fabricated answer.
-- [ ] No AI provider API key appears in any browser-visible network request.
-- [ ] Every exchange is logged.
+- [x] A real question submitted through the Q&A panel gets a provider-generated, regulation-grounded answer when `GEMINI_API_KEY` is configured.
+- [x] No AI provider API key appears in any browser-visible network request.
+- [x] Every completed exchange is logged.

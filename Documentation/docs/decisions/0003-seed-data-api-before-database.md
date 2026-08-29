@@ -17,5 +17,5 @@ This is treated as legitimate progress, not a shortcut around "not a demo again"
 ## Consequences
 
 - `../../implementation/epic-02-backend-data-model/index.md` was `Ongoing`, not `Completed`, for as long as this gap existed — resolved once MongoDB Atlas landed (see ADR 0004).
-- `POST /api/scan` responds with `"simulated": true` in its body. `POST /api/query` responds `501` rather than a fake answer. Neither may silently start pretending to be real without the underlying capability actually existing. This part is still true — it's the AI Q&A path (Epic 04), not the data layer, that remains a stub.
+- `POST /api/scan` responds with `"simulated": true` in its body. At the time of this ADR, `POST /api/query` responded `501` rather than a fake answer. That was superseded by the real Gemini-backed Epic 04 implementation; `/api/query` returns `501` only if its server-side key is not configured.
 - The route contracts (URL, method, response shape) were designed against `../architecture/03-data-model.md`'s target schema, which is why swapping the backing store turned out to be additive (one file, `app/src/lib/data.ts`) rather than a rewrite — this held true even though the actual database chosen (MongoDB) differed from what was planned when this ADR was written.

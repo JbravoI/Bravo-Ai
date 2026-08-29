@@ -10,7 +10,7 @@ Firebase was evaluated as a deploy target (see `docs/decisions/0005-vercel-not-f
 
 1. In the Vercel dashboard: **New Project → Import** the `JbravoI/Bravo-Ai` GitHub repo.
 2. **Before deploying**, set **Root Directory** to `app` in the project's settings (Vercel auto-detects Next.js once it looks in the right folder).
-3. Add environment variables in **Project Settings → Environment Variables** — `MONGODB_URI`, `MONGODB_DB`, and `AUTH_SECRET` (all required now, see `app/.env.example`), plus `ANTHROPIC_API_KEY` once Epic 04 needs it. These never go in the repo. Atlas's Network Access list needs to permit Vercel's deployment IPs (in practice, `0.0.0.0/0` — Vercel's serverless function IPs aren't fixed).
+3. Add environment variables in **Project Settings → Environment Variables** — `MONGODB_URI`, `MONGODB_DB`, `AUTH_SECRET`, and `GEMINI_API_KEY` (see `app/.env.example`). These never go in the repo. Atlas's Network Access list needs to permit Vercel's deployment IPs (in practice, `0.0.0.0/0` — Vercel's serverless function IPs aren't fixed).
 
 ## Automated deploy via GitHub Actions
 

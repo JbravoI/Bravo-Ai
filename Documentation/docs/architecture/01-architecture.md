@@ -16,7 +16,7 @@ Server Components by default; `"use client"` only where interactivity, browser A
 
 ### API (`app/src/app/api/**/route.ts`)
 
-Route Handlers exposing the same data over HTTP: `GET /api/regulations` (+ `/{id}`), `GET /api/audit`, `GET /api/impact`, `GET /api/jurisdictions`, `POST /api/scan` (simulated), `POST /api/query` (not yet implemented, returns `501`). Documented by a hand-written OpenAPI spec at `GET /api/openapi.json`, browsable at `/api-docs`. See `02-api-and-client-integration.md`.
+Route Handlers exposing the same data over HTTP: `GET /api/regulations` (+ `/{id}`), `GET /api/audit`, `GET /api/impact`, `GET /api/jurisdictions`, `POST /api/scan` (simulated), and authenticated `POST /api/query` (Gemini 3.6 Flash). Documented by a hand-written OpenAPI spec at `GET /api/openapi.json`, browsable at `/api-docs`. See `02-api-and-client-integration.md`.
 
 ### Frontend/API Coupling (Current State)
 
@@ -32,7 +32,7 @@ Auth.js v5 with a Credentials provider (email/password, JWT session) — not OAu
 - MongoDB Atlas database (regulations, jurisdictions, audit log, impact rows, users, user_preferences; regulation_versions/qa_log planned) — **built**. See `03-data-model.md`.
 - Auth (Auth.js, Credentials/JWT) — **built**. See `../decisions/0006-authjs-credentials-not-oauth.md`.
 - Scheduled ingestion job hitting `/api/scan` — **not built**. See `../../STRATEGY.md` Phase 5.
-- AI provider integration (Anthropic, called server-side) — **not built**. See `../decisions/0002-anthropic-server-side-ai.md`.
+- AI provider integration (Gemini 3.6 Flash, called server-side) — **built**. See `../decisions/0002-anthropic-server-side-ai.md`.
 
 ## Why Next.js On Vercel
 

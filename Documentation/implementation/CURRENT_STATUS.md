@@ -15,19 +15,19 @@ This file is the quickest implementation truth for what's real right now. Epic p
 | Preferences / jurisdictions (persisted, per-user) | Complete | Complete | MongoDB Atlas | Full scripted login/save/reload/isolation flow verified — see Epic 03 |
 | `GET /api/regulations`, `/{id}`, `/audit`, `/impact`, `/jurisdictions` | N/A | Complete | MongoDB Atlas | Hit directly, checked 200/400/404 responses against live data |
 | `POST /api/scan` | Complete (calls real endpoint) | Simulated | N/A | TopBar calls the real route; hit directly, confirmed `"simulated": true` in body |
-| `POST /api/query` | Complete (calls real endpoint) | Stub | N/A | QAPanel calls the real route; hit directly, confirmed `501` response with real error message surfaced in UI |
+| `POST /api/query` | Complete | Complete | Gemini 3.6 Flash + MongoDB `qa_log` | Authenticated server-side provider call; process-local free-tier guard, timeout/retry handling, and audit logging implemented. Requires `GEMINI_API_KEY`. |
 | OpenAPI spec + Swagger UI (`/api-docs`) | Complete | Complete | N/A | Hit directly; loaded in browser; no console errors |
 | UI reading through a shared data layer | Complete | — | — | `app/src/lib/data.ts` accessor functions used by both Route Handlers and Server Component pages; no component imports seed data directly |
 | MongoDB Atlas database | Complete | — | — | Connected, seeded (`npm run seed`), and confirmed live via a direct-edit round-trip test — see Epic 02 |
 | Auth (sign up / sign in / sign out / route gating) | Complete | Complete | MongoDB Atlas `users` | Full scripted flow: signup, CSRF+credentials login, gated redirect, wrong-password rejection — see Epic 03 |
-| Real AI provider (Anthropic) wired up | Not started | — | — | — |
+| Real AI provider (Gemini 3.6 Flash) wired up | Complete | Complete | `GEMINI_API_KEY`; MongoDB `qa_log` | Server-side only; API key and model confirmed locally without being exposed. |
 | Real regulator-source scanning | Not started | — | — | — |
 | Automated test suite | Not started | — | — | — |
 | Vercel deployment of the real app | Not started | — | — | Deploy steps documented (`../deployment.md`) but not yet executed |
 
 ## Explicitly Remaining
 
-- Epic 04: real Anthropic integration behind `/api/query`; reconciling `QAPanel.tsx`'s request shape with the real contract. Auth now exists if the endpoint should require sign-in.
+- Epic 04 is complete. Structured citations and a distributed rate limiter are deferred hardening work.
 - Epic 05: a sourcing decision (scrape vs. licensed provider) and the first real ingestion connector (start with one regulator) — the database this writes to is now live.
 - Epic 06: CSP, full modal focus-trap, mobile nav, ISO 8601 dates internally, first automated tests.
 - Epic 07: a real Vercel deployment of the Next.js app, with env vars (`MONGODB_URI`, `MONGODB_DB`, `AUTH_SECRET`) and Cron configured — Atlas's Network Access list will need to permit Vercel's IPs.

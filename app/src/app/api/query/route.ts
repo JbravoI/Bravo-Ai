@@ -1,13 +1,20 @@
 import { NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
 import { auth } from "@/auth";
 import { getRegulations } from "@/lib/data";
 import { getDb } from "@/lib/mongodb";
 
-// Allow up to 60s on Vercel for a synchronous Q&A response (default is 10s on
-// Hobby) — Claude Opus 5 runs adaptive thinking by default, which can take
-// longer than a typical chat reply.
+// Allow up to 60s on Vercel for a synchronous Q&A response.
 export const maxDuration = 60;
+
+const GEMINI_MODEL = "gemini-3.6-flash";
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+const REQUEST_TIMEOUT_MS = 20_000;
+const MAX_QUESTION_LENGTH = 4_000;
+// Gemini free-tier limits are project-wide. This process-local guard leaves
+// headroom below provider quotas; a distributed limiter belongs in Epic 06
+// once the app scales beyond one instance.
+const REQUESTS_PER_MINUTE = 8;
+let recentRequestTimes: number[] = [];
 
 const SYSTEM_PROMPT = `You are the Bravo Ai regulatory assistant, an expert UK financial regulatory assistant specialising in FCA, PRA, HM Treasury, and EU financial regulations. You help compliance teams, legal professionals, and executives understand regulatory changes.
 
@@ -20,10 +27,47 @@ When answering:
 
 Keep answers under 200 words unless detail is essential.`;
 
-// Requires a session — unlike the read-only data routes (a deliberate Epic 02
-// design choice, see docs/architecture/02-api-and-client-integration.md),
-// this endpoint costs real money per call and must not be callable
-// anonymously. See docs/decisions/0002-anthropic-server-side-ai.md.
+function takeRequestSlot() {
+  const now = Date.now();
+  recentRequestTimes = recentRequestTimes.filter((time) => now - time < 60_000);
+  if (recentRequestTimes.length >= REQUESTS_PER_MINUTE) return false;
+  recentRequestTimes.push(now);
+  return true;
+}
+
+async function requestGemini(contents: string, systemInstruction: string) {
+  let lastResponse: Response | undefined;
+
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    try {
+      const response = await fetch(GEMINI_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": process.env.GEMINI_API_KEY!,
+        },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: systemInstruction }] },
+          contents: [{ role: "user", parts: [{ text: contents }] }],
+          generationConfig: { maxOutputTokens: 1_024, temperature: 0.2 },
+        }),
+        signal: controller.signal,
+      });
+      if (response.ok || response.status < 500 || attempt === 1) return response;
+      lastResponse = response;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  return lastResponse!;
+}
+
+// Requires a session: it has a finite provider quota and records an auditable
+// user-specific exchange. The browser sends only the question, never a prompt
+// or provider credential.
 export async function POST(request: Request) {
   const session = await auth();
   if (!session?.user?.id || !session.user.email) {
@@ -35,9 +79,18 @@ export async function POST(request: Request) {
   if (!question) {
     return NextResponse.json({ error: 'Request body must include a non-empty "question" string.' }, { status: 400 });
   }
+  if (question.length > MAX_QUESTION_LENGTH) {
+    return NextResponse.json({ error: `Question must be ${MAX_QUESTION_LENGTH} characters or fewer.` }, { status: 400 });
+  }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return NextResponse.json({ error: "AI Q&A is not configured on this deployment (ANTHROPIC_API_KEY missing)." }, { status: 501 });
+  if (!process.env.GEMINI_API_KEY) {
+    return NextResponse.json({ error: "AI Q&A is not configured on this deployment (GEMINI_API_KEY missing)." }, { status: 501 });
+  }
+  if (!takeRequestSlot()) {
+    return NextResponse.json(
+      { error: "AI Q&A is temporarily rate-limited. Please wait a minute and try again." },
+      { status: 429, headers: { "Retry-After": "60" } },
+    );
   }
 
   const regulations = await getRegulations();
@@ -45,28 +98,28 @@ export async function POST(request: Request) {
     .map((r) => `- [${r.regulator}] ${r.title} (published ${r.date}, deadline ${r.deadline}): ${r.summary}`)
     .join("\n");
 
-  const client = new Anthropic();
   let answer: string;
   try {
-    const response = await client.messages.create({
-      model: "claude-opus-5",
-      max_tokens: 1024,
-      system: `${SYSTEM_PROMPT}\n\nTracked regulations:\n${context}`,
-      messages: [{ role: "user", content: question }],
-    });
-    const textBlock = response.content.find((b): b is Anthropic.TextBlock => b.type === "text");
-    answer = textBlock?.text ?? "";
+    const response = await requestGemini(question, `${SYSTEM_PROMPT}\n\nTracked regulations:\n${context}`);
+    if (response.status === 429) {
+      return NextResponse.json({ error: "Gemini is rate-limited. Please try again shortly." }, { status: 429 });
+    }
+    if (response.status === 401 || response.status === 403) {
+      return NextResponse.json({ error: "Gemini API authentication failed — check GEMINI_API_KEY." }, { status: 502 });
+    }
+    if (!response.ok) {
+      return NextResponse.json({ error: "Gemini is temporarily unavailable. Please try again shortly." }, { status: 502 });
+    }
+    const data = (await response.json()) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
+    answer = data.candidates?.[0]?.content?.parts?.map((part) => part.text ?? "").join("").trim() ?? "";
+    if (!answer) {
+      return NextResponse.json({ error: "Gemini did not return a usable answer. Please rephrase and try again." }, { status: 502 });
+    }
   } catch (err) {
-    if (err instanceof Anthropic.AuthenticationError) {
-      return NextResponse.json({ error: "AI provider authentication failed — check ANTHROPIC_API_KEY." }, { status: 502 });
+    if (err instanceof DOMException && err.name === "AbortError") {
+      return NextResponse.json({ error: "Gemini took too long to respond. Please try again." }, { status: 504 });
     }
-    if (err instanceof Anthropic.RateLimitError) {
-      return NextResponse.json({ error: "AI provider is rate-limited — try again shortly." }, { status: 429 });
-    }
-    if (err instanceof Anthropic.APIError) {
-      return NextResponse.json({ error: `AI provider error: ${err.message}` }, { status: 502 });
-    }
-    throw err;
+    return NextResponse.json({ error: "Gemini request failed. Please try again shortly." }, { status: 502 });
   }
 
   // Compliance audit traceability for AI usage, per Epic 04's requirements —
@@ -75,6 +128,8 @@ export async function POST(request: Request) {
   await db.collection("qa_log").insertOne({
     userId: session.user.id,
     userEmail: session.user.email,
+    provider: "gemini",
+    model: GEMINI_MODEL,
     question,
     answer,
     ts: new Date().toISOString(),

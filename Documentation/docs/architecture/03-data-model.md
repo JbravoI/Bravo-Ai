@@ -23,13 +23,13 @@ user_preferences     — userId, activeJurisdictionCodes[], activeIndustryFocus[
 
 Seeded via `npm run seed` (`app/scripts/seed.mjs`), which is idempotent — it clears each collection before inserting, so it's safe to re-run. `users`/`user_preferences` are not seeded — they're created by real signup/preference-save actions.
 
-## Collections (Planned, Not Yet Built)
+## Collections (Planned / Built)
 
 ```
-regulation_versions   — track what changed between scans (Epic 05)
+regulation_versions   — track what changed between scans (Epic 05; not yet built)
                          { regulation_id, diff_summary, captured_at }
-qa_log                — every Q&A exchange, for compliance traceability (Epic 04)
-                         { user_id, question, answer, cited_regulation_ids, ts }
+qa_log                — completed Q&A exchanges (Epic 04; built)
+                         { userId, userEmail, provider, model, question, answer, ts }
 ```
 
 ## Why Not Relational Joins

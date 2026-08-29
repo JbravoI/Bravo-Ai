@@ -22,7 +22,7 @@ This epic is about making that real.
 
 - Push the Next.js project to the GitHub repo (`https://github.com/JbravoI/Bravo-Ai.git`, already configured as `origin`).
 - Import the repo into Vercel; confirm auto-detection of the Next.js build.
-- Configure environment variables in Vercel project settings: database connection string, Anthropic API key, auth secrets — none of these committed to the repo.
+- Configure environment variables in Vercel project settings: database connection string, `GEMINI_API_KEY`, and auth secrets — none of these committed to the repo.
 - Configure Vercel Cron Jobs for Epic 05's scheduled ingestion via `vercel.json`.
 - Basic monitoring: ingestion failures, API error rates, Q&A latency/cost.
 

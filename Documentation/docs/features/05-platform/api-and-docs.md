@@ -8,8 +8,8 @@ Give the product a real, documented, independently-testable API surface — both
 
 - `app/src/app/api/regulations`, `/regulations/{id}`, `/audit`, `/impact`, `/jurisdictions` — real `GET` endpoints, backed by `app/src/lib/data.ts` seed data (see `../../decisions/0003-seed-data-api-before-database.md`).
 - `app/src/app/api/scan` — `POST`, simulated, response body includes `"simulated": true`.
-- `app/src/app/api/query` — `POST`, not yet implemented, returns `501` with a message pointing at Phase 4.
-- `GET /api/openapi.json` — a hand-written OpenAPI 3.0 spec describing every route above, including the "still seed data" / "not yet implemented" caveats directly in each operation's description.
+- `app/src/app/api/query` — authenticated `POST`, calls Gemini 3.6 Flash server-side with tracked-regulation context and logs completed exchanges to `qa_log`.
+- `GET /api/openapi.json` — a hand-written OpenAPI 3.0 spec describing every route above, including backing-store and simulated-status caveats.
 - `/api-docs` — an interactive Swagger UI page rendering that spec, with working "Try it out" buttons. Built on `swagger-ui-dist` (framework-agnostic bundle, avoids React-version peer-dependency issues) loaded through an allowlisted static-asset route (`app/src/app/swagger-static/[file]/route.ts`) rather than vendoring the bundle into the repo.
 
 ## Known Gaps

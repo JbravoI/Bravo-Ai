@@ -8,7 +8,7 @@ Accepted, **except the Postgres database choice**, which `0004-mongodb-atlas-not
 
 The original prototype was a single static HTML file with no backend. Turning it into a real product required choosing a hosting/runtime stack. Two concrete options were scoped:
 
-1. Next.js (TypeScript, App Router) deployed on Vercel, with a managed Postgres database (Supabase/Neon/etc.) and Anthropic called server-side.
+1. Next.js (TypeScript, App Router) deployed on Vercel, with a managed database and an AI provider called server-side.
 2. A Firebase-native stack: Firebase Hosting/App Hosting, Cloud Functions or Cloud Run for API routes, Firebase Authentication, Cloud Scheduler for ingestion, and either Firestore or Cloud SQL for storage.
 
 The data the product needs to store — regulations with deadlines, versioned diffs, multi-field filtering across business-area impact, an audit trail — is relational in shape. Firestore's document model would work but tends to fight complex filtering and joins; Cloud SQL (Postgres) paired with Firebase would have matched the schema but added setup complexity (a Cloud SQL instance plus a connector) without a clear benefit over Vercel's native Postgres story.

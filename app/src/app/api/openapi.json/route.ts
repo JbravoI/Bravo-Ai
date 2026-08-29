@@ -49,8 +49,8 @@ const spec = {
       "UK financial regulatory monitoring API. **Current status:** regulations/audit/impact/jurisdictions " +
       "are backed by MongoDB Atlas (Epic 02). `/api/preferences` and `/api/query` require a signed-in " +
       "session (Auth.js, Epic 03) — see the sessionCookie security scheme below; every other endpoint " +
-      "here is intentionally public. `/api/scan` is simulated (Phase 5). `/api/query` calls Anthropic " +
-      "Claude server-side, grounded in tracked regulations (Epic 04).",
+      "here is intentionally public. `/api/scan` is simulated (Phase 5). `/api/query` calls Gemini 3.6 " +
+      "Flash server-side, grounded in tracked regulations (Epic 04).",
   },
   servers: [{ url: "/" }],
   tags: [
@@ -271,7 +271,7 @@ const spec = {
     "/api/query": {
       post: {
         tags: ["Q&A"],
-        summary: "Ask the regulation AI a question, grounded in tracked regulations (Anthropic Claude, server-side). Requires a signed-in session.",
+        summary: "Ask the regulation AI a question, grounded in tracked regulations (Gemini 3.6 Flash, server-side). Requires a signed-in session.",
         security: [{ sessionCookie: [] }],
         requestBody: {
           required: true,
@@ -297,8 +297,9 @@ const spec = {
           "400": { description: "Missing question", content: { "application/json": { schema: errorSchema } } },
           "401": { description: "Not signed in", content: { "application/json": { schema: errorSchema } } },
           "429": { description: "AI provider rate-limited", content: { "application/json": { schema: errorSchema } } },
-          "501": { description: "ANTHROPIC_API_KEY not configured on this deployment", content: { "application/json": { schema: errorSchema } } },
+          "501": { description: "GEMINI_API_KEY not configured on this deployment", content: { "application/json": { schema: errorSchema } } },
           "502": { description: "AI provider error (auth failure or other upstream error)", content: { "application/json": { schema: errorSchema } } },
+          "504": { description: "AI provider timed out", content: { "application/json": { schema: errorSchema } } },
         },
       },
     },

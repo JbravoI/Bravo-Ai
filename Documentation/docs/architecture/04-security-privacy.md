@@ -5,7 +5,7 @@ Source: findings from `../../REGWATCH_CODE_REVIEW.md`, carried forward as bindin
 ## Secrets
 
 - No AI provider API key, database connection string, or regulator-source credential may ever be present in a client-side bundle or a browser-visible `fetch` call.
-- The original prototype had a placeholder API key (`YOUR-API-KEY-HERE`) called directly from browser JavaScript. This pattern must not recur. When Phase 4 wires up a real AI provider, the call happens inside `app/src/app/api/query/route.ts` (a Route Handler, which runs server-side only), reading the key from an environment variable.
+- The original prototype had a placeholder API key (`YOUR-API-KEY-HERE`) called directly from browser JavaScript. This pattern must not recur. Gemini calls happen inside `app/src/app/api/query/route.ts` (a Route Handler, server-side only), reading `GEMINI_API_KEY` from an environment variable.
 - `app/src/app/swagger-static/[file]/route.ts` reads from `node_modules` by an explicit filename allowlist — never widen it to accept an arbitrary path parameter.
 
 ## XSS / Untrusted Content
@@ -20,14 +20,11 @@ Source: findings from `../../REGWATCH_CODE_REVIEW.md`, carried forward as bindin
 - `app/src/proxy.ts` gates every UI page behind a valid session, redirecting unauthenticated visitors to `/login`. **`/api/**` is deliberately excluded** — it remains the public, independently-testable surface Epic 02 built (Swagger UI's "Try it out" depends on this staying unauthenticated). `/api/preferences` is the one exception: it checks `auth()` itself and returns `401` without a session, since preferences are inherently per-user and have no meaningful unauthenticated response.
 - `AUTH_SECRET` (JWT signing key) is a required environment variable, handled with the same care as `MONGODB_URI` — never committed, required in `app/.env.local`, Vercel's dashboard, and GitHub Actions secrets. See `../../deployment.md`.
 
-## AI Q&A Server Requirements (Phase 4)
+## AI Q&A Server Controls (Phase 4 — Built)
 
-Once `/api/query` is real, it must:
-
-- Decide whether it requires a signed-in session (auth now exists to support this if desired) — not yet decided.
-- Rate-limit and apply a timeout/retry policy.
-- Log every exchange to `qa_log` (see `03-data-model.md`) — this doubles as the compliance audit trail for AI usage, which matters because answers may inform real regulatory decisions.
-- Never accept a client-supplied system prompt — the system prompt is fixed server-side.
+- `/api/query` requires a signed-in session, applies a process-local eight-request-per-minute guard, uses a 20-second timeout, and retries one transient provider failure.
+- Every completed exchange is logged to `qa_log` (see `03-data-model.md`) with the provider and model, providing compliance traceability.
+- The system prompt and regulation context are constructed server-side. The API accepts only a question and never accepts a client-supplied system prompt.
 
 ## Data Retention And Dates
 

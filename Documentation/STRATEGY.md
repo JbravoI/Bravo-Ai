@@ -103,7 +103,7 @@ Each phase should leave the app in a working, deployable state.
 - Wire preferences/jurisdictions/alert thresholds to `user_preferences`, loaded on login and saved on change.
 - Audit log renders from the DB and updates immediately after any action (scan, preference change, Q&A) — no more "navigate away and back to refresh."
 
-### Phase 4 — Secure the AI Q&A path
+### Phase 4 — Secure the AI Q&A path *(completed)*
 - Move the `fetch` in `callAPI()` server-side into `/api/query`. Client sends only the question; server attaches the system prompt and the API key from env vars.
 - Server should authenticate the caller, rate-limit, timeout/retry, and log the exchange to `qa_log` (this doubles as the compliance audit trail for AI usage — important since answers may inform regulatory decisions).
 - Replace `innerHTML` in `addMsg()`/`addErr()` with `textContent`, or render Markdown through a sanitizer (e.g. DOMPurify) if the AI response needs formatting.
@@ -130,7 +130,7 @@ Each phase should leave the app in a working, deployable state.
 **Confirmed:**
 
 - **Framework & hosting:** Next.js/TypeScript on Vercel, with managed Postgres (Supabase/Neon/etc.). No Firebase/GCP — Firestore's document model was considered and rejected in favor of Postgres's relational querying (joins, sort-by-deadline, multi-field filtering) which the compliance/impact/audit views need.
-- **AI provider:** Anthropic (Claude), called server-side from `/api/query`. The existing prototype's request shape (`system`, `messages: [{role, content}]`, `max_tokens`) already matches Anthropic's Messages API format, so Phase 4 is mostly "move this fetch server-side and add the real key," not a rewrite. Consider enabling Anthropic's web search tool for the Q&A panel as a supplement to the ingestion pipeline (Phase 5 stays the source of truth for the structured dashboard/audit data; web search just lets Q&A answer about things the last scan hasn't caught yet).
+- **AI provider:** Gemini 3.6 Flash, called server-side from `/api/query` using `GEMINI_API_KEY`. Gemini 2.5 Flash is unavailable to new API users, so this is the compatible free-tier successor. The endpoint authenticates callers, limits free-tier requests, times out and retries transient failures, and records completed exchanges in `qa_log`. Search grounding is not enabled; Phase 5 remains the source of truth for structured dashboard and audit data.
 
 **Still open — flag if any should change:**
 

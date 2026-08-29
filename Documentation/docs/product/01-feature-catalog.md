@@ -14,7 +14,7 @@ Detailed doc: `../features/02-compliance/compliance-readiness.md`
 
 ## 3. Search And AI Q&A
 
-A knowledge-base search box with quick-question shortcuts, backed by an AI Q&A panel (also present on the dashboard). Intended to answer questions grounded in the tracked regulation set with citations. Not yet wired to a real AI provider — the endpoint returns `501` until Phase 4.
+A knowledge-base search box with quick-question shortcuts, backed by an AI Q&A panel (also present on the dashboard). It sends authenticated requests to Gemini 3.6 Flash through the server, grounding answers in the tracked regulation set. Structured citations remain to be added.
 
 Detailed doc: `../features/03-analysis/search-and-qa.md`
 
@@ -46,9 +46,9 @@ Detailed doc: `../features/05-platform/api-and-docs.md`
 
 Real ingestion from FCA/PRA/HM Treasury/EU sources, replacing the seed data and the simulated `/api/scan`. Not yet built. See `../../STRATEGY.md` Phase 5.
 
-## 9. Secure AI Q&A (Planned)
+## 9. Secure AI Q&A
 
-Server-side proxy to an AI provider (Anthropic) so a real API key never reaches the browser, with responses grounded in and cited against the tracked regulation set. Not yet built. See `../../STRATEGY.md` Phase 4 and `../decisions/0002-anthropic-server-side-ai.md`.
+Server-side Gemini 3.6 Flash integration so a real API key never reaches the browser, with authenticated, regulation-grounded responses and `qa_log` traceability. See `../../STRATEGY.md` Phase 4 and `../decisions/0002-anthropic-server-side-ai.md`.
 
 ## 10. Authentication
 

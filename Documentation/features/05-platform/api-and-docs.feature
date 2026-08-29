@@ -22,10 +22,10 @@ Feature: API and Swagger documentation
     When a client sends POST /api/scan
     Then it receives a 200 response whose body explicitly states the scan was simulated
 
-  Scenario: Ask a question before AI Q&A is implemented
-    Given the API is running and AI Q&A is not yet implemented
+  Scenario: Ask a question through the secured AI endpoint
+    Given the API is running, a user is signed in, and Gemini Q&A is configured
     When a client sends POST /api/query with a valid question
-    Then it receives a 501 response, not a fabricated answer
+    Then it receives an answer grounded in tracked regulations
 
   Scenario: Browse the API documentation
     Given a user opens /api-docs

@@ -9,12 +9,12 @@ Let a compliance officer ask a plain-English question about UK financial regulat
 - `/search` shows a search box, four quick-question shortcut buttons (FCA Consumer Duty, PRA Capital, DORA, ESG Reporting), and an AI Q&A panel (`app/src/components/QAPanel.tsx`).
 - A second Q&A panel instance appears on the Dashboard (`variant="dashboard"`).
 - Pressing Enter in the search box or clicking a quick-question button pre-fills the Q&A panel's input; the user still clicks "Ask" to submit (this is a deliberate simplification from the original prototype's auto-submit-on-Enter behavior — see Epic 01 notes).
-- Submitting calls a placeholder endpoint (`https://api.bravoai.app/v1/query`, which does not exist) and will always show an error today. This is expected, not a bug — see `../../architecture/02-api-and-client-integration.md`.
+- Submitting posts only `{ question }` to the app's authenticated `/api/query` endpoint. The server adds the fixed instruction and tracked-regulation context, calls Gemini 3.6 Flash, and returns `{ answer }`.
 
 ## Known Gaps
 
-- No real AI provider is wired up. `app/src/app/api/query/route.ts` exists and returns `501` — see `../../decisions/0002-anthropic-server-side-ai.md`.
-- `QAPanel.tsx`'s request/response shape (`{ question } → { answer }`) doesn't yet match `/api/query`'s real contract — needs reconciling when Phase 4 lands.
+- Gemini API access requires the server-only `GEMINI_API_KEY`; a missing key returns an honest `501` response.
+- Citation text is requested from Gemini, but citations are not yet a structured field in the response.
 - Search doesn't search a regulation database; it only feeds text into the Q&A panel (inherited from the original prototype's design, not yet reconsidered).
 
 ## Related

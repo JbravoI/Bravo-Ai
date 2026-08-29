@@ -10,10 +10,8 @@ const WELCOME: Record<"dashboard" | "search", string> = {
     "Search above or ask me anything about UK financial regulation. I can summarise legal text, explain compliance implications, and compare jurisdictions.",
 };
 
-// Calls Bravo Ai's own /api/query route (server-side, holds the AI provider key —
-// see docs/decisions/0002-anthropic-server-side-ai.md). Requires a signed-in
-// session (checked server-side); a 501 with an explanatory message means
-// ANTHROPIC_API_KEY isn't configured on this deployment.
+// Calls Bravo Ai's own /api/query route. The Gemini API key remains server-side;
+// a 501 with an explanatory message means GEMINI_API_KEY isn't configured.
 async function askQuery(question: string): Promise<string> {
   const res = await fetch("/api/query", {
     method: "POST",
