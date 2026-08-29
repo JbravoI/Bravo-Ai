@@ -6,8 +6,9 @@ This file is the quickest implementation truth for what's real right now. Epic p
 
 | Capability | Frontend | API | Data | Verification |
 | :--- | :---: | :---: | :---: | :--- |
+| Public landing page | Complete | N/A | N/A | Figma-referenced visual implementation; local browser preview verified at `/` |
 | Bravo Ai branding | Complete | N/A | N/A | Manual: no "RegWatch" text/ids/functions remain in the app (`app/src/app/layout.tsx` metadata, `TopBar.tsx` logo, all component/route names) |
-| Dashboard, alerts, filtering | Complete | N/A | MongoDB Atlas, via shared data layer | Build + lint clean; all routes return 200; live DB-edit round-trip confirmed |
+| Dashboard, alerts, filtering | Complete (`/dashboard`) | N/A | MongoDB Atlas, via shared data layer | Local redirect check confirms `/dashboard` is authenticated; existing build/lint and live DB-edit checks remain valid |
 | Regulation detail modal | Complete | N/A | MongoDB Atlas, via shared data layer | Manual keyboard/click check |
 | Compliance readiness table | Complete | N/A | MongoDB Atlas, via shared data layer | Build + lint clean |
 | Impact map | Complete | N/A | MongoDB Atlas, via shared data layer | Build + lint clean |

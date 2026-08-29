@@ -9,6 +9,7 @@ import { auth } from "@/auth";
 // (Swagger's "Try it out" included); gating it here would be a regression.
 // See docs/decisions/0006-authjs-credentials-not-oauth.md.
 export default auth((req) => {
+  if (req.nextUrl.pathname === "/") return NextResponse.next();
   if (!req.auth) {
     const loginUrl = new URL("/login", req.nextUrl.origin);
     return NextResponse.redirect(loginUrl);

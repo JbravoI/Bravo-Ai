@@ -8,7 +8,7 @@ Every other feature in the product is either per-user (preferences, and eventual
 
 - Self-service signup at `/signup` (`POST /api/auth/signup`) — email + password (min 8 characters), hashed with `bcryptjs`, stored in a `users` collection.
 - Sign in at `/login` via Auth.js's Credentials provider, JWT session (not database sessions).
-- Every UI page requires a valid session — `app/src/proxy.ts` redirects unauthenticated visitors to `/login`. `/login` and `/signup` themselves are excluded from the gate, obviously.
+- The public landing page (`/`), `/login`, and `/signup` are excluded from the auth gate. `app/src/proxy.ts` redirects unauthenticated visitors from the signed-in product routes, including `/dashboard`, to `/login`.
 - `/api/**` is **not** gated by the proxy — it remains the public surface Epic 02 built, with one exception: `/api/preferences` checks `auth()` itself and returns `401` without a session, since preferences have no meaningful unauthenticated response.
 - `TopBar.tsx` shows the signed-in user's email and a working Sign Out button (`signOut()` from `next-auth/react`).
 

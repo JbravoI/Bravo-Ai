@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Mono, DM_Sans, Syne } from "next/font/google";
 import "./globals.css";
-import TopBar from "@/components/TopBar";
-import Sidebar from "@/components/Sidebar";
-import RegulationModal from "@/components/RegulationModal";
-import { RegulationModalProvider } from "@/context/RegulationModalContext";
-import AuthSessionProvider from "@/components/AuthSessionProvider";
+import AppShell from "@/components/AppShell";
 import { getRegulations } from "@/lib/data";
 
 const syne = Syne({
@@ -35,18 +31,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${syne.variable} ${dmSans.variable} ${dmMono.variable}`}>
       <body suppressHydrationWarning>
-        <AuthSessionProvider>
-          <RegulationModalProvider regulations={regulations}>
-            <div className="app-shell">
-              <TopBar />
-              <div className="body">
-                <Sidebar />
-                <div className="content">{children}</div>
-              </div>
-            </div>
-            <RegulationModal />
-          </RegulationModalProvider>
-        </AuthSessionProvider>
+        <AppShell regulations={regulations}>{children}</AppShell>
       </body>
     </html>
   );

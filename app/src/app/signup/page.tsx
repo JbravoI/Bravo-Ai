@@ -31,7 +31,7 @@ export default function SignupPage() {
     // Let Auth.js handle the post-sign-in redirect itself, same as the
     // login page — see the comment there for why the manual
     // redirect:false + router.push pattern didn't reliably navigate away.
-    await signIn("credentials", { email, password, callbackUrl: "/" });
+    await signIn("credentials", { email, password, callbackUrl: "/dashboard" });
   }
 
   return (

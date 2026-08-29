@@ -19,7 +19,8 @@ Run `npm run build` and `npm run lint` after any structural change before consid
 
 | Route | What it is |
 | :--- | :--- |
-| `/` | Dashboard |
+| `/` | Public landing page |
+| `/dashboard` | Signed-in regulatory dashboard |
 | `/alerts` | Full alerts feed |
 | `/compliance` | Compliance readiness table |
 | `/search` | Search + AI Q&A |
@@ -39,4 +40,4 @@ There's no automated test suite yet (see `../architecture/01-architecture.md`). 
 
 ## Deployment
 
-See `../../deployment.md` for deploying the current static prototype or (once built) the real app to Vercel.
+See `../../deployment.md` for deploying the Next.js app to Vercel.

@@ -7,7 +7,7 @@ const NAV = [
   {
     section: "Monitor",
     items: [
-      { href: "/", label: "Dashboard", icon: "◼" },
+      { href: "/dashboard", label: "Dashboard", icon: "◼" },
       { href: "/alerts", label: "Alerts", icon: "⚡", badge: "7" },
       { href: "/compliance", label: "Compliance", icon: "✓" },
     ],

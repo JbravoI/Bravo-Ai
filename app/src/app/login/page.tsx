@@ -25,7 +25,7 @@ function LoginForm() {
     // with a valid session already set, since the client-side navigation
     // never actually fired. This is the same redirect flow already
     // verified via direct HTTP calls in Epic 03.
-    await signIn("credentials", { email, password, callbackUrl: "/" });
+    await signIn("credentials", { email, password, callbackUrl: "/dashboard" });
   }
 
   return (
