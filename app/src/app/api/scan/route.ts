@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { getLatestScanRun } from "@/lib/data";
 import { runFcaIngestion } from "@/lib/ingest/fca";
 import { runAdditionalSourceIngestion } from "@/lib/ingest/sources";
+import { getDb } from "@/lib/mongodb";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -26,11 +27,13 @@ async function runScan(request: Request) {
   try {
     const runs = [];
     const errors: string[] = [];
-    for (const run of [runFcaIngestion, () => runAdditionalSourceIngestion("pra"), () => runAdditionalSourceIngestion("hmt"), () => runAdditionalSourceIngestion("eu")]) {
+    for (const [name, run] of [["FCA", runFcaIngestion], ["PRA", () => runAdditionalSourceIngestion("pra")], ["HM Treasury", () => runAdditionalSourceIngestion("hmt")], ["ESMA", () => runAdditionalSourceIngestion("eu")]] as const) {
       try {
         runs.push(await run());
       } catch (sourceError) {
-        errors.push(sourceError instanceof Error ? sourceError.message : "A regulatory source scan failed.");
+        const message = sourceError instanceof Error ? sourceError.message : "A regulatory source scan failed.";
+        errors.push(`${name}: ${message}`);
+        await getDb().then((db) => db.collection("audit_log").insertOne({ ts: new Date().toISOString(), label: `${name} scan failed`, detail: message })).catch(() => undefined);
       }
     }
     if (!runs.length) throw new Error(errors.join(" ") || "All regulatory source scans failed.");

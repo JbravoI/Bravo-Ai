@@ -40,9 +40,12 @@ export default function TopBar() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Scan failed");
       setLastScanLabel(data.completedAt, data.newRecords, data.changedRecords);
+      if (Array.isArray(data.errors) && data.errors.length) {
+        setLabel(`Scan partially completed — ${data.errors.join("; ")}`);
+      }
       router.refresh();
-    } catch {
-      setLabel("Last scan: failed");
+    } catch (error) {
+      setLabel(`Scan failed — ${error instanceof Error ? error.message : "please retry"}`);
     } finally {
       setScanning(false);
     }
