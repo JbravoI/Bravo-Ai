@@ -1,49 +1,49 @@
-name: Deploy to Vercel (Production)
+# name: Deploy to Vercel (Production)
 
-on:
-  push:
-    branches: [main]
+# on:
+#   push:
+#     branches: [main]
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+# env:
+#   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+#   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: app
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
+#       - name: Setup Node
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 22
 
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+#       - name: Install Vercel CLI
+#         run: npm install --global vercel@latest
 
-      - name: Lint (fail fast before deploying)
-        run: npm ci && npm run lint
+#       - name: Lint (fail fast before deploying)
+#         run: npm ci && npm run lint
 
-      - name: Pull Vercel environment info
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+#       - name: Pull Vercel environment info
+#         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      # vercel build runs locally in this job (not on Vercel's servers), so
-      # Vercel's own dashboard-configured env vars are NOT injected here —
-      # anything the build needs (MONGODB_URI/MONGODB_DB for the pages that
-      # fetch live data at build time; AUTH_SECRET because the root layout
-      # and every gated page transitively import app/src/auth.ts) must be
-      # passed explicitly, or the build fails with an "X is not set" error.
-      - name: Build
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          MONGODB_DB: ${{ secrets.MONGODB_DB }}
-          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+#       # vercel build runs locally in this job (not on Vercel's servers), so
+#       # Vercel's own dashboard-configured env vars are NOT injected here —
+#       # anything the build needs (MONGODB_URI/MONGODB_DB for the pages that
+#       # fetch live data at build time; AUTH_SECRET because the root layout
+#       # and every gated page transitively import app/src/auth.ts) must be
+#       # passed explicitly, or the build fails with an "X is not set" error.
+#       - name: Build
+#         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+#         env:
+#           MONGODB_URI: ${{ secrets.MONGODB_URI }}
+#           MONGODB_DB: ${{ secrets.MONGODB_DB }}
+#           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
 
-      - name: Deploy prebuilt output
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+#       - name: Deploy prebuilt output
+#         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
