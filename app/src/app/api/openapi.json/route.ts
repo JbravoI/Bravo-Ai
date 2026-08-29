@@ -47,8 +47,10 @@ const spec = {
     version: "0.1.0",
     description:
       "UK financial regulatory monitoring API. **Current status:** regulations/audit/impact/jurisdictions " +
-      "endpoints are backed by in-memory seed data, not a database — see STRATEGY.md Phase 2. " +
-      "`/api/scan` is simulated (Phase 5). `/api/query` is not yet implemented (Phase 4) and returns 501.",
+      "are backed by MongoDB Atlas (Epic 02). `/api/preferences` and `/api/query` require a signed-in " +
+      "session (Auth.js, Epic 03) — see the sessionCookie security scheme below; every other endpoint " +
+      "here is intentionally public. `/api/scan` is simulated (Phase 5). `/api/query` calls Anthropic " +
+      "Claude server-side, grounded in tracked regulations (Epic 04).",
   },
   servers: [{ url: "/" }],
   tags: [
@@ -56,6 +58,7 @@ const spec = {
     { name: "Audit" },
     { name: "Impact" },
     { name: "Jurisdictions" },
+    { name: "Preferences" },
     { name: "Scan" },
     { name: "Q&A" },
   ],
@@ -187,6 +190,59 @@ const spec = {
         },
       },
     },
+    "/api/preferences": {
+      get: {
+        tags: ["Preferences"],
+        summary: "Get the signed-in user's saved preferences",
+        security: [{ sessionCookie: [] }],
+        responses: {
+          "200": {
+            description: "OK — an empty object if the user has never saved preferences",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    userId: { type: "string" },
+                    activeJurisdictionCodes: { type: "array", items: { type: "string" } },
+                    activeIndustryFocus: { type: "array", items: { type: "string" } },
+                    updatedAt: { type: "string", format: "date-time" },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "Not signed in", content: { "application/json": { schema: errorSchema } } },
+        },
+      },
+      put: {
+        tags: ["Preferences"],
+        summary: "Save (partially update) the signed-in user's preferences",
+        security: [{ sessionCookie: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  activeJurisdictionCodes: { type: "array", items: { type: "string" } },
+                  activeIndustryFocus: { type: "array", items: { type: "string" } },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } },
+          },
+          "400": { description: "Invalid request body", content: { "application/json": { schema: errorSchema } } },
+          "401": { description: "Not signed in", content: { "application/json": { schema: errorSchema } } },
+        },
+      },
+    },
     "/api/scan": {
       post: {
         tags: ["Scan"],
@@ -215,7 +271,8 @@ const spec = {
     "/api/query": {
       post: {
         tags: ["Q&A"],
-        summary: "Ask the regulation AI a question (not yet implemented — see Phase 4)",
+        summary: "Ask the regulation AI a question, grounded in tracked regulations (Anthropic Claude, server-side). Requires a signed-in session.",
+        security: [{ sessionCookie: [] }],
         requestBody: {
           required: true,
           content: {
@@ -229,9 +286,32 @@ const spec = {
           },
         },
         responses: {
+          "200": {
+            description: "OK",
+            content: {
+              "application/json": {
+                schema: { type: "object", properties: { answer: { type: "string" } }, required: ["answer"] },
+              },
+            },
+          },
           "400": { description: "Missing question", content: { "application/json": { schema: errorSchema } } },
-          "501": { description: "Not implemented yet", content: { "application/json": { schema: errorSchema } } },
+          "401": { description: "Not signed in", content: { "application/json": { schema: errorSchema } } },
+          "429": { description: "AI provider rate-limited", content: { "application/json": { schema: errorSchema } } },
+          "501": { description: "ANTHROPIC_API_KEY not configured on this deployment", content: { "application/json": { schema: errorSchema } } },
+          "502": { description: "AI provider error (auth failure or other upstream error)", content: { "application/json": { schema: errorSchema } } },
         },
+      },
+    },
+  },
+  components: {
+    securitySchemes: {
+      sessionCookie: {
+        type: "apiKey",
+        in: "cookie",
+        name: "authjs.session-token",
+        description:
+          "Auth.js JWT session cookie, set after signing in via /login. Swagger UI's \"Try it out\" runs " +
+          "same-origin, so if you're signed in via this browser tab, the cookie is sent automatically.",
       },
     },
   },

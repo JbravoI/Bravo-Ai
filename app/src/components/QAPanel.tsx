@@ -11,9 +11,9 @@ const WELCOME: Record<"dashboard" | "search", string> = {
 };
 
 // Calls Bravo Ai's own /api/query route (server-side, holds the AI provider key —
-// see docs/decisions/0002-anthropic-server-side-ai.md). The endpoint itself isn't
-// implemented yet (Phase 4) and currently returns 501 with an explanatory message,
-// which is surfaced here rather than a generic "API error 501".
+// see docs/decisions/0002-anthropic-server-side-ai.md). Requires a signed-in
+// session (checked server-side); a 501 with an explanatory message means
+// ANTHROPIC_API_KEY isn't configured on this deployment.
 async function askQuery(question: string): Promise<string> {
   const res = await fetch("/api/query", {
     method: "POST",
