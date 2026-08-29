@@ -37,5 +37,11 @@ Feature: Authentication
     Given a user is signed in
     When they select Sign Out
     Then their session ends
-    And they are redirected to the login page
+    And they are redirected to the public landing page
     And subsequent requests for gated pages redirect to /login again
+
+  Scenario: An inactive user is signed out
+    Given a user is signed in
+    When they do not interact with the product for five minutes
+    Then their session ends
+    And they are redirected to the public landing page

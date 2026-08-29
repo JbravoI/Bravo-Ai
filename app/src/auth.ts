@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { verifyUser } from "@/lib/users";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt", maxAge: 5 * 60 },
   pages: { signIn: "/login" },
   // Vercel is supposed to auto-set this, but an explicit true is the
   // documented fix for the generic "Configuration"/UntrustedHost error

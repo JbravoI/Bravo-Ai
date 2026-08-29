@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import type { Regulation } from "@/lib/types";
 import AuthSessionProvider from "./AuthSessionProvider";
 import RegulationModal from "./RegulationModal";
+import SessionTimeout from "./SessionTimeout";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
 import { RegulationModalProvider } from "@/context/RegulationModalContext";
@@ -18,6 +19,7 @@ export default function AppShell({ children, regulations }: { children: ReactNod
 
   return (
     <AuthSessionProvider>
+      <SessionTimeout />
       <RegulationModalProvider regulations={regulations}>
         <div className="app-shell">
           <TopBar />

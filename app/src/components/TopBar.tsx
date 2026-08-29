@@ -41,7 +41,7 @@ export default function TopBar() {
             <span className="pill" title={session.user.email}>
               {session.user.email}
             </span>
-            <button type="button" className="btn btn-ghost" onClick={() => signOut({ callbackUrl: "/login" })}>
+            <button type="button" className="btn btn-ghost" onClick={() => signOut({ callbackUrl: "/" })}>
               Sign out
             </button>
           </>
