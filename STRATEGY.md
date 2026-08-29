@@ -125,15 +125,18 @@ Each phase should leave the app in a working, deployable state.
 - Set up the scheduled ingestion trigger.
 - Basic monitoring: ingestion failures, API error rates, Q&A latency/cost.
 
-## 5. Open decisions (confirm or override before Phase 1 starts)
+## 5. Decisions
 
-These are defaults chosen to keep this moving — flag if any should change:
+**Confirmed:**
 
-1. **Framework:** Next.js/TypeScript vs. staying vanilla JS with a separate Node/Express backend. Next.js is recommended for the "single web app" requirement.
-2. **AI provider/model:** which vendor's API `POST /api/query` should call, and what compliance/data-retention terms apply (relevant given the content is regulatory Q&A).
-3. **Regulatory data sourcing:** are FCA/PRA/HMT/EU feeds to be scraped, or is there a licensed data provider in mind? Scraping public regulator sites is generally fine but should be checked against each site's terms.
-4. **Multi-tenant or single-org?** Determines whether `org_id` scoping is needed now or can wait.
-5. **Hosting/budget constraints** that would rule out Vercel + managed Postgres.
+- **Framework & hosting:** Next.js/TypeScript on Vercel, with managed Postgres (Supabase/Neon/etc.). No Firebase/GCP — Firestore's document model was considered and rejected in favor of Postgres's relational querying (joins, sort-by-deadline, multi-field filtering) which the compliance/impact/audit views need.
+- **AI provider:** Anthropic (Claude), called server-side from `/api/query`. The existing prototype's request shape (`system`, `messages: [{role, content}]`, `max_tokens`) already matches Anthropic's Messages API format, so Phase 4 is mostly "move this fetch server-side and add the real key," not a rewrite. Consider enabling Anthropic's web search tool for the Q&A panel as a supplement to the ingestion pipeline (Phase 5 stays the source of truth for the structured dashboard/audit data; web search just lets Q&A answer about things the last scan hasn't caught yet).
+
+**Still open — flag if any should change:**
+
+1. **Regulatory data sourcing:** are FCA/PRA/HMT/EU feeds to be scraped, or is there a licensed data provider in mind? Scraping public regulator sites is generally fine but should be checked against each site's terms.
+2. **Multi-tenant or single-org?** Determines whether `org_id` scoping is needed now or can wait.
+3. **Vercel/Supabase-equivalent budget** — confirm no constraint rules these out before Phase 2.
 
 ## 6. Definition of done
 
