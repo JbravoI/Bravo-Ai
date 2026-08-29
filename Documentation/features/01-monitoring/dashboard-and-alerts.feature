@@ -28,6 +28,12 @@ Feature: Dashboard and regulatory alerts
     When they tab to a regulation card and press Enter
     Then the regulation's detail view opens
 
+  Scenario: Reading an alert reduces the unread badge
+    Given a signed-in user has unread regulations
+    When they open an alert's detail view
+    Then the Alerts navigation badge decreases by one
+    And the regulation remains read after the user refreshes the page
+
   @not-yet-built
   Scenario: Dashboard stats reflect real tracked data
     Given the backend has ingested regulations from a real scan

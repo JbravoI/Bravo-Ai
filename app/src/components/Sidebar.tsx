@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRegulationModal } from "@/context/RegulationModalContext";
 
 const NAV = [
   {
     section: "Monitor",
     items: [
       { href: "/dashboard", label: "Dashboard", icon: "◼" },
-      { href: "/alerts", label: "Alerts", icon: "⚡", badge: "7" },
+      { href: "/alerts", label: "Alerts", icon: "⚡" },
       { href: "/compliance", label: "Compliance", icon: "✓" },
     ],
   },
@@ -30,6 +31,7 @@ const NAV = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { unreadCount } = useRegulationModal();
 
   return (
     <nav className="sidebar" aria-label="Primary">
@@ -44,7 +46,7 @@ export default function Sidebar() {
               aria-current={pathname === item.href ? "page" : undefined}
             >
               <span className="nav-icon">{item.icon}</span> {item.label}
-              {item.badge && <span className="nav-badge">{item.badge}</span>}
+              {item.href === "/alerts" && unreadCount > 0 && <span className="nav-badge">{unreadCount}</span>}
             </Link>
           ))}
         </div>

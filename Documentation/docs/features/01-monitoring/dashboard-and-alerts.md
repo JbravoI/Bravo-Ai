@@ -10,6 +10,7 @@ Give a compliance officer a single view of what's changed and what needs attenti
 - The alerts page (`/alerts`) shows the same feed at full width, without the stat cards.
 - Both pages filter by source (All/FCA/PRA/HM Treasury/EU/Global) via `app/src/components/AlertsSection.tsx`, which holds its own filter state — each route's filter is independent by construction, not shared.
 - Clicking an alert card opens `app/src/components/RegulationModal.tsx` via `app/src/context/RegulationModalContext.tsx`, showing the AI summary, business impact and affected-area tags for that regulation.
+- The Alerts navigation badge shows the signed-in user's unread regulation count, not a fixed number. Opening an alert marks it read for that user and reduces the badge; this state is persisted in MongoDB's `alert_reads` collection.
 - Alert cards are real `<button>` elements (not clickable `<div>`s), keyboard-operable, with visible focus rings.
 
 ## Known Gaps
