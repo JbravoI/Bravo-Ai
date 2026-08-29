@@ -7,6 +7,7 @@ import AuthSessionProvider from "./AuthSessionProvider";
 import RegulationModal from "./RegulationModal";
 import SessionTimeout from "./SessionTimeout";
 import Sidebar from "./Sidebar";
+import MobileNav from "./MobileNav";
 import TopBar from "./TopBar";
 import { RegulationModalProvider } from "@/context/RegulationModalContext";
 
@@ -23,6 +24,7 @@ export default function AppShell({ children, regulations }: { children: ReactNod
       <RegulationModalProvider regulations={regulations}>
         <div className="app-shell">
           <TopBar />
+          <MobileNav />
           <div className="body">
             <Sidebar />
             <main className="content">{children}</main>

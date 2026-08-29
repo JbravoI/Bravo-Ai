@@ -36,12 +36,6 @@ function parseDate(value: string) {
   return Number.isNaN(date.valueOf()) ? new Date().toISOString() : date.toISOString();
 }
 
-function formatDate(iso: string) {
-  return new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }).format(
-    new Date(iso),
-  );
-}
-
 function parseFcaFeed(xml: string): FcaFeedItem[] {
   const blocks = xml.match(/<item(?:\s[^>]*)?>[\s\S]*?<\/item>/gi) ?? [];
   return blocks.slice(0, MAX_ITEMS_PER_SCAN).flatMap((block) => {
@@ -86,7 +80,7 @@ function classify(item: FcaFeedItem, retrievedAt: string): Omit<Regulation, "id"
     priority,
     status: "new",
     title: item.title,
-    date: formatDate(item.publishedAt),
+    date: item.publishedAt,
     type,
     summary: summary.slice(0, 1_000),
     impact: "Review the FCA publication and assess whether it creates an obligation, control change, or customer-risk action for your firm.",

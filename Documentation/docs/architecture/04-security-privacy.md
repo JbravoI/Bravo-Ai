@@ -7,6 +7,7 @@ Source: findings from `../../REGWATCH_CODE_REVIEW.md`, carried forward as bindin
 - No AI provider API key, database connection string, or regulator-source credential may ever be present in a client-side bundle or a browser-visible `fetch` call.
 - The original prototype had a placeholder API key (`YOUR-API-KEY-HERE`) called directly from browser JavaScript. This pattern must not recur. Gemini calls happen inside `app/src/app/api/query/route.ts` (a Route Handler, server-side only), reading `GEMINI_API_KEY` from an environment variable.
 - `app/src/app/swagger-static/[file]/route.ts` reads from `node_modules` by an explicit filename allowlist — never widen it to accept an arbitrary path parameter.
+- `app/next.config.ts` applies Content-Security-Policy, anti-framing, MIME-sniffing, referrer, and browser-permission headers to every route. The CSP limits all resource types to the application origin by default; the narrowly scoped inline allowances remain necessary for Next.js runtime bootstrap and framework-injected styles.
 
 ## XSS / Untrusted Content
 
@@ -28,11 +29,10 @@ Source: findings from `../../REGWATCH_CODE_REVIEW.md`, carried forward as bindin
 
 ## Data Retention And Dates
 
-- Use ISO 8601 (`2026-08-29`) for all dates stored or passed between server and client; format for display only at the render boundary. The database (MongoDB Atlas, live as of Epic 02) currently still stores the original display-formatted strings (`"28 Apr 2025"`) carried over from the seed script — reformatting these is Epic 06 (hardening) work, now that a real database exists to reformat.
+- Dates are stored and passed as ISO 8601 values, then formatted only at the render boundary through `app/src/lib/dates.ts`. New seed and FCA records are already ISO-formatted; run `npm run migrate:dates` once in each existing database environment to convert legacy seed records.
 - FCA items ingested in Phase 5 retain `sourceUrl` and `retrievedAt` so each record can be traced back to the original regulator publication. The connector accepts only HTTPS links on `www.fca.org.uk`; externally supplied text remains React-escaped at render time.
 
 ## Non-Goals (Explicitly Out Of Scope For Now)
 
 - Formal penetration testing / third-party security audit — appropriate once Phase 4 (AI) is built too, not before.
-- Content Security Policy hardening — tracked in Epic 06 (hardening), which also removes any remaining inline event handlers that would block a strict CSP.
 - OAuth sign-in, invite-only signup, email verification, password reset — none built; see Epic 03's "Deliberately Out Of Scope" section.

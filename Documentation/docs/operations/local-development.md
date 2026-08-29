@@ -32,9 +32,9 @@ Run `npm run build` and `npm run lint` after any structural change before consid
 
 ## Verification Approach
 
-There's no automated test suite yet (see `../architecture/01-architecture.md`). Until Epic 06 adds one, verify changes by:
+Run the automated baseline before manual verification:
 
-1. `npm run build` and `npm run lint` — must both pass clean.
+1. `npm test`, `npm run lint`, and `npm run build` — must pass clean. `npm test` uses Node's built-in runner for date-normalization coverage.
 2. Manual click-through per the relevant row in `../../test.md`.
 3. For API changes, hit the route directly (`curl` / `Invoke-WebRequest`) and confirm status codes and body shape match `/api/openapi.json`.
 

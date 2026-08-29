@@ -2,20 +2,41 @@
 
 import { useEffect, useRef } from "react";
 import { useRegulationModal } from "@/context/RegulationModalContext";
+import { formatDate, formatDateTime } from "@/lib/dates";
 
 export default function RegulationModal() {
   const { regulations, openId, closeModal } = useRegulationModal();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
   const regulation = openId != null ? regulations.find((r) => r.id === openId) : undefined;
 
   useEffect(() => {
     if (!regulation) return;
+    triggerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     closeBtnRef.current?.focus();
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeModal();
+      if (e.key !== "Tab" || !dialogRef.current) return;
+      const focusable = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ));
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      triggerRef.current?.focus();
+    };
   }, [regulation, closeModal]);
 
   if (!regulation) return null;
@@ -27,7 +48,7 @@ export default function RegulationModal() {
         if (e.target === e.currentTarget) closeModal();
       }}
     >
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div ref={dialogRef} className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-summary">
         <button ref={closeBtnRef} className="close-btn" onClick={closeModal}>
           ✕ Close
         </button>
@@ -35,17 +56,17 @@ export default function RegulationModal() {
           {regulation.title}
         </div>
         <div className="modal-meta">
-          {regulation.regulator} · {regulation.type} · Published {regulation.date} · Deadline: {regulation.deadline}
+          {regulation.regulator} · {regulation.type} · Published {formatDate(regulation.date)} · Deadline: {regulation.deadline === "Implemented" || regulation.deadline === "Immediate" ? regulation.deadline : formatDate(regulation.deadline)}
         </div>
         {regulation.sourceUrl && (
           <div className="modal-meta">
             Source: <a href={regulation.sourceUrl} target="_blank" rel="noreferrer">View the original {regulation.regulator} publication</a>
-            {regulation.retrievedAt && ` · Retrieved ${new Date(regulation.retrievedAt).toLocaleString()}`}
+            {regulation.retrievedAt && ` · Retrieved ${formatDateTime(regulation.retrievedAt)}`}
           </div>
         )}
         <div className="modal-section">
           <div className="modal-section-title">AI Summary</div>
-          <div className="modal-body">{regulation.summary}</div>
+          <div className="modal-body" id="modal-summary">{regulation.summary}</div>
         </div>
         <div className="modal-section">
           <div className="modal-section-title">What this means for your business</div>

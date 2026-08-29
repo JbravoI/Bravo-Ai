@@ -41,14 +41,14 @@ const REGULATIONS = [
     priority: "high",
     status: "new",
     title: "FCA PS25/1 – Consumer Duty Annual Review Requirements",
-    date: "28 Apr 2025",
+    date: "2025-04-28",
     type: "Policy Statement",
     summary:
       "The FCA has published updated annual review obligations under Consumer Duty, requiring firms to document evidence of good consumer outcomes across all retail products and services. Board-level sign-off is now mandatory.",
     impact:
       "Investment firms and retail banks must update their annual review frameworks immediately. Boards must formally approve consumer outcome evidence packs by 31 July 2025.",
     tags: ["Banking", "Investment", "Compliance", "Risk"],
-    deadline: "31 Jul 2025",
+    deadline: "2025-07-31",
     readiness: 62,
   },
   {
@@ -58,14 +58,14 @@ const REGULATIONS = [
     priority: "high",
     status: "pending",
     title: "PRA CP5/25 – Basel 3.1 Capital Requirements Implementation",
-    date: "25 Apr 2025",
+    date: "2025-04-25",
     type: "Consultation Paper",
     summary:
       "The PRA is consulting on final rules implementing Basel 3.1, including revised credit risk, market risk, and operational risk frameworks. UK banks face significant RWA recalculations.",
     impact:
       "Banks with significant trading books or mortgage portfolios will need to remodel risk-weighted assets. Capital planning assumptions should be revisited ahead of January 2026 implementation.",
     tags: ["Banking", "Risk", "Operations"],
-    deadline: "15 Jan 2026",
+    deadline: "2026-01-15",
     readiness: 34,
   },
   {
@@ -75,14 +75,14 @@ const REGULATIONS = [
     priority: "medium",
     status: "new",
     title: "HMT – Financial Services and Markets Act 2025 Secondary Legislation",
-    date: "22 Apr 2025",
+    date: "2025-04-22",
     type: "Legislation",
     summary:
       "HM Treasury has laid before Parliament secondary legislation under FSMA 2025, introducing new competitiveness objectives for both FCA and PRA, with enhanced international regulatory co-operation provisions.",
     impact:
       "Compliance and legal teams should update regulatory monitoring frameworks to capture the new competitiveness objective. International firms need cross-border gap analyses.",
     tags: ["Compliance", "Legal", "All Firms"],
-    deadline: "30 Jun 2025",
+    deadline: "2025-06-30",
     readiness: 55,
   },
   {
@@ -92,14 +92,14 @@ const REGULATIONS = [
     priority: "medium",
     status: "pending",
     title: "FCA DP24/4 – AI & Advanced Analytics in Financial Services",
-    date: "18 Apr 2025",
+    date: "2025-04-18",
     type: "Discussion Paper",
     summary:
       "The FCA has opened a discussion on regulatory expectations for AI model governance, explainability requirements, and consumer protection in AI-driven financial products.",
     impact:
       "Firms using AI in credit decisioning, algorithmic trading, or personalised product recommendations must begin preparing governance documentation now, ahead of expected final rules in 2026.",
     tags: ["Compliance", "Risk", "Investment", "Fintech"],
-    deadline: "30 Sep 2025",
+    deadline: "2025-09-30",
     readiness: 20,
   },
   {
@@ -109,7 +109,7 @@ const REGULATIONS = [
     priority: "medium",
     status: "implemented",
     title: "DORA – Digital Operational Resilience Act – Full Application",
-    date: "17 Jan 2025",
+    date: "2025-01-17",
     type: "Regulation",
     summary:
       "DORA entered full application across EU financial entities from 17 January 2025. UK firms with EU subsidiaries must comply with ICT risk management, incident reporting, and third-party provider oversight requirements.",
@@ -126,7 +126,7 @@ const REGULATIONS = [
     priority: "low",
     status: "implemented",
     title: "PRA SS1/25 – Model Risk Management Principles",
-    date: "05 Apr 2025",
+    date: "2025-04-05",
     type: "Supervisory Statement",
     summary:
       "The PRA has finalised supervisory expectations for model risk management. Firms must maintain model inventories, conduct ongoing validation, and hold capital buffers for model uncertainty.",
@@ -143,7 +143,7 @@ const REGULATIONS = [
     priority: "high",
     status: "new",
     title: "FCA – Mortgage Market Review: Affordability Rule Changes",
-    date: "29 Apr 2025",
+    date: "2025-04-29",
     type: "Policy Statement",
     summary:
       "The FCA has announced targeted changes to mortgage affordability assessment rules, removing the interest rate stress test requirement for remortgagors with no additional borrowing, effective immediately.",

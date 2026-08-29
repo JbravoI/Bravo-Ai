@@ -30,7 +30,7 @@ This file is the quickest implementation truth for what's real right now. Epic p
 
 - Epic 04 is complete. Structured citations and a distributed rate limiter are deferred hardening work.
 - Epic 05: FCA is live. Add PRA, HM Treasury and EU connectors after choosing their feeds or a licensed provider; configure `CRON_SECRET` in Vercel for scheduled scans.
-- Epic 06: CSP, full modal focus-trap, mobile nav, ISO 8601 dates internally, first automated tests.
+- Epic 06: implemented — CSP/security headers, modal focus trap/restoration, mobile navigation/table scrolling, ISO date handling and first automated tests. Run `npm run migrate:dates` against existing databases before treating the date migration as complete.
 - Epic 07: a real Vercel deployment of the Next.js app, with env vars (`MONGODB_URI`, `MONGODB_DB`, `AUTH_SECRET`) and Cron configured — Atlas's Network Access list will need to permit Vercel's IPs.
 
 ## Verification Baseline

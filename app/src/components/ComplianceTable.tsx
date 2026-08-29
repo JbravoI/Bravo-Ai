@@ -2,6 +2,7 @@
 
 import type { Regulation } from "@/lib/types";
 import { useRegulationModal } from "@/context/RegulationModalContext";
+import { formatDate } from "@/lib/dates";
 
 const PRIORITY_BADGE: Record<Regulation["priority"], [string, string]> = {
   high: ["badge-high", "HIGH"],
@@ -55,7 +56,7 @@ export default function ComplianceTable() {
                   <span className="pill">{r.regulator}</span>
                 </td>
                 <td>{statusBadge && <span className={`badge ${statusBadge[0]}`}>{statusBadge[1]}</span>}</td>
-                <td style={{ fontFamily: "var(--fm)", fontSize: 10 }}>{r.deadline}</td>
+                <td style={{ fontFamily: "var(--fm)", fontSize: 10 }}>{r.deadline === "Implemented" || r.deadline === "Immediate" ? r.deadline : formatDate(r.deadline)}</td>
                 <td style={{ minWidth: 120 }}>
                   <div className="progress-wrap">
                     <div className="progress-bar">

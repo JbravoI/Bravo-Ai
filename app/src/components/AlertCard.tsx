@@ -2,6 +2,7 @@
 
 import type { Regulation } from "@/lib/types";
 import { useRegulationModal } from "@/context/RegulationModalContext";
+import { formatDate } from "@/lib/dates";
 
 const ICON_CLASS: Record<Regulation["source"], string> = {
   fca: "icon-fca",
@@ -50,7 +51,7 @@ export default function AlertCard({ regulation }: { regulation: Regulation }) {
       <div className="alert-right">
         <span className={`badge ${priorityClass}`}>{priorityLabel}</span>
         {statusBadge && <span className={`badge ${statusBadge[0]}`}>{statusBadge[1]}</span>}
-        <span className="alert-time">{regulation.date}</span>
+        <span className="alert-time">{formatDate(regulation.date)}</span>
       </div>
     </button>
   );

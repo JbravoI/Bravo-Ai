@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { formatDateTime } from "@/lib/dates";
 
 export default function TopBar() {
   const { data: session } = useSession();
@@ -14,7 +15,7 @@ export default function TopBar() {
     const summary = typeof newRecords === "number" && typeof changedRecords === "number"
       ? ` · ${newRecords} new, ${changedRecords} changed`
       : "";
-    setLabel(`Last scan: ${new Date(value).toLocaleString()}${summary}`);
+    setLabel(`Last scan: ${formatDateTime(value)}${summary}`);
   }
 
   useEffect(() => {

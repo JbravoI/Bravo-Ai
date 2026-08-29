@@ -24,7 +24,7 @@ For agent/LLM navigation, read `AGENT_INDEX.md` first. For the fastest "what's a
 | [Epic 03](epic-03-auth-persistence/index.md) | Auth And Persistence | `Completed` | Auth.js (Credentials/JWT), `app/src/proxy.ts`, MongoDB `users`/`user_preferences` |
 | [Epic 04](epic-04-secure-ai-qa/index.md) | Secure AI Q&A | `Completed` | `app/src/app/api/query/route.ts`, Gemini 3.6 Flash API |
 | [Epic 05](epic-05-real-ingestion/index.md) | Real Regulatory-Source Ingestion | `Pending` | `app/src/app/api/scan/route.ts`, scheduled job |
-| [Epic 06](epic-06-hardening/index.md) | Hardening | `Pending` | Whole app — CSP, a11y, tests |
+| [Epic 06](epic-06-hardening/index.md) | Hardening | `Implemented` | Whole app — CSP, a11y, tests |
 | [Epic 07](epic-07-deploy-operate/index.md) | Deploy And Operate | `Pending` | Vercel project |
 
 ---
