@@ -5,6 +5,10 @@ import { verifyUser } from "@/lib/users";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
+  // Vercel is supposed to auto-set this, but an explicit true is the
+  // documented fix for the generic "Configuration"/UntrustedHost error
+  // when it doesn't — see docs/decisions/0006-authjs-credentials-not-oauth.md.
+  trustHost: true,
   providers: [
     Credentials({
       credentials: {

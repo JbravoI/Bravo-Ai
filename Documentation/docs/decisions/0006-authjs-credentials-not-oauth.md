@@ -30,3 +30,10 @@ The proxy gates **UI pages only**, not `/api/**`. Epic 02 built the API as an in
 - Preferences (`app/src/lib/preferences.ts`, `user_preferences` collection) are keyed by the JWT's user ID, scoped per-user by construction — verified by creating two accounts and confirming the second saw an empty preferences object rather than the first's saved state.
 - Saving a preference now appends a real `audit_log` entry attributed to the user's email (not their opaque database ID, which wouldn't mean anything to a human reviewing the trail) — the first genuinely user-triggered audit entry in the app, previously the audit trail was static seed content or scan-simulation output.
 - If OAuth is added later (e.g. for a nicer sign-in UX), it can be added as an additional Auth.js provider alongside Credentials without restructuring the JWT/proxy setup — Auth.js supports multiple providers side by side.
+
+## Note On A Real Production Incident
+
+First deploy to Vercel hit Auth.js's generic `/api/auth/error` "Server error — problem with the server configuration" page immediately on signup. Auth.js's own docs are explicit that `AUTH_SECRET` is a *required* environment variable in production — omitting it throws exactly this generic configuration error rather than a specific "AUTH_SECRET missing" message, which makes it easy to mistake for something else. The fix is adding `AUTH_SECRET` to Vercel's Project Settings → Environment Variables (mirroring `app/.env.local`, which already had it — the miss was in not yet syncing it to the deployed environment, exactly the "two separate places" gotcha `../../deployment.md` warns about for every env var).
+
+The same generic error page is also the documented symptom of Auth.js's `UntrustedHost` check failing. Auth.js says official platform integrations (Vercel included) auto-detect this, but since the symptom is indistinguishable from the missing-secret case without checking logs, `trustHost: true` was added explicitly to `app/src/auth.ts` as a defensive fix — harmless if Vercel's auto-detection was already working, and removes this cause from consideration if it wasn't.
+
