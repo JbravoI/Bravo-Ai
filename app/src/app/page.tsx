@@ -75,7 +75,7 @@ export default function LandingPage() {
 
       <section className="landing-cta"><div className="landing-cta-glow" /><p className="landing-kicker">READY WHEN YOU ARE</p><h2>Make every regulatory<br />change <span>manageable.</span></h2><p>Bring clarity to your compliance programme from today.</p><Link href="/signup" className="landing-button">Get started with Bravo Ai <span>↗</span></Link></section>
 
-      <footer className="landing-footer"><Link href="/" className="landing-brand"><span className="landing-brand-mark">Ω</span><span>Bravo<span> Ai</span></span></Link><span>© 2026 Bravo Ai. Regulatory intelligence, made clear.</span><div><Link href="/login">Sign in</Link><Link href="/api-docs">API</Link></div></footer>
+      <footer className="landing-footer"><Link href="/" className="landing-brand"><span className="landing-brand-mark">Ω</span><span>Bravo<span> Ai</span></span></Link><span>© 2026 Bravo Ai. Regulatory intelligence, made clear.</span><div><Link href="/login">Sign in</Link></div></footer>
     </main>
   );
 }
