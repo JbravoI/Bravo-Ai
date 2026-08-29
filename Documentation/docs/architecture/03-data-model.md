@@ -14,19 +14,20 @@ regulations         — id, regulator, source, priority, status, title, date, ty
 jurisdictions        — code, label, color, active
 audit_log            — ts, label, detail
 impact_rows          — reg, banking, invest, insure, comp, ops
+users                — email, passwordHash, createdAt (Epic 03 — app/src/lib/users.ts)
+                       uses Mongo's native _id as the user id, unlike the collections
+                       above; a different kind of entity (auth identity, not domain data)
+user_preferences     — userId, activeJurisdictionCodes[], activeIndustryFocus[], updatedAt
+                       (Epic 03 — app/src/lib/preferences.ts)
 ```
 
-Seeded via `npm run seed` (`app/scripts/seed.mjs`), which is idempotent — it clears each collection before inserting, so it's safe to re-run.
+Seeded via `npm run seed` (`app/scripts/seed.mjs`), which is idempotent — it clears each collection before inserting, so it's safe to re-run. `users`/`user_preferences` are not seeded — they're created by real signup/preference-save actions.
 
 ## Collections (Planned, Not Yet Built)
-
-These come from `../../STRATEGY.md`'s original schema sketch and still apply conceptually — only the engine changed:
 
 ```
 regulation_versions   — track what changed between scans (Epic 05)
                          { regulation_id, diff_summary, captured_at }
-user_preferences      — per-user jurisdictions/alert-thresholds/industry-focus (Epic 03)
-                         { user_id, jurisdictions, alert_thresholds, industry_focus }
 qa_log                — every Q&A exchange, for compliance traceability (Epic 04)
                          { user_id, question, answer, cited_regulation_ids, ts }
 ```

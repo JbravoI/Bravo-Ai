@@ -22,12 +22,16 @@ Route Handlers exposing the same data over HTTP: `GET /api/regulations` (+ `/{id
 
 The UI pages call `app/src/lib/data.ts`'s accessor functions directly (not the API routes over HTTP) — this is deliberate, not a gap; see `02-api-and-client-integration.md` for why. The Route Handlers call the same functions, so both surfaces read the same live data with no duplication.
 
+### Auth (`app/src/auth.ts`, `app/src/proxy.ts`, `app/src/lib/users.ts`)
+
+Auth.js v5 with a Credentials provider (email/password, JWT session) — not OAuth, not a database adapter; see `../decisions/0006-authjs-credentials-not-oauth.md`. `app/src/proxy.ts` gates every UI page behind a valid session (redirecting to `/login`) but deliberately excludes `/api/**`, which stays the public, independently-testable surface Epic 02 built. Note the file name: Next.js 16 renamed `middleware.ts` to `proxy.ts` — this app uses the current convention, not the deprecated one.
+
 ## Target Runtime Components
 
 - Next.js app (UI + API routes) — **built**, MongoDB-backed.
-- MongoDB Atlas database (regulations, jurisdictions, audit log, impact rows; versions/preferences/qa_log planned) — **built**. See `03-data-model.md`.
+- MongoDB Atlas database (regulations, jurisdictions, audit log, impact rows, users, user_preferences; regulation_versions/qa_log planned) — **built**. See `03-data-model.md`.
+- Auth (Auth.js, Credentials/JWT) — **built**. See `../decisions/0006-authjs-credentials-not-oauth.md`.
 - Scheduled ingestion job hitting `/api/scan` — **not built**. See `../../STRATEGY.md` Phase 5.
-- Auth (Auth.js or equivalent) — **not built**. See `../../STRATEGY.md` Phase 3.
 - AI provider integration (Anthropic, called server-side) — **not built**. See `../decisions/0002-anthropic-server-side-ai.md`.
 
 ## Why Next.js On Vercel

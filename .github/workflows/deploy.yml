@@ -34,13 +34,16 @@ jobs:
 
       # vercel build runs locally in this job (not on Vercel's servers), so
       # Vercel's own dashboard-configured env vars are NOT injected here —
-      # anything the build needs (e.g. MONGODB_URI, for the pages that fetch
-      # live data at build time) must be passed explicitly.
+      # anything the build needs (MONGODB_URI/MONGODB_DB for the pages that
+      # fetch live data at build time; AUTH_SECRET because the root layout
+      # and every gated page transitively import app/src/auth.ts) must be
+      # passed explicitly, or the build fails with an "X is not set" error.
       - name: Build
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           MONGODB_DB: ${{ secrets.MONGODB_DB }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
 
       - name: Deploy prebuilt output
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}

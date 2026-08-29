@@ -32,7 +32,7 @@ Detailed doc: `../features/04-operations/audit-trail.md`
 
 ## 6. Preferences And Jurisdictions
 
-Jurisdiction toggles (UK, EU, US, Hong Kong, Singapore, Switzerland), alert-threshold checkboxes, and industry-focus tags (Banking, Investment, Insurance, Asset Management, Fintech). Currently client-side only state — nothing persists across a page refresh or between users.
+Jurisdiction toggles (UK, EU, US, Hong Kong, Singapore, Switzerland), alert-threshold checkboxes, and industry-focus tags (Banking, Investment, Insurance, Asset Management, Fintech). Persisted per signed-in user (MongoDB `user_preferences`) — survives a refresh and doesn't leak between accounts. Alert-threshold checkboxes still don't feed into anything; no notification system exists.
 
 Detailed doc: `../features/04-operations/preferences-and-jurisdictions.md`
 
@@ -50,6 +50,8 @@ Real ingestion from FCA/PRA/HM Treasury/EU sources, replacing the seed data and 
 
 Server-side proxy to an AI provider (Anthropic) so a real API key never reaches the browser, with responses grounded in and cited against the tracked regulation set. Not yet built. See `../../STRATEGY.md` Phase 4 and `../decisions/0002-anthropic-server-side-ai.md`.
 
-## 10. Auth And Per-User Persistence (Planned)
+## 10. Authentication
 
-Real user accounts so preferences, jurisdictions and the audit trail persist per user instead of resetting on refresh. Not yet built. See `../../STRATEGY.md` Phase 3.
+Self-service email/password signup and sign-in (Auth.js, Credentials provider, JWT session). Every UI page requires a signed-in session; the read-only API surface stays public by design. No OAuth, email verification, or password reset yet. See `../decisions/0006-authjs-credentials-not-oauth.md`.
+
+Detailed doc: `../features/00-auth/authentication.md`

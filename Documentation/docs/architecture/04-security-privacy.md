@@ -14,16 +14,17 @@ Source: findings from `../../REGWATCH_CODE_REVIEW.md`, carried forward as bindin
 - Current components render all dynamic text as JSX children or `textContent`-equivalent (React's default escaping) — `app/src/components/AlertCard.tsx`, `app/src/components/RegulationModal.tsx`, `app/src/components/QAPanel.tsx`, `app/src/components/AuditLog.tsx` all follow this. `app/src/components/AuditLog.tsx` intentionally splits audit entries into a `label` + `detail` pair (see `app/src/lib/types.ts`'s `AuditEntry`) specifically so no markup-string parsing is ever needed to render a bold lead-in.
 - If AI-generated Markdown ever needs rich rendering (bold, links, lists) in the Q&A panel, route it through a maintained sanitizer (e.g. DOMPurify) — do not hand-roll markdown-to-HTML.
 
-## Auth (Not Yet Built)
+## Auth (Built — Epic 03)
 
-- No authentication exists yet. Every page and every API route is currently unauthenticated and serves the same seed data to any caller.
-- Phase 3 (`../../implementation/epic-03-auth-persistence/`) must gate the app behind login before preferences, jurisdictions or the audit trail become per-user and persistent — an unauthenticated audit trail defeats its own purpose.
+- Auth.js v5, Credentials provider (email/password, `bcryptjs`-hashed, JWT session) — see `../decisions/0006-authjs-credentials-not-oauth.md`. Passwords are never stored or logged in plaintext; only the bcrypt hash is persisted (`users` collection).
+- `app/src/proxy.ts` gates every UI page behind a valid session, redirecting unauthenticated visitors to `/login`. **`/api/**` is deliberately excluded** — it remains the public, independently-testable surface Epic 02 built (Swagger UI's "Try it out" depends on this staying unauthenticated). `/api/preferences` is the one exception: it checks `auth()` itself and returns `401` without a session, since preferences are inherently per-user and have no meaningful unauthenticated response.
+- `AUTH_SECRET` (JWT signing key) is a required environment variable, handled with the same care as `MONGODB_URI` — never committed, required in `app/.env.local`, Vercel's dashboard, and GitHub Actions secrets. See `../../deployment.md`.
 
 ## AI Q&A Server Requirements (Phase 4)
 
 Once `/api/query` is real, it must:
 
-- Authenticate the caller (depends on Phase 3 landing first).
+- Decide whether it requires a signed-in session (auth now exists to support this if desired) — not yet decided.
 - Rate-limit and apply a timeout/retry policy.
 - Log every exchange to `qa_log` (see `03-data-model.md`) — this doubles as the compliance audit trail for AI usage, which matters because answers may inform real regulatory decisions.
 - Never accept a client-supplied system prompt — the system prompt is fixed server-side.
@@ -35,5 +36,6 @@ Once `/api/query` is real, it must:
 
 ## Non-Goals (Explicitly Out Of Scope For Now)
 
-- Formal penetration testing / third-party security audit — appropriate once Phase 3 (auth) and Phase 4 (AI) are built, not before.
+- Formal penetration testing / third-party security audit — appropriate once Phase 4 (AI) is built too, not before.
 - Content Security Policy hardening — tracked in Epic 06 (hardening), which also removes any remaining inline event handlers that would block a strict CSP.
+- OAuth sign-in, invite-only signup, email verification, password reset — none built; see Epic 03's "Deliberately Out Of Scope" section.

@@ -12,11 +12,15 @@ Feature: Preferences and jurisdictions
     When they select an Industry Focus tab such as "Fintech"
     Then it becomes active independently of jurisdiction toggles and alert-threshold checkboxes
 
-  @not-yet-built
   Scenario: Preferences persist across sessions
     Given a signed-in user has toggled specific jurisdictions and industry focus tags
     When they sign out, sign back in, or reload the page
     Then their preferences are restored exactly as they left them
+
+  Scenario: A second user does not see another user's preferences
+    Given user A has saved specific jurisdiction and industry focus preferences
+    When user B signs in for the first time
+    Then user B sees the default preferences, not user A's saved values
 
   @not-yet-built
   Scenario: Preferences affect what alerts are shown

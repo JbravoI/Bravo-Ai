@@ -4,6 +4,10 @@ Gherkin feature files are grouped by product domain, mirroring `../docs/features
 
 For agent/LLM navigation and traceability to docs and implementation epics, read `AGENT_INDEX.md` first.
 
+## 00 Auth
+
+- `00-auth/authentication.feature`
+
 ## 01 Monitoring
 
 - `01-monitoring/dashboard-and-alerts.feature`

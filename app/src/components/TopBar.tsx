@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function TopBar() {
+  const { data: session } = useSession();
   const [scanning, setScanning] = useState(false);
   const [label, setLabel] = useState("Last scan: —");
 
@@ -34,6 +36,16 @@ export default function TopBar() {
         <button type="button" className="btn btn-primary" onClick={scan} disabled={scanning}>
           {scanning ? "⟳ Scanning…" : "⟳ Scan Now"}
         </button>
+        {session?.user?.email && (
+          <>
+            <span className="pill" title={session.user.email}>
+              {session.user.email}
+            </span>
+            <button type="button" className="btn btn-ghost" onClick={() => signOut({ callbackUrl: "/login" })}>
+              Sign out
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

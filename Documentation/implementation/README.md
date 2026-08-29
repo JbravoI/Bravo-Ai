@@ -21,7 +21,7 @@ For agent/LLM navigation, read `AGENT_INDEX.md` first. For the fastest "what's a
 | [Epic 00](epic-00-rebrand-baseline/index.md) | Rebrand And Baseline Hygiene | `Completed` | `bravo-ai.html` (static prototype — since removed, superseded by Epic 01) |
 | [Epic 01](epic-01-app-skeleton/index.md) | App Skeleton | `Completed` | Next.js app (`app/src/app/`, `app/src/components/`, `app/src/context/`) |
 | [Epic 02](epic-02-backend-data-model/index.md) | Backend And Data Model | `Completed` | `app/src/app/api/**`, `app/src/lib/data.ts`, MongoDB Atlas |
-| [Epic 03](epic-03-auth-persistence/index.md) | Auth And Persistence | `Pending` | Auth.js (or equivalent), `app/src/app/api/**` |
+| [Epic 03](epic-03-auth-persistence/index.md) | Auth And Persistence | `Completed` | Auth.js (Credentials/JWT), `app/src/proxy.ts`, MongoDB `users`/`user_preferences` |
 | [Epic 04](epic-04-secure-ai-qa/index.md) | Secure AI Q&A | `Pending` | `app/src/app/api/query/route.ts`, Anthropic API |
 | [Epic 05](epic-05-real-ingestion/index.md) | Real Regulatory-Source Ingestion | `Pending` | `app/src/app/api/scan/route.ts`, scheduled job |
 | [Epic 06](epic-06-hardening/index.md) | Hardening | `Pending` | Whole app — CSP, a11y, tests |

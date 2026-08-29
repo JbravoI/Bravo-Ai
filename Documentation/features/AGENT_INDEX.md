@@ -6,6 +6,7 @@ The `features/` folder contains executable behavior expectations in Gherkin. Use
 
 | Area | Specs | Primary Docs | Implementation Epics |
 | :--- | :--- | :--- | :--- |
+| Authentication | `00-auth/authentication.feature` | `../docs/features/00-auth/` | `../implementation/epic-03-auth-persistence/` |
 | Dashboard and alerts | `01-monitoring/dashboard-and-alerts.feature` | `../docs/features/01-monitoring/` | `../implementation/epic-01-app-skeleton/`, `../implementation/epic-02-backend-data-model/` |
 | Compliance readiness | `02-compliance/compliance-readiness.feature` | `../docs/features/02-compliance/` | `../implementation/epic-01-app-skeleton/`, `../implementation/epic-02-backend-data-model/` |
 | Search and AI Q&A | `03-analysis/search-and-qa.feature` | `../docs/features/03-analysis/` | `../implementation/epic-04-secure-ai-qa/` |

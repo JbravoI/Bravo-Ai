@@ -23,6 +23,7 @@ See `decisions/` for ADR-style decisions.
 
 Detailed feature docs live under `features/` grouped by product domain:
 
+- `features/00-auth/`
 - `features/01-monitoring/`
 - `features/02-compliance/`
 - `features/03-analysis/`

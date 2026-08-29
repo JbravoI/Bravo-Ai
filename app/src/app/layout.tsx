@@ -5,6 +5,7 @@ import TopBar from "@/components/TopBar";
 import Sidebar from "@/components/Sidebar";
 import RegulationModal from "@/components/RegulationModal";
 import { RegulationModalProvider } from "@/context/RegulationModalContext";
+import AuthSessionProvider from "@/components/AuthSessionProvider";
 import { getRegulations } from "@/lib/data";
 
 const syne = Syne({
@@ -34,16 +35,18 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${syne.variable} ${dmSans.variable} ${dmMono.variable}`}>
       <body suppressHydrationWarning>
-        <RegulationModalProvider regulations={regulations}>
-          <div className="app-shell">
-            <TopBar />
-            <div className="body">
-              <Sidebar />
-              <div className="content">{children}</div>
+        <AuthSessionProvider>
+          <RegulationModalProvider regulations={regulations}>
+            <div className="app-shell">
+              <TopBar />
+              <div className="body">
+                <Sidebar />
+                <div className="content">{children}</div>
+              </div>
             </div>
-          </div>
-          <RegulationModal />
-        </RegulationModalProvider>
+            <RegulationModal />
+          </RegulationModalProvider>
+        </AuthSessionProvider>
       </body>
     </html>
   );

@@ -17,8 +17,8 @@ Do not introduce additional status labels without updating `README.md`.
 | Epic 00 Rebrand And Baseline Hygiene | `Completed` | RegWatch → Bravo Ai rebrand applied to the static prototype; the `.ftab` cross-contamination bug fixed. |
 | Epic 01 App Skeleton | `Completed` | Real Next.js routes, components, semantic/keyboard-operable UI. Verified: build, lint, all 7 routes return 200 with no console errors. |
 | Epic 02 Backend And Data Model | `Completed` | API routes built and documented (OpenAPI + Swagger UI at `/api-docs`); UI reads through a shared data layer backed by a live MongoDB Atlas database (not Postgres — see `../docs/decisions/0004-mongodb-atlas-not-postgres.md`). |
-| Epic 03 Auth And Persistence | `Pending` | Epic 02's database is live, so this is now unblocked. |
-| Epic 04 Secure AI Q&A | `Pending` | Provider chosen (Anthropic, see `../docs/decisions/0002-anthropic-server-side-ai.md`); not implemented. `/api/query` currently returns `501`. |
+| Epic 03 Auth And Persistence | `Completed` | Auth.js Credentials provider (JWT sessions), `proxy.ts` route gating, per-user preferences — see `../docs/decisions/0006-authjs-credentials-not-oauth.md`. |
+| Epic 04 Secure AI Q&A | `Pending` | Provider chosen (Anthropic, see `../docs/decisions/0002-anthropic-server-side-ai.md`); not implemented. `/api/query` currently returns `501`. Auth now exists if the endpoint needs to require sign-in. |
 | Epic 05 Real Regulatory-Source Ingestion | `Pending` | Database is live (Epic 02); still needs a sourcing decision (scrape vs. licensed provider). |
 | Epic 06 Hardening | `Pending` | CSP, full modal focus-trap/restore, mobile nav, ISO 8601 dates, first automated tests. |
 | Epic 07 Deploy And Operate | `Pending` | See `../deployment.md` for the manual steps; this epic is about making it a repeatable, monitored deploy. |
