@@ -1,11 +1,16 @@
 export function formatDate(iso: string) {
-  return new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(iso));
+  const normalized = toIsoDate(iso) ?? iso;
+  const date = new Date(normalized);
+  if (Number.isNaN(date.valueOf())) return iso;
+  return new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }).format(date);
 }
 
 export function formatDateTime(iso: string) {
+  const date = new Date(iso);
+  if (Number.isNaN(date.valueOf())) return iso;
   return new Intl.DateTimeFormat("en-GB", {
     day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC",
-  }).format(new Date(iso));
+  }).format(date);
 }
 
 export function toIsoDate(value: string) {
