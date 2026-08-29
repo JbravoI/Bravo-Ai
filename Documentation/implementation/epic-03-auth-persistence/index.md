@@ -38,6 +38,15 @@ Gate the app behind login, then make preferences and jurisdictions persist per-u
   - Dev server log reviewed for the whole run: the only `ERROR` line is the expected `CredentialsSignin` log from the intentional wrong-password test — no unexpected errors.
   - Test accounts and their preference/audit records were removed from the database after verification.
 
+## Bugs Found After First Deploy
+
+The scripted verification above exercised Auth.js's redirect mechanism directly via HTTP (following its 302 response) — it did **not** exercise `LoginPage`/`SignupPage`'s own client-side code, which called `signIn(..., { redirect: false })` and then manually `router.push("/")`. Two real issues surfaced only once a real browser hit the deployed app:
+
+1. **Stuck on `/login` after a successful sign-in.** The manual `router.push("/")` after a successful `redirect: false` response did not reliably navigate away, even though the session was set correctly (`TopBar` showed the signed-in email while the page content was still the login form — the client-side session context updated, but the router never transitioned). Fixed by removing the manual redirect entirely: both pages now call `signIn(..., { callbackUrl: "/" })` with Auth.js's default `redirect: true`, which performs a real browser navigation via the server's redirect response — the same mechanism already proven in the scripted tests above. `LoginPage` now reads the `?error=` query param (via `useSearchParams`, wrapped in `<Suspense>`) to show the failure message instead of relying on a parsed JS response.
+2. **`/api/auth/error` "Server error — problem with the server configuration"** on the first production deploy. Auth.js requires `AUTH_SECRET` in production and throws this generic error (not a specific "secret missing" message) if it's absent — likely just not yet synced from `app/.env.local` into Vercel's dashboard. `trustHost: true` was also added to `app/src/auth.ts` defensively, since an `UntrustedHost` check failure produces the identical generic error page. See `../../docs/decisions/0006-authjs-credentials-not-oauth.md`'s incident note.
+
+**Lesson**: scripted HTTP verification of an auth flow can pass completely while the actual client-side page code is broken, if the script exercises the underlying protocol rather than the specific UI code path. Re-verified after the fix: build/lint clean, `/login?error=CredentialsSignin` renders the error banner, and a fresh signup+login round-trip still returns `200` on protected pages.
+
 ## Acceptance Criteria
 
 - [x] A user can sign in and the app recognizes them across page loads.

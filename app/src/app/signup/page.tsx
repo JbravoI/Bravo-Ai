@@ -1,12 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 
 export default function SignupPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -30,15 +28,10 @@ export default function SignupPage() {
       return;
     }
 
-    const signInRes = await signIn("credentials", { email, password, redirect: false });
-    setBusy(false);
-    if (signInRes?.error) {
-      setError("Account created — please sign in.");
-      router.push("/login");
-      return;
-    }
-    router.push("/");
-    router.refresh();
+    // Let Auth.js handle the post-sign-in redirect itself, same as the
+    // login page — see the comment there for why the manual
+    // redirect:false + router.push pattern didn't reliably navigate away.
+    await signIn("credentials", { email, password, callbackUrl: "/" });
   }
 
   return (
