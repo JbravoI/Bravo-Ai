@@ -6,14 +6,13 @@ import { getDb } from "@/lib/mongodb";
 // Allow up to 60s on Vercel for a synchronous Q&A response.
 export const maxDuration = 60;
 
-// Keep Q&A on the model selected for the free-tier deployment. It is fast
-// enough for an interactive request, provided the prompt is kept bounded.
-const GEMINI_MODEL = "gemini-2.5-flash";
+// Gemini returns a 404 for 2.5 Flash on newly provisioned API keys. Use the
+// provider's currently available fast model for interactive Q&A.
+const GEMINI_MODEL = "gemini-3.6-flash";
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
-// Leave enough time for the route to return a useful error before an upstream
-// serverless gateway can time the request out. A second attempt is only made
-// for a provider 5xx response, not after a slow request.
-const REQUEST_TIMEOUT_MS = 12_000;
+// Free-tier responses can take around 25 seconds. Keep one bounded attempt
+// rather than retrying and risking a serverless gateway timeout.
+const REQUEST_TIMEOUT_MS = 30_000;
 const MAX_QUESTION_LENGTH = 4_000;
 const MAX_CONTEXT_ITEMS = 60;
 const MAX_CONTEXT_FIELD_LENGTH = 450;
@@ -51,33 +50,25 @@ function contextField(value: string) {
 }
 
 async function requestGemini(contents: string, systemInstruction: string) {
-  let lastResponse: Response | undefined;
-
-  for (let attempt = 0; attempt < 2; attempt += 1) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-    try {
-      const response = await fetch(GEMINI_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": process.env.GEMINI_API_KEY!,
-        },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemInstruction }] },
-          contents: [{ role: "user", parts: [{ text: contents }] }],
-          generationConfig: { maxOutputTokens: 1_024, temperature: 0.2 },
-        }),
-        signal: controller.signal,
-      });
-      if (response.ok || response.status < 500 || attempt === 1) return response;
-      lastResponse = response;
-    } finally {
-      clearTimeout(timeout);
-    }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    return await fetch(GEMINI_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": process.env.GEMINI_API_KEY!,
+      },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemInstruction }] },
+        contents: [{ role: "user", parts: [{ text: contents }] }],
+        generationConfig: { maxOutputTokens: 512, temperature: 0.2 },
+      }),
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
   }
-
-  return lastResponse!;
 }
 
 // Requires a session: it has a finite provider quota and records an auditable
