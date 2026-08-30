@@ -112,7 +112,7 @@ Each phase should leave the app in a working, deployable state.
 - Build one source connector first (e.g. FCA — many regulators publish RSS/Atom feeds or have public APIs) end-to-end: fetch → normalize → diff against last version → write to `regulations`/`regulation_versions` → append `audit_log` entry.
 - Wire "Scan Now" to actually invoke this job and reflect real status/timestamps (`Last scan` should reflect the last completed ingestion run, not a random number).
 - Add the remaining sources (PRA, HM Treasury, EU) once the pattern is proven.
-- Nigeria is an active jurisdiction with initial CBN Monetary Policy Committee coverage. Expand only after source terms and stable publication surfaces are assessed: CBN circulars, SEC Nigeria, NAICOM, PenCom and FRC first, then NDIC, FCCPC, NDPC, NFIU and NGX RegCo as applicable. See `docs/research/nigeria-regulatory-sources.md`.
+- Nigeria is an active jurisdiction with CBN MPC, SEC Nigeria, NAICOM, PenCom and FRC coverage. Expand only after source terms and stable publication surfaces are assessed: CBN circulars next, then NDIC, FCCPC, NDPC, NFIU and NGX RegCo as applicable. See `docs/research/nigeria-regulatory-sources.md`.
 - Every regulation record should carry its source URL and retrieval date so summaries are traceable back to the original text — required for a compliance tool to be trustworthy.
 
 ### Phase 6 — Hardening

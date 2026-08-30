@@ -13,7 +13,7 @@ Let a user scope the product to the jurisdictions and business areas they actual
 
 ## Known Gaps
 
-- Nigeria is active as `NG`. Choosing it scopes the dashboard, alerts, compliance table, impact map and AI context to Nigeria records. Initial coverage is CBN Monetary Policy Committee decisions only; its proposed expanded source register is in `../research/nigeria-regulatory-sources.md`.
+- Nigeria is active as `NG`. Choosing it scopes the dashboard, alerts, compliance table, impact map and AI context to Nigeria records. Live coverage includes CBN MPC decisions, SEC Nigeria circulars, and NAICOM, PenCom and FRC publications; the source register and remaining rollout are in `../research/nigeria-regulatory-sources.md`.
 - Only UK and EU have active connector coverage today; the other selectable jurisdictions remain preference-only until their official publication sources are assessed and implemented.
 - Alert delivery controls aren't exposed as editable saved controls yet — no notification system exists.
 - Saved jurisdiction/industry-focus preferences aren't yet **applied** anywhere — they persist correctly, but the dashboard/alerts feed doesn't filter by them. That's a separate piece of work from persistence itself (see the Gherkin scenario still marked `@not-yet-built`).

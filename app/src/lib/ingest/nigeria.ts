@@ -4,6 +4,12 @@ import type { Regulation, ScanRun } from "@/lib/types";
 
 const CBN_MPC_URL = "https://www.cbn.gov.ng/MonetaryPolicy/decisions.html";
 const MAX_ITEMS = 12;
+const WORDPRESS_SOURCES = [
+  { regulator: "NAICOM", endpoint: "https://naicom.gov.ng/wp-json/wp/v2/posts?per_page=12", prefix: "naicom", type: "Insurance regulatory update", tags: ["Insurance", "Compliance"] },
+  { regulator: "PenCom", endpoint: "https://www.pencom.gov.ng/wp-json/wp/v2/posts?per_page=12", prefix: "pencom", type: "Pension regulatory update", tags: ["Investment", "Compliance"] },
+  { regulator: "Financial Reporting Council of Nigeria (FRC)", endpoint: "https://frcnigeria.gov.ng/wp-json/wp/v2/posts?per_page=12", prefix: "frc", type: "Financial reporting update", tags: ["Compliance", "Investment"] },
+] as const;
+const SEC_CIRCULARS_URL = "https://www.sec.gov.ng/for-investors/keep-track-of-circulars/";
 
 function clean(value: string) {
   return value.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
@@ -14,6 +20,55 @@ function publicationDate(title: string, fallback: string) {
   if (!match) return fallback;
   const value = new Date(`${match[1]} ${match[2]}, ${match[3]}`);
   return Number.isNaN(value.valueOf()) ? fallback : value.toISOString();
+}
+
+type NigeriaPublication = Omit<Regulation, "id">;
+
+async function wordPressPublications() {
+  const publications: NigeriaPublication[] = [];
+  for (const source of WORDPRESS_SOURCES) {
+    const response = await fetch(source.endpoint, { cache: "no-store", headers: { Accept: "application/json" } });
+    if (!response.ok) throw new Error(`${source.regulator} publication feed returned HTTP ${response.status}.`);
+    const posts = (await response.json()) as Array<{ id: number; date?: string; link?: string; title?: { rendered?: string }; excerpt?: { rendered?: string } }>;
+    for (const post of posts.slice(0, MAX_ITEMS)) {
+      const title = clean(post.title?.rendered ?? "");
+      const sourceUrl = post.link ?? "";
+      if (!title || !sourceUrl) continue;
+      const retrievedAt = new Date().toISOString();
+      const summary = clean(post.excerpt?.rendered ?? "") || `${source.regulator} publication available at the linked source.`;
+      publications.push({
+        regulator: source.regulator, source: "ng", priority: /sanction|enforcement|warning|deadline/i.test(`${title} ${summary}`) ? "high" : "medium", status: "new", title,
+        date: Number.isNaN(new Date(post.date ?? "").valueOf()) ? retrievedAt : new Date(post.date!).toISOString(), type: source.type,
+        summary: summary.slice(0, 1000), impact: `Review this ${source.regulator} publication and assess the effect on your Nigerian regulatory obligations.`,
+        tags: [...source.tags], deadline: "Review required", readiness: 0, sourceUrl, retrievedAt,
+        sourceId: `${source.prefix}-${post.id}`, contentHash: createHash("sha256").update(`${title}\n${summary}\n${post.date ?? ""}`).digest("hex"),
+      });
+    }
+  }
+  return publications;
+}
+
+async function secPublications() {
+  const response = await fetch(SEC_CIRCULARS_URL, { cache: "no-store", headers: { Accept: "text/html" } });
+  if (!response.ok) throw new Error(`SEC Nigeria circulars page returned HTTP ${response.status}.`);
+  const html = await response.text();
+  const links = [...html.matchAll(/<a[^>]+href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)]
+    .map((match) => ({ sourceUrl: new URL(match[1], SEC_CIRCULARS_URL).toString(), title: clean(match[2]) }))
+    .filter((item) => item.title && item.sourceUrl.startsWith("https://www.sec.gov.ng/for-investors/keep-track-of-circulars/"))
+    .filter((item) => item.sourceUrl !== SEC_CIRCULARS_URL)
+    .filter((item, index, all) => all.findIndex((candidate) => candidate.sourceUrl === item.sourceUrl) === index)
+    .slice(0, MAX_ITEMS);
+  const retrievedAt = new Date().toISOString();
+  return links.map((item) => {
+    const sourceId = `sec-${createHash("sha256").update(item.sourceUrl).digest("hex")}`;
+    const summary = "SEC Nigeria circular or official capital-market publication available at the linked source.";
+    return {
+      regulator: "Securities and Exchange Commission Nigeria (SEC)", source: "ng" as const, priority: /sanction|warning|enforcement|implementation/i.test(item.title) ? "high" as const : "medium" as const,
+      status: "new" as const, title: item.title, date: retrievedAt, type: "Capital-market circular", summary,
+      impact: "Review this SEC Nigeria publication and assess the effect on capital-market, investment or digital-asset obligations.", tags: ["Investment", "Compliance"], deadline: "Review required", readiness: 0,
+      sourceUrl: item.sourceUrl, retrievedAt, sourceId, contentHash: createHash("sha256").update(`${item.title}\n${item.sourceUrl}`).digest("hex"),
+    } satisfies NigeriaPublication;
+  });
 }
 
 export async function runNigeriaIngestion(): Promise<ScanRun> {
@@ -35,6 +90,16 @@ export async function runNigeriaIngestion(): Promise<ScanRun> {
   let changedRecords = 0;
   const retrievedAt = new Date().toISOString();
 
+  async function store(normalized: NigeriaPublication) {
+    const existing = await regulations.findOne({ source: "ng", sourceId: normalized.sourceId });
+    if (!existing) { await regulations.insertOne({ ...normalized, id: nextId++ }); newRecords += 1; return; }
+    if (existing.contentHash !== normalized.contentHash) {
+      await regulations.updateOne({ id: existing.id }, { $set: normalized });
+      await db.collection("regulation_versions").insertOne({ regulationId: existing.id, source: "ng", sourceUrl: normalized.sourceUrl, previousContentHash: existing.contentHash ?? null, contentHash: normalized.contentHash, diffSummary: `${normalized.regulator} publication changed.`, capturedAt: normalized.retrievedAt });
+      changedRecords += 1;
+    } else await regulations.updateOne({ id: existing.id }, { $set: { retrievedAt: normalized.retrievedAt } });
+  }
+
   for (let index = 0; index < headings.length; index += 1) {
     const item = headings[index];
     const end = headings[index + 1]?.index ?? html.length;
@@ -51,17 +116,17 @@ export async function runNigeriaIngestion(): Promise<ScanRun> {
       tags: ["Banking", "Investment", "Compliance"], deadline: "Review required", readiness: 0,
       sourceUrl: CBN_MPC_URL, retrievedAt, sourceId, contentHash,
     };
-    const existing = await regulations.findOne({ source: "ng", sourceId });
-    if (!existing) { await regulations.insertOne({ ...normalized, id: nextId++ }); newRecords += 1; }
-    else if (existing.contentHash !== contentHash) {
-      await regulations.updateOne({ id: existing.id }, { $set: normalized });
-      await db.collection("regulation_versions").insertOne({ regulationId: existing.id, source: "ng", sourceUrl: CBN_MPC_URL, previousContentHash: existing.contentHash ?? null, contentHash, diffSummary: "CBN monetary-policy decision changed.", capturedAt: retrievedAt });
-      changedRecords += 1;
-    } else await regulations.updateOne({ id: existing.id }, { $set: { retrievedAt } });
+    await store(normalized);
+  }
+  const providerResults = await Promise.allSettled([wordPressPublications(), secPublications()]);
+  for (const result of providerResults) {
+    if (result.status === "fulfilled") for (const publication of result.value) await store(publication);
+    else await db.collection("audit_log").insertOne({ ts: new Date().toISOString(), label: "Nigeria source scan failed", detail: result.reason instanceof Error ? result.reason.message : "A Nigeria source scan failed." });
   }
   const completedAt = new Date().toISOString();
-  const run: ScanRun = { source: "ng", startedAt, completedAt, fetched: headings.length, newRecords, changedRecords };
+  const fetched = headings.length + providerResults.filter((result) => result.status === "fulfilled").reduce((total, result) => total + result.value.length, 0);
+  const run: ScanRun = { source: "ng", startedAt, completedAt, fetched, newRecords, changedRecords };
   await db.collection<ScanRun>("scan_runs").insertOne(run);
-  await db.collection("audit_log").insertOne({ ts: completedAt, label: "CBN Nigeria scan completed", detail: `${headings.length} CBN MPC decisions checked; ${newRecords} new and ${changedRecords} changed records recorded.` });
+  await db.collection("audit_log").insertOne({ ts: completedAt, label: "Nigeria scan completed", detail: `${fetched} CBN, SEC Nigeria, NAICOM, PenCom and FRC publications checked; ${newRecords} new and ${changedRecords} changed records recorded.` });
   return run;
 }
