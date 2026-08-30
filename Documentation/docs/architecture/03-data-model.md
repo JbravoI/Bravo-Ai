@@ -15,7 +15,7 @@ regulations         — id, regulator, source, priority, status, title, date, ty
 jurisdictions        — code, label, color, active (includes `NG` / Nigeria; `active` is the default preference, not proof of live connector coverage)
 audit_log            — ts, label, detail
 impact_rows          — reg, banking, invest, insure, comp, ops
-users                — email, passwordHash, createdAt (Epic 03 — app/src/lib/users.ts)
+users                — email, profileName, passwordHash, createdAt (Epic 03 — app/src/lib/users.ts)
                        uses Mongo's native _id as the user id, unlike the collections
                        above; a different kind of entity (auth identity, not domain data)
 user_preferences     — userId, activeJurisdictionCodes[], activeIndustryFocus[], updatedAt

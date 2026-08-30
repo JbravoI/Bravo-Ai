@@ -5,6 +5,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 
 export default function SignupPage() {
+  const [profileName, setProfileName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +19,7 @@ export default function SignupPage() {
     const res = await fetch("/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ profileName, email, password }),
     });
     const data = await res.json().catch(() => null);
 
@@ -38,8 +39,23 @@ export default function SignupPage() {
     <div className="auth-wrap">
       <form className="auth-card" onSubmit={handleSubmit}>
         <div className="auth-title">Create your Bravo Ai account</div>
-        <div className="auth-sub">Password must be at least 8 characters.</div>
+        <div className="auth-sub">Set your profile name and start monitoring the regulations that matter to you.</div>
         {error && <div className="error-msg">⚠ {error}</div>}
+        <div className="auth-field">
+          <label htmlFor="profileName">Profile name</label>
+          <input
+            id="profileName"
+            type="text"
+            className="qa-input"
+            value={profileName}
+            onChange={(e) => setProfileName(e.target.value)}
+            required
+            minLength={2}
+            maxLength={60}
+            autoComplete="name"
+            placeholder="e.g. Ada Okafor"
+          />
+        </div>
         <div className="auth-field">
           <label htmlFor="email">Email</label>
           <input

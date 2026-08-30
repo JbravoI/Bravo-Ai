@@ -3,9 +3,14 @@ Feature: Authentication
 
   Scenario: Sign up with a new account
     Given a visitor is on the signup page
-    When they submit a valid email and a password of at least 8 characters
+    When they submit a profile name, a valid email and a password of at least 8 characters
     Then an account is created
     And they are signed in immediately afterward
+
+  Scenario: Reject an invalid profile name
+    Given a visitor is on the signup page
+    When they submit a profile name shorter than 2 characters
+    Then signup is rejected with a clear error message
 
   Scenario: Reject a duplicate signup
     Given an account already exists for an email address

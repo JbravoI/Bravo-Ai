@@ -13,6 +13,7 @@ export type UserRole = (typeof USER_ROLES)[number];
 export interface AuthUser {
   id: string;
   email: string;
+  name: string;
   role: UserRole;
 }
 
@@ -31,11 +32,12 @@ function userRole(value: unknown): UserRole {
   return value === "admin" || value === "viewer" || value === "analyst" ? value : "analyst";
 }
 
-function publicUser(user: { _id: ObjectId; email: string; role?: unknown }): AuthUser {
-  return { id: user._id.toString(), email: user.email, role: userRole(user.role) };
+function publicUser(user: { _id: ObjectId; email: string; profileName?: unknown; role?: unknown }): AuthUser {
+  const fallbackName = user.email.split("@")[0] || "Bravo Ai user";
+  return { id: user._id.toString(), email: user.email, name: typeof user.profileName === "string" && user.profileName.trim() ? user.profileName : fallbackName, role: userRole(user.role) };
 }
 
-export async function createUser(email: string, password: string): Promise<AuthUser> {
+export async function createUser(email: string, password: string, profileName: string): Promise<AuthUser> {
   const db = await getDb();
   const normalizedEmail = email.trim().toLowerCase();
   const existing = await db.collection("users").findOne({ email: normalizedEmail });
@@ -45,13 +47,14 @@ export async function createUser(email: string, password: string): Promise<AuthU
   const passwordHash = await bcrypt.hash(password, 10);
   const result = await db.collection("users").insertOne({
     email: normalizedEmail,
+    profileName,
     passwordHash,
     role: "analyst" satisfies UserRole,
     failedLoginAttempts: 0,
     locked: false,
     createdAt: new Date().toISOString(),
   });
-  return { id: result.insertedId.toString(), email: normalizedEmail, role: "analyst" };
+  return { id: result.insertedId.toString(), email: normalizedEmail, name: profileName, role: "analyst" };
 }
 
 export async function verifyUser(email: string, password: string): Promise<AuthUser | null> {
@@ -73,13 +76,13 @@ export async function verifyUser(email: string, password: string): Promise<AuthU
     { _id: user._id },
     { $set: { failedLoginAttempts: 0, locked: false, lastLoginAt: new Date().toISOString() }, $unset: { lockedAt: "" } },
   );
-  return publicUser(user as { _id: ObjectId; email: string; role?: unknown });
+  return publicUser(user as { _id: ObjectId; email: string; profileName?: unknown; role?: unknown });
 }
 
 export async function getUserById(id: string) {
   if (!ObjectId.isValid(id)) return null;
   const user = await (await getDb()).collection("users").findOne({ _id: new ObjectId(id) });
-  return user ? publicUser(user as { _id: ObjectId; email: string; role?: unknown }) : null;
+  return user ? publicUser(user as { _id: ObjectId; email: string; profileName?: unknown; role?: unknown }) : null;
 }
 
 export async function getManagedUsers(): Promise<ManagedUser[]> {

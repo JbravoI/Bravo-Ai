@@ -69,7 +69,7 @@ export default function TopBar() {
         {session?.user?.email && (
           <>
             <span className="pill" title={session.user.email}>
-              {session.user.email}
+              {session.user.name || session.user.email}
             </span>
             <button type="button" className="btn btn-ghost" onClick={() => void signOutAndClearOptionalNigeriaData()}>
               Sign out

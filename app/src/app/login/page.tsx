@@ -68,10 +68,23 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="auth-wrap">
-      <Suspense fallback={null}>
-        <LoginForm />
-      </Suspense>
+    <div className="auth-layout">
+      <aside className="auth-intro" aria-label="About Bravo Ai">
+        <div className="auth-brand"><span>Ω</span> Bravo <b>Ai</b></div>
+        <p className="auth-eyebrow"><i /> Regulatory intelligence for financial services</p>
+        <h1>Turn regulatory change into <em>confident action.</em></h1>
+        <p className="auth-lead">Bravo Ai brings official regulatory updates, impact analysis and an audit trail into one focused workspace.</p>
+        <div className="auth-benefits">
+          <div><span>◈</span><p><strong>Stay ahead of change</strong>Monitor the bodies and jurisdictions relevant to your firm.</p></div>
+          <div><span>↗</span><p><strong>Understand the impact</strong>Turn incoming publications into practical compliance work.</p></div>
+          <div><span>✓</span><p><strong>Keep decisions traceable</strong>Maintain a clear record of alerts, scans and actions.</p></div>
+        </div>
+      </aside>
+      <div className="auth-wrap">
+        <Suspense fallback={null}>
+          <LoginForm />
+        </Suspense>
+      </div>
     </div>
   );
 }
