@@ -23,6 +23,12 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
   const { activeJurisdictionCodes, activeIndustryFocus } = body;
+  if (Array.isArray(activeJurisdictionCodes) && (activeJurisdictionCodes.length !== 1 || !activeJurisdictionCodes.every((code) => typeof code === "string"))) {
+    return NextResponse.json({ error: "Select exactly one jurisdiction." }, { status: 400 });
+  }
+  if (Array.isArray(activeIndustryFocus) && !activeIndustryFocus.every((industry) => typeof industry === "string")) {
+    return NextResponse.json({ error: "Industry focus must be a list of labels." }, { status: 400 });
+  }
   await saveUserPreferences(session.user.id, session.user.email, {
     ...(Array.isArray(activeJurisdictionCodes) ? { activeJurisdictionCodes } : {}),
     ...(Array.isArray(activeIndustryFocus) ? { activeIndustryFocus } : {}),

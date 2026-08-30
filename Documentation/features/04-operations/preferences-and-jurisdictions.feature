@@ -1,16 +1,18 @@
 Feature: Preferences and jurisdictions
   Users need to scope the product to the jurisdictions and business areas they care about.
 
-  Scenario: Toggle a jurisdiction
+  Scenario: Choose one jurisdiction and save it
     Given a user is on the Preferences page
     When they select a jurisdiction pill such as "US"
-    Then it becomes active
-    And selecting it again deactivates it
+    And they select "Save preferences"
+    Then only "US" is active
+    And the page refreshes with the saved preference
 
   Scenario: Select Nigeria as a jurisdiction
     Given a user is on the Preferences page
     When they select the "NG — Nigeria" jurisdiction pill
-    Then it becomes active for that user's saved preferences
+    And they select "Save preferences"
+    Then it becomes the one saved jurisdiction for that user
     And the UI does not imply that Nigeria source scanning is enabled
 
   Scenario: Toggle an industry focus tag
@@ -19,7 +21,7 @@ Feature: Preferences and jurisdictions
     Then it becomes active independently of jurisdiction toggles and alert-threshold checkboxes
 
   Scenario: Preferences persist across sessions
-    Given a signed-in user has toggled specific jurisdictions and industry focus tags
+    Given a signed-in user has saved one jurisdiction and specific industry focus tags
     When they sign out, sign back in, or reload the page
     Then their preferences are restored exactly as they left them
 

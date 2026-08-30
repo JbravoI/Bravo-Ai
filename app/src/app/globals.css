@@ -911,6 +911,11 @@ tr[role="button"]:focus-visible {
   color: var(--text2);
   cursor: pointer;
 }
+.prefs-form { display: flex; flex-direction: column; gap: 18px; }
+.prefs-save-row { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.prefs-save { white-space: nowrap; }
+.prefs-help { color: var(--text3); font-size: 11px; margin-top: 3px; }
+.prefs-message { color: var(--success); font-size: 12px; }
 
 @media (max-width: 700px) {
   .sidebar {

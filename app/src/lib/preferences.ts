@@ -17,11 +17,15 @@ export async function saveUserPreferences(
   patch: Partial<Pick<UserPreferences, "activeJurisdictionCodes" | "activeIndustryFocus">>,
 ): Promise<void> {
   const db = await getDb();
+  const normalizedPatch = {
+    ...patch,
+    ...(patch.activeJurisdictionCodes ? { activeJurisdictionCodes: [patch.activeJurisdictionCodes[0]] } : {}),
+  };
   await db
     .collection("user_preferences")
-    .updateOne({ userId }, { $set: { userId, ...patch, updatedAt: new Date().toISOString() } }, { upsert: true });
+    .updateOne({ userId }, { $set: { userId, ...normalizedPatch, updatedAt: new Date().toISOString() } }, { upsert: true });
 
-  const changed = Object.keys(patch).join(", ");
+  const changed = Object.keys(normalizedPatch).join(", ");
   await db.collection("audit_log").insertOne({
     ts: new Date().toISOString().slice(0, 16).replace("T", " "),
     label: "Preferences updated",
