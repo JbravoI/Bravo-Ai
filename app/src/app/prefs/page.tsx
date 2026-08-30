@@ -2,6 +2,7 @@ import PreferencesForm from "@/components/PreferencesForm";
 import { getJurisdictions } from "@/lib/data";
 import { getUserPreferences } from "@/lib/preferences";
 import { auth } from "@/auth";
+import { normalizeOptionalNigeriaRegulatorCodes } from "@/lib/optional-nigeria-regulators";
 
 const DEFAULT_INDUSTRY_FOCUS = ["Banking", "Investment"];
 
@@ -22,7 +23,7 @@ export default async function PrefsPage() {
       <div className="section-title" style={{ marginBottom: 12 }}>
         Alert Preferences &amp; Jurisdictions
       </div>
-      <PreferencesForm jurisdictions={jurisdictions} initialJurisdictionCode={initialJurisdictionCode} initialIndustryFocus={initialIndustryFocus} />
+      <PreferencesForm jurisdictions={jurisdictions} initialJurisdictionCode={initialJurisdictionCode} initialIndustryFocus={initialIndustryFocus} initialOptionalNigeriaRegulatorCodes={normalizeOptionalNigeriaRegulatorCodes(savedPrefs?.optionalNigeriaRegulatorCodes)} />
     </div>
   );
 }

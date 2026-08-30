@@ -1,9 +1,9 @@
 import ImpactTable from "@/components/ImpactTable";
-import { getJurisdictions, getRegulationsForSources } from "@/lib/data";
+import { getJurisdictions, getRegulationsForUserJurisdiction } from "@/lib/data";
 import type { ImpactLevel, ImpactRow } from "@/lib/types";
 import { auth } from "@/auth";
 import { getUserPreferences } from "@/lib/preferences";
-import { selectedJurisdictionCode, sourcesForJurisdiction } from "@/lib/jurisdictions";
+import { selectedJurisdictionCode } from "@/lib/jurisdictions";
 
 function level(regulation: { priority: string; tags: string[] }, area: string): ImpactLevel {
   if (!regulation.tags.some((tag) => tag.toLowerCase() === area.toLowerCase())) return "None";
@@ -17,7 +17,9 @@ export default async function ImpactPage() {
     session?.user?.id ? getUserPreferences(session.user.id) : Promise.resolve(null),
   ]);
   const jurisdictionCode = selectedJurisdictionCode(preferences?.activeJurisdictionCodes, jurisdictions.map((jurisdiction) => jurisdiction.code));
-  const regulations = await getRegulationsForSources(sourcesForJurisdiction(jurisdictionCode));
+  const regulations = session?.user?.id
+    ? await getRegulationsForUserJurisdiction(session.user.id, jurisdictionCode, preferences?.optionalNigeriaRegulatorCodes)
+    : [];
   const rows: ImpactRow[] = regulations.map((regulation) => ({
     reg: regulation.title,
     banking: level(regulation, "Banking"),

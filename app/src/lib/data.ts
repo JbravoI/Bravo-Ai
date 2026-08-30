@@ -8,6 +8,7 @@
 // anything.
 import { getDb } from "./mongodb";
 import type { AuditEntry, ImpactRow, Jurisdiction, Regulation, ScanRun, Source } from "./types";
+import { getOptionalNigeriaRegulationById, getOptionalNigeriaRegulations } from "./optional-nigeria-regulators";
 
 // Mongo's own `_id` is never part of the public shape — every query excludes it.
 const NO_ID = { projection: { _id: 0 } } as const;
@@ -28,6 +29,18 @@ export async function getRegulationById(id: number): Promise<Regulation | undefi
   const db = await getDb();
   const doc = await db.collection<Regulation>("regulations").findOne({ id }, NO_ID);
   return doc ?? undefined;
+}
+
+export async function getRegulationForUser(userId: string, id: number): Promise<Regulation | undefined> {
+  if (id < 0) return (await getOptionalNigeriaRegulationById(userId, id)) ?? undefined;
+  return getRegulationById(id);
+}
+
+export async function getRegulationsForUserJurisdiction(userId: string, jurisdictionCode: string, optionalNigeriaRegulatorCodes?: string[]): Promise<Regulation[]> {
+  const regulations = await getRegulationsForSources(jurisdictionCode === "NG" ? ["ng"] : jurisdictionCode === "UK" ? ["fca", "pra", "hmt"] : jurisdictionCode === "EU" ? ["eu"] : []);
+  if (jurisdictionCode !== "NG") return regulations;
+  const optional = await getOptionalNigeriaRegulations(userId, optionalNigeriaRegulatorCodes);
+  return [...regulations, ...optional].sort((left, right) => left.id - right.id);
 }
 
 export async function getAuditEntries(): Promise<AuditEntry[]> {

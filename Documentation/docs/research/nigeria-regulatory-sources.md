@@ -2,7 +2,7 @@
 
 ## Status
 
-Nigeria (`NG`) is an active per-user jurisdiction. Live coverage includes CBN Monetary Policy Committee decisions, SEC Nigeria circulars, and the official NAICOM, PenCom and FRC publication feeds. This is still not complete Nigeria coverage: adding a jurisdiction must not be represented as complete regulator coverage until every source has been assessed for a stable publication feed, permitted access, parsing quality and operational ownership.
+Nigeria (`NG`) is an active per-user jurisdiction. Live shared coverage includes CBN Monetary Policy Committee decisions, SEC Nigeria circulars, and the official NAICOM, PenCom and FRC publication feeds. NDIC, FCCPC, NDPC, NFIU and NGX RegCo are optional per-user feeds: a user opts in from Preferences, which scans the regulator's official publication surface into user-scoped temporary data. Those records are removed at sign-out. This is still not complete Nigeria coverage: adding a jurisdiction must not be represented as complete regulator coverage until every source has been assessed for a stable publication feed, permitted access, parsing quality and operational ownership.
 
 ## Recommended source register
 
@@ -21,10 +21,10 @@ Nigeria (`NG`) is an active per-user jurisdiction. Live coverage includes CBN Mo
 
 ## Connector rollout
 
-1. CBN Monetary Policy Committee decisions, SEC Nigeria circulars, NAICOM, PenCom and FRC publication feeds are live. Next add CBN circulars because together they cover more of the core banking, investment, insurance, pension and reporting populations.
+1. CBN Monetary Policy Committee decisions, SEC Nigeria circulars, NAICOM, PenCom and FRC publication feeds are live. NDIC, FCCPC, NDPC, NFIU and NGX RegCo are available as opt-in, session-scoped connectors. Each request uses the regulator's official public page and has a 15-second per-source timeout; a site-side block or markup change is recorded as a scan failure rather than falling back to an unofficial source.
 2. Prefer RSS, Atom, official API or clearly dated publication indexes. Do not rely on search-result snippets or unofficial reposts.
 3. Before enabling a source, record the exact URL, acceptable polling frequency, terms/access constraints, owner, parser tests and a fallback/manual-review process.
-4. Add NDIC, FCCPC, NDPC, NFIU and NGX RegCo according to each customer’s regulated activities. They are material for deposit-taking firms, digital lenders, data-heavy firms, AML reporting entities and listed/market participants respectively.
+4. Keep NDIC, FCCPC, NDPC, NFIU and NGX RegCo optional according to each customer's regulated activities. They are material for deposit-taking firms, digital lenders, data-heavy firms, AML reporting entities and listed/market participants respectively.
 
 ## Scope note
 

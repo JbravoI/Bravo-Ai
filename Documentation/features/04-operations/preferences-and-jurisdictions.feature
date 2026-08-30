@@ -36,3 +36,15 @@ Feature: Preferences and jurisdictions
     Then they see only Nigeria regulations
     And the regulator filters list only Nigeria regulatory bodies
     And the filters do not include "FCA", "PRA", "HM Treasury" or "EU/Global"
+
+  Scenario: Select an optional Nigeria regulatory body
+    Given a signed-in user has selected "NG — Nigeria"
+    When they select "NDIC" and save their preferences
+    Then a scan of NDIC's official publication page starts automatically
+    And only that user's Nigeria view includes the fetched NDIC records
+
+  Scenario: Clear optional Nigeria data at sign-out
+    Given a signed-in user has fetched optional Nigeria regulator records
+    When they sign out explicitly or due to inactivity
+    Then their fetched optional regulator records are removed
+    And no other user's records are affected

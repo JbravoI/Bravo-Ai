@@ -4,6 +4,7 @@ export interface UserPreferences {
   userId: string;
   activeJurisdictionCodes?: string[];
   activeIndustryFocus?: string[];
+  optionalNigeriaRegulatorCodes?: string[];
 }
 
 export async function getUserPreferences(userId: string): Promise<UserPreferences | null> {
@@ -14,7 +15,7 @@ export async function getUserPreferences(userId: string): Promise<UserPreference
 export async function saveUserPreferences(
   userId: string,
   userEmail: string,
-  patch: Partial<Pick<UserPreferences, "activeJurisdictionCodes" | "activeIndustryFocus">>,
+  patch: Partial<Pick<UserPreferences, "activeJurisdictionCodes" | "activeIndustryFocus" | "optionalNigeriaRegulatorCodes">>,
 ): Promise<void> {
   const db = await getDb();
   const normalizedPatch = {

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { DM_Mono, DM_Sans, Syne } from "next/font/google";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
-import { getJurisdictions, getRegulations, getRegulationsForSources } from "@/lib/data";
+import { getJurisdictions, getRegulations, getRegulationsForUserJurisdiction } from "@/lib/data";
 import { getUserPreferences } from "@/lib/preferences";
-import { selectedJurisdictionCode, sourcesForJurisdiction } from "@/lib/jurisdictions";
+import { selectedJurisdictionCode } from "@/lib/jurisdictions";
 import { auth } from "@/auth";
 
 const syne = Syne({
@@ -34,7 +34,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   const preferences = session?.user?.id ? await getUserPreferences(session.user.id) : null;
   const jurisdictionCode = selectedJurisdictionCode(preferences?.activeJurisdictionCodes, jurisdictions.map((jurisdiction) => jurisdiction.code));
   const regulations = session?.user?.id && jurisdictionCode
-    ? await getRegulationsForSources(sourcesForJurisdiction(jurisdictionCode))
+    ? await getRegulationsForUserJurisdiction(session.user.id, jurisdictionCode, preferences?.optionalNigeriaRegulatorCodes)
     : await getRegulations();
 
   return (

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { signOutAndClearOptionalNigeriaData } from "@/lib/client-signout";
 
 const IDLE_TIMEOUT_MS = 5 * 60 * 1000;
 const SESSION_REFRESH_INTERVAL_MS = 60 * 1000;
@@ -19,7 +20,7 @@ export default function SessionTimeout() {
     const signOutForInactivity = () => {
       if (signingOutRef.current) return;
       signingOutRef.current = true;
-      void signOut({ callbackUrl: "/" });
+      void signOutAndClearOptionalNigeriaData();
     };
 
     const resetIdleTimer = () => {

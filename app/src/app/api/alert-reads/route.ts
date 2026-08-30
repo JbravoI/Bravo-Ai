@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { getRegulationById } from "@/lib/data";
+import { getRegulationForUser } from "@/lib/data";
 import { getDb } from "@/lib/mongodb";
 
 async function getUserId() {
@@ -25,10 +25,10 @@ export async function POST(request: Request) {
 
   const body = await request.json().catch(() => null);
   const regulationId = body?.regulationId;
-  if (!Number.isInteger(regulationId) || regulationId < 1) {
-    return NextResponse.json({ error: "regulationId must be a positive integer." }, { status: 400 });
+  if (!Number.isInteger(regulationId) || regulationId === 0) {
+    return NextResponse.json({ error: "regulationId must be a non-zero integer." }, { status: 400 });
   }
-  if (!(await getRegulationById(regulationId))) {
+  if (!(await getRegulationForUser(userId, regulationId))) {
     return NextResponse.json({ error: "Regulation not found." }, { status: 404 });
   }
 

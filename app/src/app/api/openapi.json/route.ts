@@ -206,6 +206,7 @@ const spec = {
                     userId: { type: "string" },
                     activeJurisdictionCodes: { type: "array", items: { type: "string" } },
                     activeIndustryFocus: { type: "array", items: { type: "string" } },
+                    optionalNigeriaRegulatorCodes: { type: "array", items: { type: "string", enum: ["ndic", "fccpc", "ndpc", "nfiu", "ngx-regco"] } },
                     updatedAt: { type: "string", format: "date-time" },
                   },
                 },
@@ -228,6 +229,7 @@ const spec = {
                 properties: {
                   activeJurisdictionCodes: { type: "array", items: { type: "string" } },
                   activeIndustryFocus: { type: "array", items: { type: "string" } },
+                  optionalNigeriaRegulatorCodes: { type: "array", items: { type: "string", enum: ["ndic", "fccpc", "ndpc", "nfiu", "ngx-regco"] } },
                 },
               },
             },

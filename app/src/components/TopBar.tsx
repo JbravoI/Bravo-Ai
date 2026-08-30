@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { formatDateTime } from "@/lib/dates";
+import { signOutAndClearOptionalNigeriaData } from "@/lib/client-signout";
 
 export default function TopBar() {
   const { data: session } = useSession();
@@ -70,7 +71,7 @@ export default function TopBar() {
             <span className="pill" title={session.user.email}>
               {session.user.email}
             </span>
-            <button type="button" className="btn btn-ghost" onClick={() => signOut({ callbackUrl: "/" })}>
+            <button type="button" className="btn btn-ghost" onClick={() => void signOutAndClearOptionalNigeriaData()}>
               Sign out
             </button>
           </>

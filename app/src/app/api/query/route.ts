@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { getJurisdictions, getRegulations, getRegulationsForSources } from "@/lib/data";
+import { getJurisdictions, getRegulationsForUserJurisdiction } from "@/lib/data";
 import { getDb } from "@/lib/mongodb";
 import { getUserPreferences } from "@/lib/preferences";
-import { selectedJurisdictionCode, sourcesForJurisdiction } from "@/lib/jurisdictions";
+import { selectedJurisdictionCode } from "@/lib/jurisdictions";
 
 // Allow up to 60s on Vercel for a synchronous Q&A response.
 export const maxDuration = 60;
@@ -103,7 +103,9 @@ export async function POST(request: Request) {
 
   const [preferences, jurisdictions] = await Promise.all([getUserPreferences(session.user.id), getJurisdictions()]);
   const jurisdictionCode = selectedJurisdictionCode(preferences?.activeJurisdictionCodes, jurisdictions.map((jurisdiction) => jurisdiction.code));
-  const regulations = jurisdictionCode ? await getRegulationsForSources(sourcesForJurisdiction(jurisdictionCode)) : await getRegulations();
+  const regulations = jurisdictionCode
+    ? await getRegulationsForUserJurisdiction(session.user.id, jurisdictionCode, preferences?.optionalNigeriaRegulatorCodes)
+    : [];
   // Sending every historical record can make an otherwise simple question
   // exceed the interactive latency budget. The newest records remain enough
   // for current regulatory Q&A; users can ask about an older record by name.
