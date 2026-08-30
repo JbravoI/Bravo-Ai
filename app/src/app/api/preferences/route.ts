@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { getUserPreferences, saveUserPreferences } from "@/lib/preferences";
-import { clearDeselectedOptionalNigeriaRegulations, normalizeOptionalNigeriaRegulatorCodes, runOptionalNigeriaRegulatorIngestion } from "@/lib/optional-nigeria-regulators";
+import { clearDeselectedOptionalNigeriaRegulations, runOptionalNigeriaRegulatorIngestion } from "@/lib/optional-nigeria-regulators";
+import { normalizeOptionalNigeriaRegulatorCodes } from "@/lib/optional-nigeria-regulator-config";
 
 export const maxDuration = 60;
 

@@ -1,17 +1,10 @@
+import "server-only";
 import { createHash } from "crypto";
 import { getDb } from "./mongodb";
 import type { Regulation } from "./types";
+import { OPTIONAL_NIGERIA_REGULATORS, type OptionalNigeriaRegulatorCode, normalizeOptionalNigeriaRegulatorCodes } from "./optional-nigeria-regulator-config";
 
-export const OPTIONAL_NIGERIA_REGULATORS = [
-  { code: "ndic", label: "NDIC", regulator: "Nigeria Deposit Insurance Corporation (NDIC)", url: "https://ndic.gov.ng/news/", path: /\/news\//i, type: "Deposit-insurance update", tags: ["Banking", "Compliance"] },
-  { code: "fccpc", label: "FCCPC", regulator: "Federal Competition and Consumer Protection Commission (FCCPC)", url: "https://fccpc.gov.ng/media/news-events/", path: /\/(media|news|event|press)/i, type: "Competition and consumer-protection update", tags: ["Compliance", "Operations"] },
-  { code: "ndpc", label: "NDPC", regulator: "Nigeria Data Protection Commission (NDPC)", url: "https://ndpc.gov.ng/news/", path: /\/news\//i, type: "Data-protection update", tags: ["Compliance", "Operations", "Fintech"] },
-  { code: "nfiu", label: "NFIU", regulator: "Nigerian Financial Intelligence Unit (NFIU)", url: "https://www.nfiu.gov.ng/", path: /NewsDetail/i, type: "AML/CFT update", tags: ["Banking", "Compliance", "Fintech"] },
-  { code: "ngx-regco", label: "NGX RegCo", regulator: "NGX Regulation Limited (NGX RegCo)", url: "https://ngxgroup.com/regulation/", path: /\/(regulation|circular|rule|document)/i, type: "Exchange-regulation update", tags: ["Investment", "Compliance"] },
-] as const;
-
-export type OptionalNigeriaRegulatorCode = (typeof OPTIONAL_NIGERIA_REGULATORS)[number]["code"];
-export const OPTIONAL_NIGERIA_REGULATOR_CODES = OPTIONAL_NIGERIA_REGULATORS.map((source) => source.code) as OptionalNigeriaRegulatorCode[];
+export { normalizeOptionalNigeriaRegulatorCodes } from "./optional-nigeria-regulator-config";
 
 type OptionalNigeriaRegulation = Regulation & { userId: string; optionalRegulatorCode: OptionalNigeriaRegulatorCode };
 type SourceConfig = (typeof OPTIONAL_NIGERIA_REGULATORS)[number];
@@ -20,15 +13,6 @@ const REQUEST_TIMEOUT_MS = 15_000;
 
 function clean(value: string) {
   return value.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&#(?:x[\da-f]+|\d+);/gi, " ").replace(/\s+/g, " ").trim();
-}
-
-function isOptionalNigeriaRegulatorCode(value: string): value is OptionalNigeriaRegulatorCode {
-  return OPTIONAL_NIGERIA_REGULATOR_CODES.includes(value as OptionalNigeriaRegulatorCode);
-}
-
-export function normalizeOptionalNigeriaRegulatorCodes(values: unknown): OptionalNigeriaRegulatorCode[] {
-  if (!Array.isArray(values) || !values.every((value) => typeof value === "string")) return [];
-  return [...new Set(values.filter(isOptionalNigeriaRegulatorCode))];
 }
 
 async function publicationsFromOfficialPage(source: SourceConfig) {

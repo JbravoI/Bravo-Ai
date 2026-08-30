@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { Jurisdiction } from "@/lib/types";
-import { OPTIONAL_NIGERIA_REGULATORS, type OptionalNigeriaRegulatorCode } from "@/lib/optional-nigeria-regulators";
+import { OPTIONAL_NIGERIA_REGULATORS, type OptionalNigeriaRegulatorCode } from "@/lib/optional-nigeria-regulator-config";
 
 const INDUSTRIES = ["Banking", "Investment", "Insurance", "Asset Management", "Fintech"];
 

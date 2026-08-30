@@ -2,7 +2,7 @@ import PreferencesForm from "@/components/PreferencesForm";
 import { getJurisdictions } from "@/lib/data";
 import { getUserPreferences } from "@/lib/preferences";
 import { auth } from "@/auth";
-import { normalizeOptionalNigeriaRegulatorCodes } from "@/lib/optional-nigeria-regulators";
+import { normalizeOptionalNigeriaRegulatorCodes } from "@/lib/optional-nigeria-regulator-config";
 
 const DEFAULT_INDUSTRY_FOCUS = ["Banking", "Investment"];
 
