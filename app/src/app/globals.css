@@ -341,6 +341,13 @@ button {
   flex-direction: column;
   gap: 7px;
 }
+.alerts-empty {
+  padding: 16px;
+  border: 1px dashed var(--border2);
+  border-radius: 9px;
+  color: var(--text3);
+  font-size: 12px;
+}
 .alert-card {
   background: var(--surface);
   border: 1px solid var(--border);

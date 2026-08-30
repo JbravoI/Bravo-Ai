@@ -5,11 +5,11 @@ import { useRegulationModal } from "@/context/RegulationModalContext";
 import AlertCard from "./AlertCard";
 
 export default function AlertsSection({ title, subtitle }: { title: string; subtitle?: string }) {
-  const { regulations } = useRegulationModal();
+  const { regulations, regulatorFilters } = useRegulationModal();
   const [filter, setFilter] = useState("all");
   const regulators = useMemo(
-    () => Array.from(new Set(regulations.map((regulation) => regulation.regulator))).sort((a, b) => a.localeCompare(b)),
-    [regulations],
+    () => Array.from(new Set([...regulations.map((regulation) => regulation.regulator), ...regulatorFilters])).sort((a, b) => a.localeCompare(b)),
+    [regulations, regulatorFilters],
   );
   const filters = [
     { value: "all", label: "All" },
@@ -49,6 +49,7 @@ export default function AlertsSection({ title, subtitle }: { title: string; subt
         {list.map((r) => (
           <AlertCard key={r.id} regulation={r} />
         ))}
+        {!list.length && activeFilter !== "all" && <p className="alerts-empty">No publications are available for this regulator in the current session. Select Save preferences to retry its scan.</p>}
       </div>
     </div>
   );

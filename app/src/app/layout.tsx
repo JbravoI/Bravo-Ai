@@ -6,6 +6,7 @@ import { getJurisdictions, getRegulations, getRegulationsForUserJurisdiction } f
 import { getUserPreferences } from "@/lib/preferences";
 import { selectedJurisdictionCode } from "@/lib/jurisdictions";
 import { auth } from "@/auth";
+import { OPTIONAL_NIGERIA_REGULATORS, normalizeOptionalNigeriaRegulatorCodes } from "@/lib/optional-nigeria-regulator-config";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -36,11 +37,16 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   const regulations = session?.user?.id && jurisdictionCode
     ? await getRegulationsForUserJurisdiction(session.user.id, jurisdictionCode, preferences?.optionalNigeriaRegulatorCodes)
     : await getRegulations();
+  const regulatorFilters = jurisdictionCode === "NG"
+    ? normalizeOptionalNigeriaRegulatorCodes(preferences?.optionalNigeriaRegulatorCodes)
+      .map((code) => OPTIONAL_NIGERIA_REGULATORS.find((regulator) => regulator.code === code)?.regulator)
+      .filter((regulator) => regulator !== undefined)
+    : [];
 
   return (
     <html lang="en" className={`${syne.variable} ${dmSans.variable} ${dmMono.variable}`}>
       <body suppressHydrationWarning>
-        <AppShell regulations={regulations}>{children}</AppShell>
+        <AppShell regulations={regulations} regulatorFilters={regulatorFilters}>{children}</AppShell>
       </body>
     </html>
   );

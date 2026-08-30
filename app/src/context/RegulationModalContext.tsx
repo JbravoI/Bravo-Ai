@@ -5,6 +5,7 @@ import type { Regulation } from "@/lib/types";
 
 interface RegulationModalContextValue {
   regulations: Regulation[];
+  regulatorFilters: string[];
   openId: number | null;
   unreadCount: number;
   openModal: (id: number) => void;
@@ -15,9 +16,11 @@ const RegulationModalContext = createContext<RegulationModalContextValue | null>
 
 export function RegulationModalProvider({
   regulations,
+  regulatorFilters = [],
   children,
 }: {
   regulations: Regulation[];
+  regulatorFilters?: string[];
   children: ReactNode;
 }) {
   const [openId, setOpenId] = useState<number | null>(null);
@@ -65,12 +68,13 @@ export function RegulationModalProvider({
   const value = useMemo(
     () => ({
       regulations,
+      regulatorFilters,
       openId,
       unreadCount,
       openModal,
       closeModal: () => setOpenId(null),
     }),
-    [regulations, openId, unreadCount, openModal],
+    [regulations, regulatorFilters, openId, unreadCount, openModal],
   );
 
   return <RegulationModalContext.Provider value={value}>{children}</RegulationModalContext.Provider>;

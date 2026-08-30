@@ -13,7 +13,7 @@ import { RegulationModalProvider } from "@/context/RegulationModalContext";
 
 const PUBLIC_PATHS = new Set(["/", "/login", "/signup", "/api-docs"]);
 
-export default function AppShell({ children, regulations }: { children: ReactNode; regulations: Regulation[] }) {
+export default function AppShell({ children, regulations, regulatorFilters = [] }: { children: ReactNode; regulations: Regulation[]; regulatorFilters?: string[] }) {
   const pathname = usePathname();
 
   if (PUBLIC_PATHS.has(pathname)) return <>{children}</>;
@@ -21,7 +21,7 @@ export default function AppShell({ children, regulations }: { children: ReactNod
   return (
     <AuthSessionProvider>
       <SessionTimeout />
-      <RegulationModalProvider regulations={regulations}>
+      <RegulationModalProvider regulations={regulations} regulatorFilters={regulatorFilters}>
         <div className="app-shell">
           <TopBar />
           <MobileNav />
