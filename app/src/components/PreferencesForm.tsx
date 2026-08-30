@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { Jurisdiction } from "@/lib/types";
 
@@ -20,6 +20,17 @@ export default function PreferencesForm({
   const [industryFocus, setIndustryFocus] = useState<Set<string>>(new Set(initialIndustryFocus));
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [refreshRequested, setRefreshRequested] = useState(false);
+  const [isRefreshing, startRefresh] = useTransition();
+
+  useEffect(() => {
+    if (!refreshRequested || isRefreshing) return;
+    const timer = window.setTimeout(() => {
+      setMessage("Preferences saved ✓");
+      setRefreshRequested(false);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [isRefreshing, refreshRequested]);
 
   function toggleIndustry(label: string) {
     setIndustryFocus((current) => {
@@ -39,15 +50,16 @@ export default function PreferencesForm({
       });
       const data = await response.json().catch(() => null);
       if (!response.ok) throw new Error(data?.error ?? "Could not save preferences.");
-      setMessage("Preferences saved. Refreshing…");
-      router.refresh();
+      setMessage("Preferences saved. Updating your view…");
+      setRefreshRequested(true);
+      startRefresh(() => router.refresh());
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Could not save preferences.");
     } finally { setSaving(false); }
   }
 
   return <div className="prefs-form">
-    <div className="prefs-save-row"><div><div className="modal-section-title">Jurisdiction</div><p className="prefs-help">Choose one jurisdiction to view at a time.</p></div><button className="btn btn-primary prefs-save" type="button" onClick={save} disabled={saving} aria-label="Save preferences">{saving ? "Saving…" : "💾 Save preferences"}</button></div>
+    <div className="prefs-save-row"><div><div className="modal-section-title">Jurisdiction</div><p className="prefs-help">Choose one jurisdiction to view at a time.</p></div><button className="btn btn-primary prefs-save" type="button" onClick={save} disabled={saving || isRefreshing} aria-label="Save preferences">{saving ? "Saving…" : isRefreshing ? "Updating…" : "💾 Save preferences"}</button></div>
     <div className="juri-grid" role="radiogroup" aria-label="Jurisdiction">
       {jurisdictions.map((jurisdiction) => <button key={jurisdiction.code} type="button" className={`juri-pill ${jurisdictionCode === jurisdiction.code ? "active" : ""}`} role="radio" aria-checked={jurisdictionCode === jurisdiction.code} onClick={() => setJurisdictionCode(jurisdiction.code)}><span className="juri-dot" style={{ background: jurisdiction.color }} />{jurisdiction.code} – {jurisdiction.label}</button>)}
     </div>
