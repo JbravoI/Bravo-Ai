@@ -6,10 +6,17 @@ import { getDb } from "@/lib/mongodb";
 // Allow up to 60s on Vercel for a synchronous Q&A response.
 export const maxDuration = 60;
 
-const GEMINI_MODEL = "gemini-3.6-flash";
+// Keep Q&A on the model selected for the free-tier deployment. It is fast
+// enough for an interactive request, provided the prompt is kept bounded.
+const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
-const REQUEST_TIMEOUT_MS = 20_000;
+// Leave enough time for the route to return a useful error before an upstream
+// serverless gateway can time the request out. A second attempt is only made
+// for a provider 5xx response, not after a slow request.
+const REQUEST_TIMEOUT_MS = 12_000;
 const MAX_QUESTION_LENGTH = 4_000;
+const MAX_CONTEXT_ITEMS = 60;
+const MAX_CONTEXT_FIELD_LENGTH = 450;
 // Gemini free-tier limits are project-wide. This process-local guard leaves
 // headroom below provider quotas; a distributed limiter belongs in Epic 06
 // once the app scales beyond one instance.
@@ -33,6 +40,14 @@ function takeRequestSlot() {
   if (recentRequestTimes.length >= REQUESTS_PER_MINUTE) return false;
   recentRequestTimes.push(now);
   return true;
+}
+
+function contextField(value: string) {
+  return value
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, MAX_CONTEXT_FIELD_LENGTH);
 }
 
 async function requestGemini(contents: string, systemInstruction: string) {
@@ -94,8 +109,16 @@ export async function POST(request: Request) {
   }
 
   const regulations = await getRegulations();
+  // Sending every historical record can make an otherwise simple question
+  // exceed the interactive latency budget. The newest records remain enough
+  // for current regulatory Q&A; users can ask about an older record by name.
   const context = regulations
-    .map((r) => `- [${r.regulator}] ${r.title} (published ${r.date}, deadline ${r.deadline}): ${r.summary}`)
+    .slice(-MAX_CONTEXT_ITEMS)
+    .map(
+      (r) =>
+        `- [${contextField(r.regulator)}] ${contextField(r.title)} ` +
+        `(published ${contextField(r.date)}, deadline ${contextField(r.deadline)}): ${contextField(r.summary)}`,
+    )
     .join("\n");
 
   let answer: string;
