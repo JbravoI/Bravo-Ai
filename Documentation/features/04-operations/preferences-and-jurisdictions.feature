@@ -30,8 +30,9 @@ Feature: Preferences and jurisdictions
     When user B signs in for the first time
     Then user B sees the default preferences, not user A's saved values
 
-  @not-yet-built
-  Scenario: Preferences affect what alerts are shown
-    Given a signed-in user has deactivated a jurisdiction
-    When new regulations from that jurisdiction are ingested
-    Then those regulations are excluded from their dashboard and alerts feed by default
+  Scenario: Jurisdiction scopes alerts and their regulator filters
+    Given a signed-in user has saved "NG — Nigeria" as their jurisdiction
+    When they view the dashboard alerts
+    Then they see only Nigeria regulations
+    And the regulator filters list only Nigeria regulatory bodies
+    And the filters do not include "FCA", "PRA", "HM Treasury" or "EU/Global"

@@ -8,6 +8,7 @@ Let a user scope the product to the jurisdictions and business areas they actual
 
 - `/prefs` renders `app/src/components/PreferencesForm.tsx`: a single-choice jurisdiction control (UK, EU, US, Hong Kong, Singapore, Switzerland and Nigeria), multi-select industry-focus tabs, and a save icon/button.
 - A user chooses exactly one jurisdiction. The whole preference set is persisted with `PUT /api/preferences` only when they select **Save preferences**; the route rejects a request that supplies zero or multiple jurisdictions. On success the page refreshes from the saved server state. See `app/src/lib/preferences.ts`.
+- The dashboard, alerts, compliance table, impact map and AI context use records only from that saved jurisdiction. The Alerts filter bar is populated from the regulatory bodies represented in those records, so it never shows another jurisdiction's bodies (for example, Nigeria shows CBN, SEC, NAICOM, PenCom and FRC, not FCA or PRA).
 - Requires sign-in: `/prefs` (like every UI page) sits behind `app/src/proxy.ts`'s auth gate.
 - Each preference save appends a real `audit_log` entry attributed to the user's email.
 
@@ -16,7 +17,7 @@ Let a user scope the product to the jurisdictions and business areas they actual
 - Nigeria is active as `NG`. Choosing it scopes the dashboard, alerts, compliance table, impact map and AI context to Nigeria records. Live coverage includes CBN MPC decisions, SEC Nigeria circulars, and NAICOM, PenCom and FRC publications; the source register and remaining rollout are in `../research/nigeria-regulatory-sources.md`.
 - Only UK and EU have active connector coverage today; the other selectable jurisdictions remain preference-only until their official publication sources are assessed and implemented.
 - Alert delivery controls aren't exposed as editable saved controls yet — no notification system exists.
-- Saved jurisdiction/industry-focus preferences aren't yet **applied** anywhere — they persist correctly, but the dashboard/alerts feed doesn't filter by them. That's a separate piece of work from persistence itself (see the Gherkin scenario still marked `@not-yet-built`).
+- Industry focus is saved for future relevance and notification rules; it does not yet narrow the displayed regulation feed.
 
 ## Related
 

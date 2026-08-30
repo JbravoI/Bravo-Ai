@@ -1,25 +1,29 @@
 "use client";
 
-import { useState } from "react";
-import type { Source } from "@/lib/types";
+import { useMemo, useState } from "react";
 import { useRegulationModal } from "@/context/RegulationModalContext";
 import AlertCard from "./AlertCard";
 
-type FilterValue = "all" | Source;
-
-const FILTERS: { value: FilterValue; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "fca", label: "FCA" },
-  { value: "pra", label: "PRA" },
-  { value: "hmt", label: "HM Treasury" },
-  { value: "eu", label: "EU/Global" },
-  { value: "ng", label: "Nigeria" },
-];
-
 export default function AlertsSection({ title, subtitle }: { title: string; subtitle?: string }) {
   const { regulations } = useRegulationModal();
-  const [filter, setFilter] = useState<FilterValue>("all");
-  const list = filter === "all" ? regulations : regulations.filter((r) => r.source === filter);
+  const [filter, setFilter] = useState("all");
+  const regulators = useMemo(
+    () => Array.from(new Set(regulations.map((regulation) => regulation.regulator))).sort((a, b) => a.localeCompare(b)),
+    [regulations],
+  );
+  const filters = [
+    { value: "all", label: "All" },
+    ...regulators.map((regulator) => ({
+      value: regulator,
+      // Prefer the common regulator abbreviation where the data supplies one,
+      // keeping the country-scoped filter bar easy to scan.
+      label: regulator.match(/\(([^)]+)\)$/)?.[1] ?? regulator,
+    })),
+  ];
+  // A jurisdiction change can remove the previously selected regulator.
+  // Resolve that stale selection to All without an extra state update/render.
+  const activeFilter = filter === "all" || regulators.includes(filter) ? filter : "all";
+  const list = activeFilter === "all" ? regulations : regulations.filter((regulation) => regulation.regulator === activeFilter);
 
   return (
     <div>
@@ -29,11 +33,11 @@ export default function AlertsSection({ title, subtitle }: { title: string; subt
           {subtitle && <span className="section-sub">{subtitle}</span>}
         </div>
         <div className="filter-tabs">
-          {FILTERS.map((f) => (
+          {filters.map((f) => (
             <button
               key={f.value}
               type="button"
-              className={`ftab ${filter === f.value ? "active" : ""}`}
+              className={`ftab ${activeFilter === f.value ? "active" : ""}`}
               onClick={() => setFilter(f.value)}
             >
               {f.label}
