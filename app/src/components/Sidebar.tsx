@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRegulationModal } from "@/context/RegulationModalContext";
+import { useSession } from "next-auth/react";
 
 const NAV = [
   {
@@ -32,6 +33,7 @@ const NAV = [
 export default function Sidebar() {
   const pathname = usePathname();
   const { unreadCount } = useRegulationModal();
+  const { data: session } = useSession();
 
   return (
     <nav className="sidebar" aria-label="Primary">
@@ -51,6 +53,7 @@ export default function Sidebar() {
           ))}
         </div>
       ))}
+      {session?.user.role === "admin" && <div><div className="sb-section">Administration</div><Link href="/admin" className={`nav-item ${pathname === "/admin" ? "active" : ""}`} aria-current={pathname === "/admin" ? "page" : undefined}><span className="nav-icon">♛</span> Admin dashboard</Link></div>}
     </nav>
   );
 }
