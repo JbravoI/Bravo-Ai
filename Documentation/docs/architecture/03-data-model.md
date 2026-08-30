@@ -12,7 +12,7 @@ Every document's shape matches the corresponding type in `app/src/lib/types.ts` 
 regulations         — id, regulator, source, priority, status, title, date, type,
                        summary, impact, tags[], deadline, readiness, sourceUrl?,
                        retrievedAt?, sourceId?, contentHash?
-jurisdictions        — code, label, color, active
+jurisdictions        — code, label, color, active (includes `NG` / Nigeria; `active` is the default preference, not proof of live connector coverage)
 audit_log            — ts, label, detail
 impact_rows          — reg, banking, invest, insure, comp, ops
 users                — email, passwordHash, createdAt (Epic 03 — app/src/lib/users.ts)
@@ -42,6 +42,6 @@ The original Postgres plan (ADR 0001) was chosen partly for relational filtering
 
 ## Open Decisions
 
-- **Regulatory data sourcing**: the FCA public news-and-warnings RSS feed is the first live connector. PRA, HM Treasury and EU coverage still needs a connector or licensed-provider decision; regulator feed terms should be reviewed before adding each source.
+- **Nigeria regulatory data sourcing**: Nigeria is a stored jurisdiction preference only. The proposed CBN, SEC Nigeria, NAICOM, PenCom, FRC and secondary-source register is documented in `../research/nigeria-regulatory-sources.md`; source/terms assessment is required before adding a connector.
 - **Multi-tenant or single-org?** Determines whether an `org_id` field is needed on `audit_log`/`qa_log` at launch or can be added later.
 - **Atlas tier/scaling**: the current cluster is whatever Atlas's onboarding flow provisioned by default — revisit before real traffic (Epic 07).

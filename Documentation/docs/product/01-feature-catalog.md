@@ -36,7 +36,7 @@ Detailed doc: `../features/04-operations/audit-trail.md`
 
 ## 7. Preferences And Jurisdictions
 
-Jurisdiction toggles (UK, EU, US, Hong Kong, Singapore, Switzerland), alert-threshold checkboxes, and industry-focus tags (Banking, Investment, Insurance, Asset Management, Fintech). Persisted per signed-in user (MongoDB `user_preferences`) — survives a refresh and doesn't leak between accounts. Alert-threshold checkboxes still don't feed into anything; no notification system exists.
+Jurisdiction toggles (UK, EU, US, Hong Kong, Singapore, Switzerland and Nigeria), alert-threshold checkboxes, and industry-focus tags (Banking, Investment, Insurance, Asset Management, Fintech). Persisted per signed-in user (MongoDB `user_preferences`) — survives a refresh and doesn't leak between accounts. Nigeria is selectable but has no enabled ingestion connector; see `../research/nigeria-regulatory-sources.md`. Alert-threshold checkboxes still don't feed into anything; no notification system exists.
 
 Detailed doc: `../features/04-operations/preferences-and-jurisdictions.md`
 

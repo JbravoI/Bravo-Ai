@@ -29,5 +29,5 @@ Replace the simulated `/api/scan` with a real pipeline. FCA, PRA, HM Treasury an
 
 ## Remaining Follow-up
 
-- Add PRA, HM Treasury and EU connectors after confirming their preferred public feeds or licensed-provider arrangements.
+- Add Nigeria connectors only after source assessment. Start with CBN, SEC Nigeria, NAICOM, PenCom and FRC; add NDIC, FCCPC, NDPC, NFIU and NGX RegCo according to product scope. See `../../docs/research/nigeria-regulatory-sources.md`.
 - Configure `CRON_SECRET` in Vercel before relying on the daily scheduled scan; manual authenticated scans work without it.

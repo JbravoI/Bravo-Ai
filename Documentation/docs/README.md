@@ -38,3 +38,7 @@ Executable-style feature scenarios live in `../features/` at the Documentation r
 
 - `operations/local-development.md` - running the app locally (Node setup, dev server, build, lint).
 - `../deployment.md` - deploying to Vercel.
+
+## Regulatory source research
+
+- `research/nigeria-regulatory-sources.md` - proposed Nigeria regulator register and connector rollout criteria.

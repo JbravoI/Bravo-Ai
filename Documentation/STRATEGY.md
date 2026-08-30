@@ -36,7 +36,7 @@ Next.js (App Router, TypeScript)
 │   ├── preferences/         Per-user jurisdiction/alert settings
 │   └── audit/               Append-only audit log reads
 ├── lib/db/                  Database client + schema (Prisma or Drizzle)
-├── lib/ingest/              Source connectors (FCA, PRA, HMT, EU) + normalizer
+├── lib/ingest/              Source connectors (FCA, PRA, HMT, EU; Nigeria after source approval) + normalizer
 ├── auth/                    Auth.js (NextAuth) — who's allowed to see this org's data
 └── worker/                  Scheduled ingestion job (cron, or a queue consumer)
 ```
@@ -112,6 +112,7 @@ Each phase should leave the app in a working, deployable state.
 - Build one source connector first (e.g. FCA — many regulators publish RSS/Atom feeds or have public APIs) end-to-end: fetch → normalize → diff against last version → write to `regulations`/`regulation_versions` → append `audit_log` entry.
 - Wire "Scan Now" to actually invoke this job and reflect real status/timestamps (`Last scan` should reflect the last completed ingestion run, not a random number).
 - Add the remaining sources (PRA, HM Treasury, EU) once the pattern is proven.
+- Nigeria is a selectable jurisdiction preference. Before adding Nigeria ingestion, assess official source terms and stable publication surfaces; phase in CBN, SEC Nigeria, NAICOM, PenCom and FRC first, then NDIC, FCCPC, NDPC, NFIU and NGX RegCo as applicable. See `docs/research/nigeria-regulatory-sources.md`.
 - Every regulation record should carry its source URL and retrieval date so summaries are traceable back to the original text — required for a compliance tool to be trustworthy.
 
 ### Phase 6 — Hardening
@@ -134,7 +135,7 @@ Each phase should leave the app in a working, deployable state.
 
 **Still open — flag if any should change:**
 
-1. **Regulatory data sourcing:** are FCA/PRA/HMT/EU feeds to be scraped, or is there a licensed data provider in mind? Scraping public regulator sites is generally fine but should be checked against each site's terms.
+1. **Regulatory data sourcing:** are FCA/PRA/HMT/EU and proposed Nigeria regulator feeds to be scraped, or is there a licensed data provider in mind? Scraping public regulator sites is generally fine but should be checked against each site's terms. Nigeria's proposed source register is in `docs/research/nigeria-regulatory-sources.md`.
 2. **Multi-tenant or single-org?** Determines whether `org_id` scoping is needed now or can wait.
 3. **Vercel/Supabase-equivalent budget** — confirm no constraint rules these out before Phase 2.
 

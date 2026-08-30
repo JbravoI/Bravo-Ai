@@ -25,7 +25,7 @@ Regulatory monitoring is a pipeline, not a document pile: detect a change at the
 
 The core loop is:
 
-1. **Scan** official regulator sources (FCA, PRA, HM Treasury, EU) for new or changed publications.
+1. **Scan** official regulator sources (FCA, PRA, HM Treasury and EU today; Nigeria sources after connector approval) for new or changed publications.
 2. **Classify** each update: regulator, type, priority, deadline, affected business areas, and a plain-English summary of what it means for the firm.
 3. **Track readiness** against each regulation's deadline, and surface high-priority/near-deadline items on the dashboard.
 4. **Answer questions** grounded in the tracked regulation set, with citations back to source documents.
@@ -35,6 +35,6 @@ This is what separates the product from a demo: the same loop must work with a c
 
 ## Out Of Scope (For Now)
 
-- Jurisdictions beyond UK/EU (US, Hong Kong, Singapore, Switzerland exist as UI toggles today but have no real source scanning behind them).
+- Jurisdictions beyond UK/EU with no enabled connector. Nigeria is now a selectable preference, with a documented source register and proposed rollout; it is not yet live monitoring. US, Hong Kong, Singapore and Switzerland also remain preference-only.
 - Multi-tenant/multi-org support — see `../decisions/` for the open decision.
 - Anything resembling legal advice. Generated summaries and AI answers are decision support, not a substitute for legal review.

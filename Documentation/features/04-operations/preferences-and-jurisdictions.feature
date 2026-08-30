@@ -7,6 +7,12 @@ Feature: Preferences and jurisdictions
     Then it becomes active
     And selecting it again deactivates it
 
+  Scenario: Select Nigeria as a jurisdiction
+    Given a user is on the Preferences page
+    When they select the "NG — Nigeria" jurisdiction pill
+    Then it becomes active for that user's saved preferences
+    And the UI does not imply that Nigeria source scanning is enabled
+
   Scenario: Toggle an industry focus tag
     Given a user is on the Preferences page
     When they select an Industry Focus tab such as "Fintech"
