@@ -35,6 +35,6 @@ This is what separates the product from a demo: the same loop must work with a c
 
 ## Out Of Scope (For Now)
 
-- Jurisdictions beyond UK/EU with no enabled connector. Nigeria is now a selectable preference, with a documented source register and proposed rollout; it is not yet live monitoring. US, Hong Kong, Singapore and Switzerland also remain preference-only.
+- Jurisdictions beyond UK/EU except Nigeria. Nigeria is active with initial CBN Monetary Policy Committee coverage; its broader source register is documented and remains phased. US, Hong Kong, Singapore and Switzerland remain preference-only.
 - Multi-tenant/multi-org support — see `../decisions/` for the open decision.
 - Anything resembling legal advice. Generated summaries and AI answers are decision support, not a substitute for legal review.

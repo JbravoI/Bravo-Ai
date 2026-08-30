@@ -2,7 +2,7 @@
 
 ## Status
 
-Nigeria (`NG`) is available as a per-user jurisdiction preference. No Nigeria connector is enabled yet. Adding a preference must not be represented as live regulatory coverage until each official source has been assessed for a stable publication feed, permitted access, parsing quality and operational ownership.
+Nigeria (`NG`) is an active per-user jurisdiction. The initial live connector monitors the CBN Monetary Policy Committee decisions page. This is deliberately narrower than full Nigeria coverage: adding a jurisdiction must not be represented as complete regulator coverage until every source has been assessed for a stable publication feed, permitted access, parsing quality and operational ownership.
 
 ## Recommended source register
 
@@ -21,7 +21,7 @@ Nigeria (`NG`) is available as a per-user jurisdiction preference. No Nigeria co
 
 ## Connector rollout
 
-1. Start with CBN, SEC Nigeria, NAICOM, PenCom and FRC because together they cover the core banking, investment, insurance, pension and reporting populations.
+1. The CBN Monetary Policy Committee decisions page is the first live Nigeria connector. Next add CBN circulars, then SEC Nigeria, NAICOM, PenCom and FRC because together they cover the core banking, investment, insurance, pension and reporting populations.
 2. Prefer RSS, Atom, official API or clearly dated publication indexes. Do not rely on search-result snippets or unofficial reposts.
 3. Before enabling a source, record the exact URL, acceptable polling frequency, terms/access constraints, owner, parser tests and a fallback/manual-review process.
 4. Add NDIC, FCCPC, NDPC, NFIU and NGX RegCo according to each customer’s regulated activities. They are material for deposit-taking firms, digital lenders, data-heavy firms, AML reporting entities and listed/market participants respectively.

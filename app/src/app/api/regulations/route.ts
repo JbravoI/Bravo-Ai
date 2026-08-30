@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getRegulations } from "@/lib/data";
 import type { Source } from "@/lib/types";
 
-const VALID_SOURCES: Source[] = ["fca", "pra", "hmt", "eu"];
+const VALID_SOURCES: Source[] = ["fca", "pra", "hmt", "eu", "ng"];
 
 // Backed by in-memory seed data until Phase 2's Postgres store lands. See STRATEGY.md.
 export async function GET(request: Request) {

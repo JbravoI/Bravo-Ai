@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { getLatestScanRun } from "@/lib/data";
 import { runFcaIngestion } from "@/lib/ingest/fca";
 import { runAdditionalSourceIngestion } from "@/lib/ingest/sources";
+import { runNigeriaIngestion } from "@/lib/ingest/nigeria";
 import { getDb } from "@/lib/mongodb";
 
 export const maxDuration = 60;
@@ -27,7 +28,7 @@ async function runScan(request: Request) {
   try {
     const runs = [];
     const errors: string[] = [];
-    for (const [name, run] of [["FCA", runFcaIngestion], ["PRA", () => runAdditionalSourceIngestion("pra")], ["HM Treasury", () => runAdditionalSourceIngestion("hmt")], ["ESMA", () => runAdditionalSourceIngestion("eu")]] as const) {
+    for (const [name, run] of [["FCA", runFcaIngestion], ["PRA", () => runAdditionalSourceIngestion("pra")], ["HM Treasury", () => runAdditionalSourceIngestion("hmt")], ["ESMA", () => runAdditionalSourceIngestion("eu")], ["CBN Nigeria", runNigeriaIngestion]] as const) {
       try {
         runs.push(await run());
       } catch (sourceError) {

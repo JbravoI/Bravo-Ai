@@ -9,12 +9,14 @@ const ICON_CLASS: Record<Regulation["source"], string> = {
   pra: "icon-pra",
   hmt: "icon-hmt",
   eu: "icon-eu",
+  ng: "icon-ng",
 };
 const ICON_EMOJI: Record<Regulation["source"], string> = {
   fca: "⚖",
   pra: "🏛",
   hmt: "🏦",
   eu: "🌍",
+  ng: "🇳🇬",
 };
 const PRIORITY_BADGE: Record<Regulation["priority"], [string, string]> = {
   high: ["badge-high", "HIGH"],

@@ -13,7 +13,7 @@ This file is the quickest implementation truth for what's real right now. Epic p
 | Compliance readiness table | Complete | N/A | MongoDB Atlas, via shared data layer | Build + lint clean |
 | Impact map | Complete | N/A | MongoDB Atlas, via shared data layer | Build + lint clean |
 | Audit trail (display only) | Complete | N/A | MongoDB Atlas, via shared data layer | Build + lint clean |
-| Preferences / jurisdictions (persisted, per-user) | Complete | Complete | MongoDB Atlas | Full scripted login/save/reload/isolation flow verified — see Epic 03 |
+| Preferences / jurisdictions (persisted, per-user) | Complete | Complete | MongoDB Atlas | One jurisdiction is saved explicitly, page refreshes after save, and the selection scopes dashboard/alert/compliance/impact/AI data. Nigeria is active. |
 | `GET /api/regulations`, `/{id}`, `/audit`, `/impact`, `/jurisdictions` | N/A | Complete | MongoDB Atlas | Hit directly, checked 200/400/404 responses against live data |
 | `GET`/`POST /api/scan` | Complete | Implemented — authenticated FCA RSS ingestion | MongoDB `regulations`, `regulation_versions`, `scan_runs`, `audit_log` | FCA feed endpoint verified live (HTTP 200, 20 items); live database-write verification awaits `MONGODB_URI` in the target environment |
 | `POST /api/query` | Complete | Complete | Gemini 3.6 Flash + MongoDB `qa_log` | Authenticated server-side provider call; process-local free-tier guard, timeout/retry handling, and audit logging implemented. Requires `GEMINI_API_KEY`. |
@@ -22,7 +22,7 @@ This file is the quickest implementation truth for what's real right now. Epic p
 | MongoDB Atlas database | Complete | — | — | Connected, seeded (`npm run seed`), and confirmed live via a direct-edit round-trip test — see Epic 02 |
 | Auth (sign up / sign in / sign out / route gating) | Complete | Complete | MongoDB Atlas `users` | Full scripted flow: signup, CSRF+credentials login, gated redirect, wrong-password rejection — see Epic 03 |
 | Real AI provider (Gemini 3.6 Flash) wired up | Complete | Complete | `GEMINI_API_KEY`; MongoDB `qa_log` | Server-side only; API key and model confirmed locally without being exposed. |
-| Real regulator-source scanning | Implemented — FCA | Implemented | MongoDB Atlas | Normalizes FCA RSS entries with source URL/retrieval date, detects content changes, and records scan/audit history; first database-write verification plus PRA/HMT/EU follow-up remain |
+| Real regulator-source scanning | Implemented — FCA, PRA, HM Treasury, ESMA and initial CBN Nigeria | Implemented | MongoDB Atlas | Nigeria imports official CBN Monetary Policy Committee decisions; expand to CBN circulars and other Nigeria regulators using the documented source register. |
 | Automated test suite | Not started | — | — | — |
 | Vercel deployment of the real app | Not started | — | — | Deploy steps documented (`../deployment.md`) but not yet executed |
 

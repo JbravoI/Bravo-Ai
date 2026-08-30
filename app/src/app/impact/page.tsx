@@ -1,6 +1,9 @@
 import ImpactTable from "@/components/ImpactTable";
-import { getRegulations } from "@/lib/data";
+import { getJurisdictions, getRegulationsForSources } from "@/lib/data";
 import type { ImpactLevel, ImpactRow } from "@/lib/types";
+import { auth } from "@/auth";
+import { getUserPreferences } from "@/lib/preferences";
+import { selectedJurisdictionCode, sourcesForJurisdiction } from "@/lib/jurisdictions";
 
 function level(regulation: { priority: string; tags: string[] }, area: string): ImpactLevel {
   if (!regulation.tags.some((tag) => tag.toLowerCase() === area.toLowerCase())) return "None";
@@ -8,7 +11,13 @@ function level(regulation: { priority: string; tags: string[] }, area: string): 
 }
 
 export default async function ImpactPage() {
-  const regulations = await getRegulations();
+  const session = await auth();
+  const [jurisdictions, preferences] = await Promise.all([
+    getJurisdictions(),
+    session?.user?.id ? getUserPreferences(session.user.id) : Promise.resolve(null),
+  ]);
+  const jurisdictionCode = selectedJurisdictionCode(preferences?.activeJurisdictionCodes, jurisdictions.map((jurisdiction) => jurisdiction.code));
+  const regulations = await getRegulationsForSources(sourcesForJurisdiction(jurisdictionCode));
   const rows: ImpactRow[] = regulations.map((regulation) => ({
     reg: regulation.title,
     banking: level(regulation, "Banking"),

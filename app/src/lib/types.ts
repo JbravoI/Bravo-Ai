@@ -1,4 +1,4 @@
-export type Source = "fca" | "pra" | "hmt" | "eu";
+export type Source = "fca" | "pra" | "hmt" | "eu" | "ng";
 export type Priority = "high" | "medium" | "low";
 export type Status = "new" | "pending" | "implemented";
 

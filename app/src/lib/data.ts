@@ -18,6 +18,12 @@ export async function getRegulations(source?: Source): Promise<Regulation[]> {
   return db.collection<Regulation>("regulations").find(filter, NO_ID).sort({ id: 1 }).toArray();
 }
 
+export async function getRegulationsForSources(sources: Source[]): Promise<Regulation[]> {
+  if (!sources.length) return [];
+  const db = await getDb();
+  return db.collection<Regulation>("regulations").find({ source: { $in: sources } }, NO_ID).sort({ id: 1 }).toArray();
+}
+
 export async function getRegulationById(id: number): Promise<Regulation | undefined> {
   const db = await getDb();
   const doc = await db.collection<Regulation>("regulations").findOne({ id }, NO_ID);

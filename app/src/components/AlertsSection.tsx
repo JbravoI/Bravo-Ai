@@ -13,6 +13,7 @@ const FILTERS: { value: FilterValue; label: string }[] = [
   { value: "pra", label: "PRA" },
   { value: "hmt", label: "HM Treasury" },
   { value: "eu", label: "EU/Global" },
+  { value: "ng", label: "Nigeria" },
 ];
 
 export default function AlertsSection({ title, subtitle }: { title: string; subtitle?: string }) {
