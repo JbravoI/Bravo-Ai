@@ -1,30 +1,32 @@
 import { MongoClient } from "mongodb";
 
-const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB ?? "bravo_ai";
-
-if (!uri) {
-  throw new Error("MONGODB_URI is not set. Add it to app/.env.local (see app/.env.example).");
-}
 
 declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-let clientPromise: Promise<MongoClient>;
+function getClientPromise() {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) throw new Error("MONGODB_URI is not set. Add it to the deployment environment.");
 
-if (process.env.NODE_ENV === "development") {
-  // Reuse the client across Next.js dev hot-reloads instead of opening a new
-  // connection pool on every file change.
+  // Do not connect when this module is evaluated: a rejected promise at module
+  // scope becomes an unhandled rejection in a serverless function. Lazily
+  // connect on the first database operation and clear a failed promise so a
+  // later request can recover after Atlas/network availability is restored.
   if (!global._mongoClientPromise) {
-    global._mongoClientPromise = new MongoClient(uri).connect();
+    global._mongoClientPromise = new MongoClient(uri, {
+      connectTimeoutMS: 10_000,
+      serverSelectionTimeoutMS: 10_000,
+    }).connect().catch((error) => {
+      global._mongoClientPromise = undefined;
+      throw error;
+    });
   }
-  clientPromise = global._mongoClientPromise;
-} else {
-  clientPromise = new MongoClient(uri).connect();
+  return global._mongoClientPromise;
 }
 
 export async function getDb() {
-  const client = await clientPromise;
+  const client = await getClientPromise();
   return client.db(dbName);
 }
