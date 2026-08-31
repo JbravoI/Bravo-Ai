@@ -14,6 +14,7 @@ function LoginForm() {
   const urlError = searchParams.get("error");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [busy, setBusy] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -46,15 +47,26 @@ function LoginForm() {
       </div>
       <div className="auth-field">
         <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          className="qa-input"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          autoComplete="current-password"
-        />
+        <div className="password-input-wrap">
+          <input
+            id="password"
+            type={passwordVisible ? "text" : "password"}
+            className="qa-input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoComplete="current-password"
+          />
+          <button
+            type="button"
+            className="password-visibility-toggle"
+            aria-label={passwordVisible ? "Hide password" : "Show password"}
+            aria-pressed={passwordVisible}
+            onClick={() => setPasswordVisible((visible) => !visible)}
+          >
+            {passwordVisible ? "◉" : "◌"}
+          </button>
+        </div>
       </div>
       <button type="submit" className="btn btn-primary" disabled={busy}>
         {busy ? "Signing in…" : "Sign in"}
