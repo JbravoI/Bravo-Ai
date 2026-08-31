@@ -11,7 +11,7 @@ import MobileNav from "./MobileNav";
 import TopBar from "./TopBar";
 import { RegulationModalProvider } from "@/context/RegulationModalContext";
 
-const PUBLIC_PATHS = new Set(["/", "/login", "/signup", "/api-docs"]);
+const PUBLIC_PATHS = new Set(["/", "/login", "/signup", "/forgot-password", "/reset-password", "/api-docs"]);
 
 export default function AppShell({ children, regulations, regulatorFilters = [] }: { children: ReactNode; regulations: Regulation[]; regulatorFilters?: string[] }) {
   const pathname = usePathname();

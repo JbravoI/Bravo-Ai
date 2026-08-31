@@ -76,7 +76,7 @@ function LoginForm() {
         {busy ? "Signing in…" : "Sign in"}
       </button>
       <div className="auth-switch">
-        No account? <Link href="/signup">Create one</Link>
+        <Link href="/forgot-password">Forgot password?</Link><br />No account? <Link href="/signup">Create one</Link>
       </div>
     </form>
   );

@@ -28,6 +28,18 @@ Feature: Authentication
     Then sign-in fails with an error message
     And no session is created
 
+  Scenario: Request an administrator-assisted password reset
+    Given a visitor is on the forgot-password page
+    When they submit their account email
+    Then the app confirms the request without revealing whether that email exists
+    And an administrator can verify the requester and issue a one-time reset link
+
+  Scenario: Use a password reset link once
+    Given an administrator has issued a reset link less than 30 minutes ago
+    When the user submits a valid new password through that link
+    Then their password is updated and their account is unlocked
+    And the reset link cannot be used again
+
   Scenario: Unauthenticated visitors are redirected to login
     Given a visitor has no active session
     When they request any UI page other than /login or /signup

@@ -12,11 +12,12 @@ Every other feature in the product is either per-user (preferences, and eventual
 - The public landing page (`/`), `/login`, and `/signup` are excluded from the auth gate. `app/src/proxy.ts` redirects unauthenticated visitors from the signed-in product routes, including `/dashboard`, to `/login`.
 - `/api/**` is **not** gated by the proxy — it remains the public surface Epic 02 built, with one exception: `/api/preferences` checks `auth()` itself and returns `401` without a session, since preferences have no meaningful unauthenticated response.
 - `TopBar.tsx` shows the signed-in user's profile name (with their email as the hover label) and a working Sign Out button. Manual sign-out and inactivity sign-out both return the user to the public landing page (`/`).
+- Password reset is temporarily admin-assisted: `/forgot-password` accepts an email without revealing whether it exists, an administrator verifies the requester and issues a single-use reset link from `/admin`, and `/reset-password` accepts a new password. Tokens are stored only as hashes, expire after 30 minutes, and cannot be reused.
 
 ## Known Gaps
 
 - No OAuth (Google/GitHub sign-in) — Credentials-only, a deliberate choice to avoid needing external app-registration credentials before building anything. See `../../decisions/0006-authjs-credentials-not-oauth.md`.
-- No email verification, password reset, or account recovery flow.
+- No email delivery provider yet: reset links are copied by a verified administrator and shared outside the product. An email provider can later replace only that delivery step.
 - Signup is unrestricted/self-service — no invite system or admin approval, acceptable for the current pre-launch, single-tenant stage.
 - No rate limiting on login/signup attempts.
 

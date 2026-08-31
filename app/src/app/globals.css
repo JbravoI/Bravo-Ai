@@ -243,6 +243,8 @@ button {
 .admin-search { min-width: 200px; }
 .admin-role-select:focus, .admin-search:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .admin-message { color: var(--success); font-size: 12px; margin: 0 0 10px; }
+.admin-reset-link { display: flex; flex-direction: column; gap: 5px; margin-top: 12px; color: var(--text3); font: 10px var(--fm); }
+.admin-reset-link input { width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 7px; padding: 8px 10px; color: var(--text2); font: 11px var(--fm); }
 
 /* STAT CARDS */
 .stats-grid {
@@ -967,6 +969,7 @@ tr[role="button"]:focus-visible {
 .auth-switch a {
   color: var(--accent);
 }
+.auth-reset-message { color: var(--success); font-size: 12px; line-height: 1.55; }
 
 /* PREFS */
 .pref-check {

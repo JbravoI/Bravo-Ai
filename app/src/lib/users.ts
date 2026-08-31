@@ -79,6 +79,10 @@ export async function verifyUser(email: string, password: string): Promise<AuthU
   return publicUser(user as { _id: ObjectId; email: string; profileName?: unknown; role?: unknown });
 }
 
+export async function hashPassword(password: string) {
+  return bcrypt.hash(password, 10);
+}
+
 export async function getUserById(id: string) {
   if (!ObjectId.isValid(id)) return null;
   const user = await (await getDb()).collection("users").findOne({ _id: new ObjectId(id) });
