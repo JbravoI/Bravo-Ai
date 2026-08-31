@@ -64,7 +64,11 @@ function LoginForm() {
             aria-pressed={passwordVisible}
             onClick={() => setPasswordVisible((visible) => !visible)}
           >
-            {passwordVisible ? "◉" : "◌"}
+            {passwordVisible ? (
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 4.2A10.8 10.8 0 0 1 12 4c5.4 0 9.2 5 10 8-0.3 1.1-1.1 2.6-2.4 4M6.1 6.1C3.9 7.7 2.5 10.2 2 12c0.8 3 4.6 8 10 8 1.3 0 2.5-0.3 3.6-0.8" /></svg>
+            ) : (
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-8 10-8 10 8 10 8-3.6 8-10 8S2 12 2 12Z" /><circle cx="12" cy="12" r="3" /></svg>
+            )}
           </button>
         </div>
       </div>
