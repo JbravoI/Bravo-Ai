@@ -19,6 +19,8 @@ users                — email, profileName, passwordHash, createdAt (Epic 03 �
                        uses Mongo's native _id as the user id, unlike the collections
                        above; a different kind of entity (auth identity, not domain data)
 user_preferences     — userId, activeJurisdictionCodes[], activeIndustryFocus[], updatedAt
+alert_reads          — userId, regulationId, readAt (one document per user/record acknowledgement;
+                       the selected jurisdiction is resolved from the regulation at write time)
 password_reset_requests — userId, email, status, requestedAt, tokenHash, expiresAt, usedAt
                        (Epic 03 — app/src/lib/preferences.ts)
 ```

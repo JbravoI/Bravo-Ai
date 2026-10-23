@@ -126,6 +126,23 @@ Each phase should leave the app in a working, deployable state.
 - Set up the scheduled ingestion trigger.
 - Basic monitoring: ingestion failures, API error rates, Q&A latency/cost.
 
+### Phase 8 — Information navigation, filtering and alert acknowledgement
+- Introduce one reusable, accessible paginated-list pattern for the Dashboard feed, Alerts, Compliance Readiness and Audit Trail. Show items 1–10 by default and let the user choose 10, 20, 30, 50 (and, where safe, all) items per page. Preserve the current jurisdiction, filters, sort and page size while moving between pages.
+- Add Dashboard feed controls that sort by newest/oldest publication date and risk (High, Medium, Low), and filter by regulator, status, deadline/review state and industry tag. Include a clear-all action and an explicit empty state so users can tell the difference between “no records” and “no records match these filters.”
+- Treat opening the Alerts area as an acknowledgement action: when a signed-in user navigates to `/alerts`, mark all currently unread alerts in their selected jurisdiction as viewed, persist that decision in `alert_reads`, and immediately set the Alerts badge to zero. New records arriving after that point remain unread. This must be an authenticated, auditable bulk operation and must not mark records in another jurisdiction as read.
+- Keep opening an individual card as an acknowledgement action too, so direct links and Dashboard card interactions remain consistent.
+
+### Phase 9 — Personalised product presentation and appearance
+- Expand the public landing page with a concise, non-marketing-only “What Bravo Ai does” article: explain the source scan → prioritisation → impact/review → audit workflow, what a new user sees after sign-in, and that source documents remain the authoritative reference. Keep it readable without exposing API documentation or secrets.
+- Add a saved Appearance preference with Light, Dark and Browser/System choices. “Browser/System” follows the operating-system colour scheme; Light and Dark explicitly override it. Apply the selected theme before the page is painted to avoid a distracting theme flash, maintain accessible contrast, and retain the choice across sign-in sessions.
+- In jurisdiction choices and labels, prefix EU, US, HK, SG and CH with `*Beta`. UK and Nigeria are not beta. Beta labeling must be present anywhere these jurisdictions can be selected or described, not only on the Preferences screen.
+
+### Phase 10 — Compliance assessment and score model
+- Replace seed/manual `readiness` percentages with a traceable readiness assessment workflow. A permitted compliance user should be able to record an assessment for a regulation: owner, assessment date, implementation/review status, percentage, evidence/reference, rationale and next review date. Preserve an append-only history rather than silently overwriting the prior assessment.
+- Define and display the compliance-score calculation. Initially, calculate it as the rounded average of the latest readiness assessment for applicable regulations in the selected jurisdiction; exclude records that have never been assessed and clearly display the assessed/total denominator. Consider priority- and deadline-weighted scoring only after the business agrees the weighting policy.
+- Make the Compliance Readiness table explain its status colours (green ≥70%, amber 40–69%, red <40%) and distinguish “not assessed” from `0%`. The dashboard should link to the underlying filtered records and identify the calculation timestamp.
+- Audit every readiness change, score-affecting inclusion/exclusion and bulk alert acknowledgement. Add unit and route tests for pagination, filtering, jurisdiction scoping, theme persistence, readiness calculation and permission boundaries.
+
 ## 5. Decisions
 
 **Confirmed:**

@@ -8,9 +8,12 @@ Give a compliance officer a single view of what's changed and what needs attenti
 
 - The dashboard (`/dashboard`) derives its regulations-tracked, high-priority, pending-review and average-readiness metrics from the stored regulations, followed by the full alerts feed and the AI Q&A panel.
 - The alerts page (`/alerts`) shows the same feed at full width, without the stat cards.
-- Both pages filter by source (All/FCA/PRA/HM Treasury/EU/Global) via `app/src/components/AlertsSection.tsx`, which holds its own filter state — each route's filter is independent by construction, not shared.
+- Both pages filter by the regulatory bodies present in the selected jurisdiction via `app/src/components/AlertsSection.tsx`, which holds its own filter state — each route's filter is independent by construction, not shared.
+- The Dashboard adds client-side controls for publication date (newest/oldest), risk, status, deadline/review state and industry tag. A clear action restores the full active-jurisdiction feed; an explicit empty state distinguishes no matching records from a regulator that returned no publication.
+- The Dashboard and Alerts feed paginate at 10 records by default. Users can select 10, 20, 30 or 50 records per page and move between pages without changing their selected jurisdiction.
 - Clicking an alert card opens `app/src/components/RegulationModal.tsx` via `app/src/context/RegulationModalContext.tsx`, showing the AI summary, business impact and affected-area tags for that regulation.
 - The Alerts navigation badge shows the signed-in user's unread regulation count, not a fixed number. Opening an alert marks it read for that user and reduces the badge; this state is persisted in MongoDB's `alert_reads` collection.
+- Opening `/alerts` acknowledges every unread alert in the user's currently selected jurisdiction. The authenticated server operation only writes reads for records visible in that jurisdiction (including the user's optional Nigeria records), appends one audit entry when it changes anything, and returns the affected ids so the badge becomes zero without a refresh. Newly ingested records remain unread.
 - Alert cards are real `<button>` elements (not clickable `<div>`s), keyboard-operable, with visible focus rings.
 
 ## Known Gaps

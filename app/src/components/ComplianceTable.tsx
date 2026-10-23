@@ -3,6 +3,7 @@
 import type { Regulation } from "@/lib/types";
 import { useRegulationModal } from "@/context/RegulationModalContext";
 import { formatDate } from "@/lib/dates";
+import PaginationControls, { usePagination } from "./PaginationControls";
 
 const PRIORITY_BADGE: Record<Regulation["priority"], [string, string]> = {
   high: ["badge-high", "HIGH"],
@@ -17,6 +18,7 @@ const STATUS_BADGE: Record<Regulation["status"], [string, string] | null> = {
 
 export default function ComplianceTable() {
   const { regulations, openModal } = useRegulationModal();
+  const pagination = usePagination(regulations, regulations.map((regulation) => regulation.id).join(","));
 
   return (
     <div className="table-wrap">
@@ -32,7 +34,7 @@ export default function ComplianceTable() {
           </tr>
         </thead>
         <tbody>
-          {regulations.map((r) => {
+          {pagination.pageItems.map((r) => {
             const progressClass = r.readiness >= 70 ? "pf-green" : r.readiness >= 40 ? "pf-warn" : "pf-danger";
             const [priorityClass, priorityLabel] = PRIORITY_BADGE[r.priority];
             const statusBadge = STATUS_BADGE[r.status];
@@ -71,8 +73,10 @@ export default function ComplianceTable() {
               </tr>
             );
           })}
+          {!pagination.pageItems.length && <tr><td colSpan={6}>No regulations are available for this jurisdiction.</td></tr>}
         </tbody>
       </table>
+      <PaginationControls page={pagination.page} pageSize={pagination.pageSize} totalItems={pagination.totalItems} totalPages={pagination.totalPages} onPageChange={pagination.setPage} onPageSizeChange={pagination.setPageSize} />
     </div>
   );
 }

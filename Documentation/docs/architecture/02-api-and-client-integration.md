@@ -13,6 +13,7 @@ All routes live under `app/src/app/api/` and are documented authoritatively by `
 | `/api/jurisdictions` | GET | MongoDB Atlas | |
 | `/api/scan` | POST | Simulated | Response body includes `"simulated": true` — never remove that field without the endpoint becoming real |
 | `/api/query` | POST | Gemini 3.6 Flash + MongoDB `qa_log` | Authenticated; grounded in tracked regulations; rate-limited and audited |
+| `/api/alert-reads` | GET, POST | MongoDB Atlas `alert_reads` | Authenticated. `POST { regulationId }` acknowledges one visible record; `POST { action: "mark-all" }` acknowledges all records in the user's active jurisdiction and audits the bulk action. |
 
 ## Rules
 

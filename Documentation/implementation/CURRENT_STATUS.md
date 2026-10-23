@@ -1,6 +1,6 @@
 # Current Status
 
-**Updated:** 2026-08-29
+**Updated:** 2026-10-23
 
 This file is the quickest implementation truth for what's real right now. Epic pages remain authoritative for detailed remaining work.
 
@@ -8,11 +8,11 @@ This file is the quickest implementation truth for what's real right now. Epic p
 | :--- | :---: | :---: | :---: | :--- |
 | Public landing page | Complete | N/A | N/A | Figma-referenced visual implementation; local browser preview verified at `/` |
 | Bravo Ai branding | Complete | N/A | N/A | Manual: no "RegWatch" text/ids/functions remain in the app (`app/src/app/layout.tsx` metadata, `TopBar.tsx` logo, all component/route names) |
-| Dashboard, alerts, filtering | Complete (`/dashboard`) | N/A | MongoDB Atlas, via shared data layer | Local redirect check confirms `/dashboard` is authenticated; existing build/lint and live DB-edit checks remain valid |
+| Dashboard, alerts, filtering | Complete (`/dashboard`, `/alerts`) | Complete (`POST /api/alert-reads { action: "mark-all" }`) | MongoDB Atlas, via shared data layer and `alert_reads` | Dashboard supports date/risk sort plus regulator/risk/status/deadline/industry filters; opening Alerts bulk-acknowledges only the active jurisdiction |
 | Regulation detail modal | Complete | N/A | MongoDB Atlas, via shared data layer | Manual keyboard/click check |
-| Compliance readiness table | Complete | N/A | MongoDB Atlas, via shared data layer | Build + lint clean |
+| Compliance readiness table | Complete | N/A | MongoDB Atlas, via shared data layer | Shared 10/20/30/50 pagination; TypeScript + lint clean |
 | Impact map | Complete | N/A | MongoDB Atlas, via shared data layer | Build + lint clean |
-| Audit trail (display only) | Complete | N/A | MongoDB Atlas, via shared data layer | Build + lint clean |
+| Audit trail (display only) | Complete | N/A | MongoDB Atlas, via shared data layer | Shared 10/20/30/50 pagination; TypeScript + lint clean |
 | Preferences / jurisdictions (persisted, per-user) | Complete | Complete | MongoDB Atlas | One jurisdiction is saved explicitly, page refreshes after save, and the selection scopes dashboard/alert/compliance/impact/AI data. Nigeria is active. |
 | `GET /api/regulations`, `/{id}`, `/audit`, `/impact`, `/jurisdictions` | N/A | Complete | MongoDB Atlas | Hit directly, checked 200/400/404 responses against live data |
 | `GET`/`POST /api/scan` | Complete | Implemented — authenticated FCA RSS ingestion | MongoDB `regulations`, `regulation_versions`, `scan_runs`, `audit_log` | FCA feed endpoint verified live (HTTP 200, 20 items); live database-write verification awaits `MONGODB_URI` in the target environment |

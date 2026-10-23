@@ -5,6 +5,11 @@ Feature: Compliance readiness tracking
     Given a user opens the Compliance page
     Then they see every tracked regulation with its regulator, status, deadline, readiness percentage and priority
 
+  Scenario: Page through compliance records
+    Given more than 10 regulations are tracked in the selected jurisdiction
+    When a user chooses 20 rows per page or moves to the next page
+    Then the Compliance table shows the requested page of records
+
   Scenario: Readiness is visually flagged by severity
     Given a regulation has a readiness percentage below 40%
     When the compliance table renders that row

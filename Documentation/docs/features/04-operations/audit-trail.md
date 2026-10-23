@@ -6,13 +6,13 @@ Give a compliance team a reliable, chronological record of what the system did a
 
 ## Current Behavior
 
-- `/audit` renders `app/src/components/AuditLog.tsx`: a chronological list of persisted entries, each with a timestamp, a bold label and a detail line.
+- `/audit` renders `app/src/components/AuditLog.tsx`: a chronological list of persisted entries, each with a timestamp, a bold label and a detail line. It displays 10 entries by default, with 10, 20, 30 and 50-entry page-size choices and previous/next navigation.
 - Entries are structured as `{ ts, label, detail }` (see `app/src/lib/types.ts`'s `AuditEntry`) specifically so rendering never needs to parse a markup string — see `../../architecture/04-security-privacy.md`.
 
 ## Known Gaps
 
 - Every completed FCA scan appends a persisted audit entry with its real completion timestamp and new/changed record counts. The TopBar refreshes the current route after a completed scan so an open audit page reflects the new entry.
-- No pagination, search or date filtering.
+- No search or date filtering.
 
 ## What "Real" Looks Like
 

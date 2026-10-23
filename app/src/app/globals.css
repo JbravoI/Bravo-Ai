@@ -350,6 +350,51 @@ button {
   color: var(--text3);
   font-size: 12px;
 }
+.alert-controls {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+}
+.alert-controls label, .pagination-size {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  color: var(--text3);
+  font: 10px var(--fm);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.alert-controls select, .pagination-size select {
+  min-height: 30px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  color: var(--text);
+  font: 11px var(--fb);
+}
+.alert-controls select:focus, .pagination-size select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 11px 0 0;
+  color: var(--text3);
+  font: 10px var(--fm);
+}
+.table-wrap .pagination { padding: 11px 12px; border-top: 1px solid var(--border); }
+.pagination-summary { white-space: nowrap; }
+.pagination-size { flex-direction: row; align-items: center; text-transform: none; letter-spacing: normal; }
+.pagination-size select { min-height: 27px; }
+.pagination-actions { display: flex; align-items: center; gap: 7px; }
+.pagination-actions .btn { padding: 4px 9px; font-size: 11px; }
 .alert-card {
   background: var(--surface);
   border: 1px solid var(--border);

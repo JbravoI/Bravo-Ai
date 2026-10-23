@@ -7,6 +7,7 @@ Show, at a glance, how prepared the firm is for every tracked regulation — sta
 ## Current Behavior
 
 - `/compliance` renders `app/src/components/ComplianceTable.tsx`: one row per regulation with title, regulator, status badge, deadline, a readiness progress bar (green ≥70%, amber ≥40%, red below), and priority badge.
+- The table paginates at 10 rows by default. A user can select 10, 20, 30 or 50 rows per page and navigate between pages.
 - Rows open the same `RegulationModal` used by the alerts feed.
 - Table rows are keyboard-operable (`role="button"`, `tabIndex={0}`, Enter/Space handling) since a `<button>` cannot legally wrap a `<tr>`.
 

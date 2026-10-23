@@ -6,13 +6,13 @@ A public introduction to Bravo Ai, with product positioning, a dashboard preview
 
 ## 2. Dashboard And Alerts
 
-Stat cards (regulations tracked, high priority, pending review, compliance score) and a filterable feed of regulatory updates by source (FCA/PRA/HM Treasury/EU/All). Clicking an alert opens a detail view with AI summary, business impact and affected areas. Currently backed by 7 seed records, not a live scan.
+Stat cards (regulations tracked, high priority, pending review, compliance score) and a filterable regulatory feed. On the Dashboard it can be sorted by date/risk and narrowed by regulator, risk, status, deadline and industry; Dashboard and Alerts paginate at 10/20/30/50 records. Opening Alerts marks every unread alert in the active jurisdiction as viewed. Clicking an alert opens a detail view with AI summary, business impact and affected areas.
 
 Detailed doc: `../features/01-monitoring/dashboard-and-alerts.md`
 
 ## 3. Compliance Readiness
 
-A table of every tracked regulation with regulator, status, deadline, a readiness percentage (progress bar) and priority. Rows open the same regulation detail view as alerts.
+A table of every tracked regulation with regulator, status, deadline, a readiness percentage (progress bar) and priority. It paginates at 10/20/30/50 records. Rows open the same regulation detail view as alerts.
 
 Detailed doc: `../features/02-compliance/compliance-readiness.md`
 
@@ -30,7 +30,7 @@ Detailed doc: `../features/03-analysis/impact-map.md`
 
 ## 6. Audit Trail
 
-A chronological log of scans, alerts, compliance-record updates and Q&A queries. Currently static seed entries; a real scan doesn't yet append to it.
+A paginated chronological log of scans, alert acknowledgements, compliance-record updates and Q&A queries. Each page can show 10, 20, 30 or 50 entries.
 
 Detailed doc: `../features/04-operations/audit-trail.md`
 
