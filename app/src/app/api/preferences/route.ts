@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { getUserPreferences, saveUserPreferences } from "@/lib/preferences";
+import { APPEARANCE_PREFERENCES, getUserPreferences, saveUserPreferences } from "@/lib/preferences";
 import { clearDeselectedOptionalNigeriaRegulations, runOptionalNigeriaRegulatorIngestion } from "@/lib/optional-nigeria-regulators";
 import { normalizeOptionalNigeriaRegulatorCodes } from "@/lib/optional-nigeria-regulator-config";
 
@@ -26,7 +26,7 @@ export async function PUT(request: Request) {
   if (!body || typeof body !== "object") {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
-  const { activeJurisdictionCodes, activeIndustryFocus, optionalNigeriaRegulatorCodes } = body;
+  const { activeJurisdictionCodes, activeIndustryFocus, optionalNigeriaRegulatorCodes, appearance } = body;
   if (Array.isArray(activeJurisdictionCodes) && (activeJurisdictionCodes.length !== 1 || !activeJurisdictionCodes.every((code) => typeof code === "string"))) {
     return NextResponse.json({ error: "Select exactly one jurisdiction." }, { status: 400 });
   }
@@ -35,6 +35,9 @@ export async function PUT(request: Request) {
   }
   if (optionalNigeriaRegulatorCodes !== undefined && (!Array.isArray(optionalNigeriaRegulatorCodes) || !optionalNigeriaRegulatorCodes.every((code) => typeof code === "string"))) {
     return NextResponse.json({ error: "Optional Nigeria regulators must be a list of codes." }, { status: 400 });
+  }
+  if (appearance !== undefined && !APPEARANCE_PREFERENCES.includes(appearance)) {
+    return NextResponse.json({ error: "Appearance must be light, dark or system." }, { status: 400 });
   }
   const optionalCodes = normalizeOptionalNigeriaRegulatorCodes(optionalNigeriaRegulatorCodes);
   if (Array.isArray(optionalNigeriaRegulatorCodes) && optionalCodes.length !== new Set(optionalNigeriaRegulatorCodes).size) {
@@ -48,6 +51,7 @@ export async function PUT(request: Request) {
     ...(Array.isArray(activeJurisdictionCodes) ? { activeJurisdictionCodes } : {}),
     ...(Array.isArray(activeIndustryFocus) ? { activeIndustryFocus } : {}),
     ...(Array.isArray(optionalNigeriaRegulatorCodes) ? { optionalNigeriaRegulatorCodes: optionalCodes } : {}),
+    ...(appearance !== undefined ? { appearance } : {}),
   });
   if (Array.isArray(optionalNigeriaRegulatorCodes)) await clearDeselectedOptionalNigeriaRegulations(session.user.id, selectedNigeria ? optionalCodes : []);
   const scan = newlySelected.length ? await runOptionalNigeriaRegulatorIngestion(session.user.id, newlySelected) : undefined;

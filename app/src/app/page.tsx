@@ -68,6 +68,20 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <section className="landing-explainer" aria-labelledby="what-to-expect">
+        <div>
+          <p className="landing-kicker">WHAT TO EXPECT INSIDE</p>
+          <h2 id="what-to-expect">A practical view of regulatory change, from source to action.</h2>
+          <p>Bravo Ai brings the monitoring workflow into one place. It collects regulatory publications, highlights the updates that need attention, and keeps the underlying source available for your team to review.</p>
+        </div>
+        <div className="landing-expectations">
+          <article><span>01</span><h3>Choose your scope</h3><p>Select one jurisdiction and the business areas that matter to your organisation.</p></article>
+          <article><span>02</span><h3>Review what changed</h3><p>Use Dashboard and Alerts to prioritise regulatory updates by risk, status and deadline.</p></article>
+          <article><span>03</span><h3>Evidence your response</h3><p>Explore the impact map, track readiness and retain an audit trail of scans and actions.</p></article>
+        </div>
+        <p className="landing-source-note">Bravo Ai helps organise and explain regulatory information; official regulator publications remain the authoritative source.</p>
+      </section>
+
       <section className="landing-security">
         <div><p className="landing-kicker">SECURITY YOU CAN STAND BEHIND</p><h2>Built for the responsibility <span>you carry.</span></h2><p>Your compliance data deserves more than a dashboard. Bravo Ai is designed with accountable, secure decision-making in mind.</p><Link href="/signup" className="landing-link">Explore Bravo Ai <span>↗</span></Link></div>
         <div className="security-card"><div><span>◈</span><b>Traceable by design</b><p>Every question, change and action has a clear place in your audit trail.</p></div><div><span>◌</span><b>Grounded intelligence</b><p>Answer questions against the regulations your organisation tracks.</p></div></div>

@@ -23,6 +23,7 @@ Do not introduce additional status labels without updating `README.md`.
 | Epic 06 Hardening | `Pending` | CSP, full modal focus-trap/restore, mobile nav, ISO 8601 dates, first automated tests. |
 | Epic 07 Deploy And Operate | `Pending` | See `../deployment.md` for the manual steps; this epic is about making it a repeatable, monitored deploy. |
 | Epic 08 Information Navigation, Filtering And Alert Acknowledgement | `Completed` | Shared 10/20/30/50 pagination, Dashboard and Impact Map sorting/filtering, and active-jurisdiction bulk alert acknowledgement. |
+| Epic 09 Personalised Product Presentation And Appearance | `Completed` | Landing-page workflow article, persisted Light/Dark/Browser preference and beta jurisdiction labels. |
 
 ## Agent Workflow
 

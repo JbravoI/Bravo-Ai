@@ -1,10 +1,14 @@
 import { getDb } from "./mongodb";
 
+export const APPEARANCE_PREFERENCES = ["light", "dark", "system"] as const;
+export type AppearancePreference = (typeof APPEARANCE_PREFERENCES)[number];
+
 export interface UserPreferences {
   userId: string;
   activeJurisdictionCodes?: string[];
   activeIndustryFocus?: string[];
   optionalNigeriaRegulatorCodes?: string[];
+  appearance?: AppearancePreference;
 }
 
 export async function getUserPreferences(userId: string): Promise<UserPreferences | null> {
@@ -15,7 +19,7 @@ export async function getUserPreferences(userId: string): Promise<UserPreference
 export async function saveUserPreferences(
   userId: string,
   userEmail: string,
-  patch: Partial<Pick<UserPreferences, "activeJurisdictionCodes" | "activeIndustryFocus" | "optionalNigeriaRegulatorCodes">>,
+  patch: Partial<Pick<UserPreferences, "activeJurisdictionCodes" | "activeIndustryFocus" | "optionalNigeriaRegulatorCodes" | "appearance">>,
 ): Promise<void> {
   const db = await getDb();
   const normalizedPatch = {

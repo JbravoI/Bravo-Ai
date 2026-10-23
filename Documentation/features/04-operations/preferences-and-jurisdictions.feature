@@ -25,6 +25,22 @@ Feature: Preferences and jurisdictions
     When they sign out, sign back in, or reload the page
     Then their preferences are restored exactly as they left them
 
+  Scenario: Choose an appearance preference
+    Given a user is on the Preferences page
+    When they choose "Light", "Dark" or "Browser" and save preferences
+    Then the application uses that appearance immediately
+    And the appearance is restored after they reload or sign in again
+
+  Scenario: Browser appearance follows the device
+    Given a user has selected "Browser" appearance
+    When their browser or operating system uses a light colour scheme
+    Then Bravo Ai uses its light application theme
+
+  Scenario: Beta jurisdictions are clearly labelled
+    Given a user views jurisdiction choices
+    Then EU, US, HK, SG and CH are prefixed "*Beta"
+    And UK and Nigeria are not prefixed "*Beta"
+
   Scenario: A second user does not see another user's preferences
     Given user A has saved specific jurisdiction and industry focus preferences
     When user B signs in for the first time

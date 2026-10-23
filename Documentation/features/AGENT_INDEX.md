@@ -14,6 +14,7 @@ The `features/` folder contains executable behavior expectations in Gherkin. Use
 | Audit trail | `04-operations/audit-trail.feature` | `../docs/features/04-operations/` | `../implementation/epic-05-real-ingestion/` |
 | Preferences and jurisdictions | `04-operations/preferences-and-jurisdictions.feature` | `../docs/features/04-operations/` | `../implementation/epic-03-auth-persistence/` |
 | API and Swagger docs | `05-platform/api-and-docs.feature` | `../docs/features/05-platform/` | `../implementation/epic-02-backend-data-model/` |
+| Public landing page | `05-platform/landing-page.feature` | `../docs/features/05-platform/` | `../implementation/epic-09-presentation-and-appearance/` |
 
 ## Agent Rules
 

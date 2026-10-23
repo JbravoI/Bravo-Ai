@@ -7,6 +7,7 @@ This file is the quickest implementation truth for what's real right now. Epic p
 | Capability | Frontend | API | Data | Verification |
 | :--- | :---: | :---: | :---: | :--- |
 | Public landing page | Complete | N/A | N/A | Figma-referenced visual implementation; local browser preview verified at `/` |
+| Appearance preference | Complete | Complete (`PUT /api/preferences`) | MongoDB Atlas `user_preferences.appearance` | Light, Dark and Browser/System persist per user and are rendered before app paint |
 | Bravo Ai branding | Complete | N/A | N/A | Manual: no "RegWatch" text/ids/functions remain in the app (`app/src/app/layout.tsx` metadata, `TopBar.tsx` logo, all component/route names) |
 | Dashboard, alerts, filtering | Complete (`/dashboard`, `/alerts`) | Complete (`POST /api/alert-reads { action: "mark-all" }`) | MongoDB Atlas, via shared data layer and `alert_reads` | Dashboard supports date/risk sort plus regulator/risk/status/deadline/industry filters; opening Alerts bulk-acknowledges only the active jurisdiction |
 | Regulation detail modal | Complete | N/A | MongoDB Atlas, via shared data layer | Manual keyboard/click check |

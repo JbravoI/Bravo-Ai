@@ -27,6 +27,7 @@ For agent/LLM navigation, read `AGENT_INDEX.md` first. For the fastest "what's a
 | [Epic 06](epic-06-hardening/index.md) | Hardening | `Implemented` | Whole app — CSP, a11y, tests |
 | [Epic 07](epic-07-deploy-operate/index.md) | Deploy And Operate | `Pending` | Vercel project |
 | [Epic 08](epic-08-information-navigation/index.md) | Information Navigation, Filtering And Alert Acknowledgement | `Completed` | Dashboard, Alerts, Compliance, Impact Map, Audit Trail, `alert_reads` |
+| [Epic 09](epic-09-presentation-and-appearance/index.md) | Personalised Product Presentation And Appearance | `Completed` | Landing page, Preferences, root layout, `user_preferences` |
 
 ---
 
@@ -45,7 +46,8 @@ implementation/
 |-- epic-05-real-ingestion/index.md
 |-- epic-06-hardening/index.md
 |-- epic-07-deploy-operate/index.md
-`-- epic-08-information-navigation/index.md
+|-- epic-08-information-navigation/index.md
+`-- epic-09-presentation-and-appearance/index.md
 ```
 
 Each epic's `index.md` lists its features, status, and acceptance criteria. Epics are not further split into `features/`/`tasks/` subfolders the way a larger, multi-engineer project might — Bravo Ai's current scope doesn't warrant that depth yet. Split an epic into that structure if and when its own scope grows large enough to need it.

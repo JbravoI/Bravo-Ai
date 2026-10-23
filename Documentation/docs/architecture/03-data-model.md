@@ -18,7 +18,7 @@ impact_rows          — reg, banking, invest, insure, comp, ops
 users                — email, profileName, passwordHash, createdAt (Epic 03 — app/src/lib/users.ts)
                        uses Mongo's native _id as the user id, unlike the collections
                        above; a different kind of entity (auth identity, not domain data)
-user_preferences     — userId, activeJurisdictionCodes[], activeIndustryFocus[], updatedAt
+user_preferences     — userId, activeJurisdictionCodes[], activeIndustryFocus[], appearance? (`light` | `dark` | `system`), updatedAt
 alert_reads          — userId, regulationId, readAt (one document per user/record acknowledgement;
                        the selected jurisdiction is resolved from the regulation at write time)
 password_reset_requests — userId, email, status, requestedAt, tokenHash, expiresAt, usedAt

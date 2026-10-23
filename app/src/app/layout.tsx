@@ -44,7 +44,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     : [];
 
   return (
-    <html lang="en" className={`${syne.variable} ${dmSans.variable} ${dmMono.variable}`}>
+    <html lang="en" data-theme={preferences?.appearance ?? "dark"} className={`${syne.variable} ${dmSans.variable} ${dmMono.variable}`}>
       <body suppressHydrationWarning>
         <AppShell regulations={regulations} regulatorFilters={regulatorFilters}>{children}</AppShell>
       </body>

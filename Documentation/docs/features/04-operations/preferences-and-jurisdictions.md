@@ -6,13 +6,15 @@ Let a user scope the product to the jurisdictions and business areas they actual
 
 ## Current Behavior
 
-- `/prefs` renders `app/src/components/PreferencesForm.tsx`: a single-choice jurisdiction control (UK, EU, US, Hong Kong, Singapore, Switzerland and Nigeria), multi-select industry-focus tabs, and a save icon/button.
+- `/prefs` renders `app/src/components/PreferencesForm.tsx`: a single-choice jurisdiction control (UK, EU, US, Hong Kong, Singapore, Switzerland and Nigeria), multi-select industry-focus tabs, Light/Dark/Browser appearance choices, and a save icon/button.
 - A user chooses exactly one jurisdiction. The whole preference set is persisted with `PUT /api/preferences` only when they select **Save preferences**; the route rejects a request that supplies zero or multiple jurisdictions. On success the page refreshes from the saved server state. See `app/src/lib/preferences.ts`.
 - The dashboard, alerts, compliance table, impact map and AI context use records only from that saved jurisdiction. The Alerts filter bar is populated from the regulatory bodies represented in those records, so it never shows another jurisdiction's bodies (for example, Nigeria shows CBN, SEC, NAICOM, PenCom and FRC, not FCA or PRA).
 - When Nigeria is selected, a user may additionally opt into NDIC, FCCPC, NDPC, NFIU and NGX RegCo. Saving newly selected bodies starts a scan of their official publication pages and stores the results only for that user. These temporary records are deleted when they explicitly sign out or the five-minute inactivity timer signs them out; they are never shared with other users.
 - Selected optional Nigeria bodies remain visible as regulator filters even when their latest scan has no usable records or is blocked. Selecting one shows a clear empty state and directs the user to save preferences to retry the scan.
 - Requires sign-in: `/prefs` (like every UI page) sits behind `app/src/proxy.ts`'s auth gate.
 - Each preference save appends a real `audit_log` entry attributed to the user's email.
+- Appearance is saved as `light`, `dark` or `system` on the same user preference document. The server renders the saved theme on the root `<html>` element before the page is painted, so a reload does not briefly show the wrong app theme. Browser follows the operating-system colour preference; an explicit Light or Dark choice overrides it.
+- EU, US, HK, SG and CH are visibly prefixed `*Beta` wherever they appear as selectable jurisdiction labels. UK and Nigeria are not beta-labelled.
 
 ## Known Gaps
 

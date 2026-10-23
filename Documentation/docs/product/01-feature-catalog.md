@@ -2,7 +2,7 @@
 
 ## 1. Public Landing Page
 
-A public introduction to Bravo Ai, with product positioning, a dashboard preview, monitoring/AI/audit benefits, workflow overview, security messaging and clear sign-up/sign-in calls to action. The signed-in product dashboard lives at `/dashboard`.
+A public introduction to Bravo Ai, with product positioning, a dashboard preview, monitoring/AI/audit benefits, workflow overview, security messaging and clear sign-up/sign-in calls to action. It now includes a short “What to expect inside” article explaining source monitoring, review/prioritisation, impact/readiness and audit-trail workflow, while making clear that regulator publications remain authoritative. The signed-in product dashboard lives at `/dashboard`.
 
 ## 2. Dashboard And Alerts
 
@@ -36,7 +36,7 @@ Detailed doc: `../features/04-operations/audit-trail.md`
 
 ## 7. Preferences And Jurisdictions
 
-One jurisdiction at a time (UK, EU, US, Hong Kong, Singapore, Switzerland or Nigeria), multi-select industry-focus tags (Banking, Investment, Insurance, Asset Management, Fintech), and an explicit save action. Persisted per signed-in user (MongoDB `user_preferences`) and applied to the dashboard, alerts, compliance table, impact map and AI context. Nigeria has initial CBN Monetary Policy Committee coverage; see `../research/nigeria-regulatory-sources.md`. Alert delivery controls are not active yet.
+One jurisdiction at a time (UK, EU, US, Hong Kong, Singapore, Switzerland or Nigeria), multi-select industry-focus tags (Banking, Investment, Insurance, Asset Management, Fintech), a Light/Dark/Browser appearance preference, and an explicit save action. Persisted per signed-in user (MongoDB `user_preferences`) and applied to the dashboard, alerts, compliance table, impact map and AI context. EU, US, HK, SG and CH are explicitly labelled `*Beta`; UK and Nigeria are not. Nigeria has initial CBN Monetary Policy Committee coverage; see `../research/nigeria-regulatory-sources.md`. Alert delivery controls are not active yet.
 
 Detailed doc: `../features/04-operations/preferences-and-jurisdictions.md`
 
