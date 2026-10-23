@@ -59,3 +59,9 @@ Server-side Gemini 3.6 Flash integration so a real API key never reaches the bro
 Self-service email/password signup and sign-in (Auth.js, Credentials provider, JWT session). The landing, login and signup pages are public; the product dashboard and all working pages require a signed-in session. The read-only API surface stays public by design. No OAuth, email verification, or password reset yet. See `../decisions/0006-authjs-credentials-not-oauth.md`.
 
 Detailed doc: `../features/00-auth/authentication.md`
+
+## 12. Admin Dashboard
+
+An administrator-only workspace for role changes, unlocking accounts after failed sign-ins, and issuing verified password-reset links. User access and open reset requests support filtering, sorting and 10/20/30/50-row pagination.
+
+Detailed doc: `../features/04-operations/admin-dashboard.md`

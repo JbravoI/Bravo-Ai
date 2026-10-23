@@ -279,6 +279,10 @@ button {
 .admin-search, .admin-role-select { background: var(--bg3); border: 1px solid var(--border); border-radius: 7px; color: var(--text); font: 12px var(--fb); padding: 7px 10px; }
 .admin-search { min-width: 200px; }
 .admin-role-select:focus, .admin-search:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.admin-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 8px; margin: 0 0 12px; }
+.admin-controls label { display: flex; flex-direction: column; gap: 3px; color: var(--text3); font: 10px var(--fm); text-transform: uppercase; letter-spacing: .04em; }
+.admin-controls select { min-height: 31px; background: var(--bg3); border: 1px solid var(--border); border-radius: 7px; padding: 5px 8px; color: var(--text); font: 11px var(--fb); }
+.admin-controls select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .admin-message { color: var(--success); font-size: 12px; margin: 0 0 10px; }
 .admin-reset-link { display: flex; flex-direction: column; gap: 5px; margin-top: 12px; color: var(--text3); font: 10px var(--fm); }
 .admin-reset-link input { width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 7px; padding: 8px 10px; color: var(--text2); font: 11px var(--fm); }

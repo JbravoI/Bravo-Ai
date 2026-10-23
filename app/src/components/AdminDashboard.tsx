@@ -4,19 +4,46 @@ import { useMemo, useState } from "react";
 import type { ManagedUser, UserRole } from "@/lib/users";
 import type { ManagedPasswordResetRequest } from "@/lib/password-reset";
 import { formatDateTime } from "@/lib/dates";
+import PaginationControls, { usePagination } from "./PaginationControls";
 
 const ROLE_LABEL: Record<UserRole, string> = { admin: "Admin", analyst: "Analyst", viewer: "Viewer" };
 
 export default function AdminDashboard({ initialUsers, initialPasswordResetRequests }: { initialUsers: ManagedUser[]; initialPasswordResetRequests: ManagedPasswordResetRequest[] }) {
   const [users, setUsers] = useState(initialUsers);
   const [query, setQuery] = useState("");
+  const [roleFilter, setRoleFilter] = useState<UserRole | "all">("all");
+  const [accountFilter, setAccountFilter] = useState<"all" | "locked" | "active">("all");
+  const [userSort, setUserSort] = useState("joined-newest");
+  const [resetStatusFilter, setResetStatusFilter] = useState<"all" | "pending" | "issued">("all");
+  const [resetSort, setResetSort] = useState("requested-newest");
   const [message, setMessage] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
   const [passwordResetRequests, setPasswordResetRequests] = useState(initialPasswordResetRequests);
   const [issuedResetLink, setIssuedResetLink] = useState("");
-  const filtered = useMemo(() => users.filter((user) => user.email.includes(query.trim().toLowerCase())), [users, query]);
+  const filtered = useMemo(() => users
+    .filter((user) => user.email.includes(query.trim().toLowerCase()))
+    .filter((user) => roleFilter === "all" || user.role === roleFilter)
+    .filter((user) => accountFilter === "all" || (accountFilter === "locked" ? user.locked : !user.locked))
+    .sort((left, right) => {
+      if (userSort === "email") return left.email.localeCompare(right.email);
+      if (userSort === "last-sign-in") return (right.lastLoginAt ?? "").localeCompare(left.lastLoginAt ?? "");
+      const direction = userSort === "joined-oldest" ? 1 : -1;
+      return direction * left.createdAt.localeCompare(right.createdAt);
+    }), [users, query, roleFilter, accountFilter, userSort]);
+  const paginatedUsers = usePagination(filtered, `${query}|${roleFilter}|${accountFilter}|${userSort}|${users.map((user) => user.id).join(",")}`);
+  const filteredResetRequests = useMemo(() => passwordResetRequests
+    .filter((request) => resetStatusFilter === "all" || request.status === resetStatusFilter)
+    .sort((left, right) => (resetSort === "requested-oldest" ? 1 : -1) * left.requestedAt.localeCompare(right.requestedAt)), [passwordResetRequests, resetStatusFilter, resetSort]);
+  const paginatedResetRequests = usePagination(filteredResetRequests, `${resetStatusFilter}|${resetSort}|${passwordResetRequests.map((request) => `${request.id}-${request.status}`).join(",")}`);
   const locked = users.filter((user) => user.locked).length;
   const admins = users.filter((user) => user.role === "admin").length;
+
+  function clearUserFilters() {
+    setQuery("");
+    setRoleFilter("all");
+    setAccountFilter("all");
+    setUserSort("joined-newest");
+  }
 
   async function updateUser(id: string, body: { role?: UserRole; unlock?: boolean }) {
     setBusyId(id); setMessage("");
@@ -53,19 +80,21 @@ export default function AdminDashboard({ initialUsers, initialPasswordResetReque
       <div className="stat-card"><span className="stat-label">Analysts & viewers</span><strong className="stat-value">{users.length - admins}</strong><span className="stat-delta">Standard access</span></div>
     </div>
     <section className="admin-card">
-      <div className="section-header"><div><h2 className="section-title">User access</h2><span className="section-sub">Manage roles and unlock accounts after three failed sign-in attempts.</span></div><input className="admin-search" aria-label="Search users" placeholder="Search email…" value={query} onChange={(event) => setQuery(event.target.value)} /></div>
+      <div className="section-header"><div><h2 className="section-title">User access</h2><span className="section-sub">Manage roles and unlock accounts after three failed sign-in attempts.</span></div></div>
+      <div className="admin-controls" aria-label="User access filters"><input className="admin-search" aria-label="Search users" placeholder="Search email…" value={query} onChange={(event) => setQuery(event.target.value)} /><label>Role<select value={roleFilter} onChange={(event) => setRoleFilter(event.target.value as UserRole | "all")}><option value="all">All roles</option>{Object.entries(ROLE_LABEL).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label><label>Account<select value={accountFilter} onChange={(event) => setAccountFilter(event.target.value as "all" | "locked" | "active")}><option value="all">All accounts</option><option value="active">Active</option><option value="locked">Locked</option></select></label><label>Sort<select value={userSort} onChange={(event) => setUserSort(event.target.value)}><option value="joined-newest">Newest joined</option><option value="joined-oldest">Oldest joined</option><option value="last-sign-in">Recent sign-in</option><option value="email">Email A–Z</option></select></label><button type="button" className="btn btn-ghost" onClick={clearUserFilters}>Clear filters</button></div>
       {message && <p className="admin-message" role="status">{message}</p>}
       <div className="table-wrap"><table><thead><tr><th>User</th><th>Role</th><th>Account status</th><th>Last sign-in</th><th>Actions</th></tr></thead><tbody>
-        {filtered.map((user) => <tr key={user.id}><td><strong>{user.email}</strong><br /><span className="admin-muted">Joined {formatDateTime(user.createdAt)}</span></td><td><select className="admin-role-select" value={user.role} disabled={busyId === user.id} onChange={(event) => updateUser(user.id, { role: event.target.value as UserRole })}>{Object.entries(ROLE_LABEL).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></td><td>{user.locked ? <span className="badge badge-high">Locked · {user.failedLoginAttempts} attempts</span> : <span className="badge badge-impl">Active</span>}</td><td className="admin-muted">{user.lastLoginAt ? formatDateTime(user.lastLoginAt) : "Never"}</td><td>{user.locked && <button className="btn btn-primary" disabled={busyId === user.id} onClick={() => updateUser(user.id, { unlock: true })}>{busyId === user.id ? "…" : "Unlock"}</button>}</td></tr>)}
+        {paginatedUsers.pageItems.map((user) => <tr key={user.id}><td><strong>{user.email}</strong><br /><span className="admin-muted">Joined {formatDateTime(user.createdAt)}</span></td><td><select className="admin-role-select" value={user.role} disabled={busyId === user.id} onChange={(event) => updateUser(user.id, { role: event.target.value as UserRole })}>{Object.entries(ROLE_LABEL).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></td><td>{user.locked ? <span className="badge badge-high">Locked · {user.failedLoginAttempts} attempts</span> : <span className="badge badge-impl">Active</span>}</td><td className="admin-muted">{user.lastLoginAt ? formatDateTime(user.lastLoginAt) : "Never"}</td><td>{user.locked && <button className="btn btn-primary" disabled={busyId === user.id} onClick={() => updateUser(user.id, { unlock: true })}>{busyId === user.id ? "…" : "Unlock"}</button>}</td></tr>)}
         {!filtered.length && <tr><td colSpan={5} className="admin-muted">No users match that search.</td></tr>}
-      </tbody></table></div>
+      </tbody></table><PaginationControls page={paginatedUsers.page} pageSize={paginatedUsers.pageSize} totalItems={paginatedUsers.totalItems} totalPages={paginatedUsers.totalPages} onPageChange={paginatedUsers.setPage} onPageSizeChange={paginatedUsers.setPageSize} /></div>
     </section>
     <section className="admin-card">
       <div className="section-header"><div><h2 className="section-title">Password reset requests</h2><span className="section-sub">Verify identity outside the product before issuing and sharing a one-time link.</span></div><span className="pill">{passwordResetRequests.length} open</span></div>
+      <div className="admin-controls" aria-label="Password reset request filters"><label>Status<select value={resetStatusFilter} onChange={(event) => setResetStatusFilter(event.target.value as "all" | "pending" | "issued")}><option value="all">All open requests</option><option value="pending">Awaiting verification</option><option value="issued">Link issued</option></select></label><label>Sort<select value={resetSort} onChange={(event) => setResetSort(event.target.value)}><option value="requested-newest">Newest request</option><option value="requested-oldest">Oldest request</option></select></label><button type="button" className="btn btn-ghost" onClick={() => { setResetStatusFilter("all"); setResetSort("requested-newest"); }}>Clear filters</button></div>
       <div className="table-wrap"><table><thead><tr><th>Account</th><th>Requested</th><th>Status</th><th>Action</th></tr></thead><tbody>
-        {passwordResetRequests.map((request) => <tr key={request.id}><td><strong>{request.email}</strong></td><td className="admin-muted">{formatDateTime(request.requestedAt)}</td><td>{request.status === "pending" ? <span className="badge badge-pending">Awaiting verification</span> : <span className="badge badge-impl">Link active until {request.expiresAt ? formatDateTime(request.expiresAt) : "—"}</span>}</td><td>{request.status === "pending" && <button className="btn btn-primary" disabled={busyId === request.id} onClick={() => issueResetLink(request.id)}>{busyId === request.id ? "Issuing…" : "Issue & copy link"}</button>}</td></tr>)}
-        {!passwordResetRequests.length && <tr><td colSpan={4} className="admin-muted">No open password reset requests.</td></tr>}
-      </tbody></table></div>
+        {paginatedResetRequests.pageItems.map((request) => <tr key={request.id}><td><strong>{request.email}</strong></td><td className="admin-muted">{formatDateTime(request.requestedAt)}</td><td>{request.status === "pending" ? <span className="badge badge-pending">Awaiting verification</span> : <span className="badge badge-impl">Link active until {request.expiresAt ? formatDateTime(request.expiresAt) : "—"}</span>}</td><td>{request.status === "pending" && <button className="btn btn-primary" disabled={busyId === request.id} onClick={() => issueResetLink(request.id)}>{busyId === request.id ? "Issuing…" : "Issue & copy link"}</button>}</td></tr>)}
+        {!filteredResetRequests.length && <tr><td colSpan={4} className="admin-muted">No password reset requests match the selected filters.</td></tr>}
+      </tbody></table><PaginationControls page={paginatedResetRequests.page} pageSize={paginatedResetRequests.pageSize} totalItems={paginatedResetRequests.totalItems} totalPages={paginatedResetRequests.totalPages} onPageChange={paginatedResetRequests.setPage} onPageSizeChange={paginatedResetRequests.setPageSize} /></div>
       {issuedResetLink && <div className="admin-reset-link"><label htmlFor="issued-reset-link">Latest one-time reset link</label><input id="issued-reset-link" readOnly value={issuedResetLink} onFocus={(event) => event.currentTarget.select()} /></div>}
     </section>
   </div>;
