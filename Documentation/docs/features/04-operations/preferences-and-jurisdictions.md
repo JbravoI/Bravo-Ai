@@ -15,6 +15,7 @@ Let a user scope the product to the jurisdictions and business areas they actual
 - Each preference save appends a real `audit_log` entry attributed to the user's email.
 - Appearance is saved as `light`, `dark` or `system` on the same user preference document. The server renders the saved theme on the root `<html>` element before the page is painted, so a reload does not briefly show the wrong app theme. Browser follows the operating-system colour preference; an explicit Light or Dark choice overrides it.
 - EU, US, HK, SG and CH are visibly prefixed `*Beta` wherever they appear as selectable jurisdiction labels. UK and Nigeria are not beta-labelled.
+- Jurisdiction choices are displayed in a deliberate onboarding order: Nigeria first, UK second, then EU, US, HK, SG and CH. This is display-only and does not change a user's saved jurisdiction.
 
 ## Known Gaps
 

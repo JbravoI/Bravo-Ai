@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Jurisdiction } from "@/lib/types";
 import { OPTIONAL_NIGERIA_REGULATORS, type OptionalNigeriaRegulatorCode } from "@/lib/optional-nigeria-regulator-config";
 import type { AppearancePreference } from "@/lib/preferences";
-import { isBetaJurisdiction } from "@/lib/jurisdiction-presentation";
+import { compareJurisdictionDisplayOrder, isBetaJurisdiction } from "@/lib/jurisdiction-presentation";
 
 const INDUSTRIES = ["Banking", "Investment", "Insurance", "Asset Management", "Fintech"];
 
@@ -79,7 +79,7 @@ export default function PreferencesForm({
   return <div className="prefs-form">
     <div className="prefs-save-row"><div><div className="modal-section-title">Jurisdiction</div><p className="prefs-help">Choose one jurisdiction to view at a time.</p></div><button className="btn btn-primary prefs-save" type="button" onClick={save} disabled={saving || isRefreshing} aria-label="Save preferences">{saving ? "Saving…" : isRefreshing ? "Updating…" : "💾 Save preferences"}</button></div>
     <div className="juri-grid" role="radiogroup" aria-label="Jurisdiction">
-      {jurisdictions.map((jurisdiction) => <button key={jurisdiction.code} type="button" className={`juri-pill ${jurisdictionCode === jurisdiction.code ? "active" : ""}`} role="radio" aria-checked={jurisdictionCode === jurisdiction.code} onClick={() => setJurisdictionCode(jurisdiction.code)}><span className="juri-dot" style={{ background: jurisdiction.color }} />{isBetaJurisdiction(jurisdiction.code) && <span className="beta-label">*Beta</span>}{jurisdiction.code} – {jurisdiction.label}</button>)}
+      {[...jurisdictions].sort((left, right) => compareJurisdictionDisplayOrder(left.code, right.code)).map((jurisdiction) => <button key={jurisdiction.code} type="button" className={`juri-pill ${jurisdictionCode === jurisdiction.code ? "active" : ""}`} role="radio" aria-checked={jurisdictionCode === jurisdiction.code} onClick={() => setJurisdictionCode(jurisdiction.code)}><span className="juri-dot" style={{ background: jurisdiction.color }} />{isBetaJurisdiction(jurisdiction.code) && <span className="beta-label">*Beta</span>}{jurisdiction.code} – {jurisdiction.label}</button>)}
     </div>
     {jurisdictionCode === "NG" && <div><div className="modal-section-title">Optional Nigeria Regulatory Bodies</div><p className="prefs-help">Select the bodies you want to monitor. Saving fetches data only for your current session; it is removed when you sign out.</p><div className="filter-tabs">{OPTIONAL_NIGERIA_REGULATORS.map((regulator) => <button key={regulator.code} type="button" className={`ftab ${optionalNigeriaRegulators.has(regulator.code) ? "active" : ""}`} aria-pressed={optionalNigeriaRegulators.has(regulator.code)} onClick={() => toggleOptionalNigeriaRegulator(regulator.code)}>{regulator.label}</button>)}</div></div>}
     <div><div className="modal-section-title">Industry Focus</div><div className="filter-tabs">{INDUSTRIES.map((label) => <button key={label} type="button" className={`ftab ${industryFocus.has(label) ? "active" : ""}`} aria-pressed={industryFocus.has(label)} onClick={() => toggleIndustry(label)}>{label}</button>)}</div></div>

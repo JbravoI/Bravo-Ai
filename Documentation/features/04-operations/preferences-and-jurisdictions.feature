@@ -41,6 +41,11 @@ Feature: Preferences and jurisdictions
     Then EU, US, HK, SG and CH are prefixed "*Beta"
     And UK and Nigeria are not prefixed "*Beta"
 
+  Scenario: Jurisdiction choices use the preferred display order
+    Given a user views jurisdiction choices
+    Then Nigeria is displayed first
+    And UK is displayed second
+
   Scenario: A second user does not see another user's preferences
     Given user A has saved specific jurisdiction and industry focus preferences
     When user B signs in for the first time
