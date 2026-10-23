@@ -7,6 +7,7 @@ import { getUserPreferences } from "@/lib/preferences";
 import { selectedJurisdictionCode } from "@/lib/jurisdictions";
 import { auth } from "@/auth";
 import { OPTIONAL_NIGERIA_REGULATORS, normalizeOptionalNigeriaRegulatorCodes } from "@/lib/optional-nigeria-regulator-config";
+import { getLatestComplianceAssessments } from "@/lib/compliance-assessments";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -42,11 +43,12 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       .map((code) => OPTIONAL_NIGERIA_REGULATORS.find((regulator) => regulator.code === code)?.regulator)
       .filter((regulator) => regulator !== undefined)
     : [];
+  const complianceAssessments = session?.user?.id ? await getLatestComplianceAssessments(regulations.map((regulation) => regulation.id).filter((id) => id > 0)) : [];
 
   return (
     <html lang="en" data-theme={preferences?.appearance ?? "dark"} className={`${syne.variable} ${dmSans.variable} ${dmMono.variable}`}>
       <body suppressHydrationWarning>
-        <AppShell regulations={regulations} regulatorFilters={regulatorFilters}>{children}</AppShell>
+        <AppShell regulations={regulations} regulatorFilters={regulatorFilters} complianceAssessments={complianceAssessments} canAssessCompliance={session?.user?.role !== "viewer"}>{children}</AppShell>
       </body>
     </html>
   );

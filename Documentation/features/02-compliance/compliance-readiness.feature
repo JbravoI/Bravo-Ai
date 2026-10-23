@@ -21,9 +21,20 @@ Feature: Compliance readiness tracking
     When they select a row, by mouse or by keyboard (Enter or Space while focused)
     Then the same regulation detail view used by the alerts feed opens
 
-  @not-yet-built
-  Scenario: Readiness percentage is user-editable
-    Given a compliance officer has reviewed a regulation's implementation status
-    When they update its readiness percentage
-    Then the change is persisted and reflected on the dashboard and compliance table
+  Scenario: Record a readiness assessment
+    Given an analyst or administrator has reviewed a regulation's implementation status
+    When they record its owner, assessment status, readiness percentage, rationale and optional evidence or review date
+    Then an append-only assessment is persisted
+    And the latest assessment is reflected on the dashboard and compliance table
     And the change is recorded in the audit trail
+
+  Scenario: Viewers cannot record an assessment
+    Given a viewer opens a regulation detail view
+    Then they can see the latest assessment
+    But they cannot submit a compliance assessment
+
+  Scenario: Compliance score excludes unassessed regulations
+    Given the selected jurisdiction has assessed and unassessed regulations
+    When the dashboard renders the Compliance Score
+    Then it is the rounded average of latest assessment readiness values only
+    And it displays the assessed regulation count over the total

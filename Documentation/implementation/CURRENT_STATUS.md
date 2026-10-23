@@ -11,7 +11,7 @@ This file is the quickest implementation truth for what's real right now. Epic p
 | Bravo Ai branding | Complete | N/A | N/A | Manual: no "RegWatch" text/ids/functions remain in the app (`app/src/app/layout.tsx` metadata, `TopBar.tsx` logo, all component/route names) |
 | Dashboard, alerts, filtering | Complete (`/dashboard`, `/alerts`) | Complete (`POST /api/alert-reads { action: "mark-all" }`) | MongoDB Atlas, via shared data layer and `alert_reads` | Dashboard supports date/risk sort plus regulator/risk/status/deadline/industry filters; opening Alerts bulk-acknowledges only the active jurisdiction |
 | Regulation detail modal | Complete | N/A | MongoDB Atlas, via shared data layer | Manual keyboard/click check |
-| Compliance readiness table | Complete | N/A | MongoDB Atlas, via shared data layer | Shared 10/20/30/50 pagination; TypeScript + lint clean |
+| Compliance readiness and score | Complete | Complete (`/api/compliance-assessments`) | MongoDB Atlas `compliance_assessments` | Append-only analyst/admin assessments; dashboard score is latest assessed records only and displays assessed/total denominator |
 | Impact map | Complete | N/A | MongoDB Atlas, via shared data layer | Business-area/minimum-impact filtering, three sort orders and 10/20/30/50 pagination; TypeScript + lint clean |
 | Audit trail (display only) | Complete | N/A | MongoDB Atlas, via shared data layer | Shared 10/20/30/50 pagination; TypeScript + lint clean |
 | Preferences / jurisdictions (persisted, per-user) | Complete | Complete | MongoDB Atlas | One jurisdiction is saved explicitly, page refreshes after save, and the selection scopes dashboard/alert/compliance/impact/AI data. Nigeria is active. |

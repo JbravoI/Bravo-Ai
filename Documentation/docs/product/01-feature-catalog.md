@@ -12,7 +12,7 @@ Detailed doc: `../features/01-monitoring/dashboard-and-alerts.md`
 
 ## 3. Compliance Readiness
 
-A table of every tracked regulation with regulator, status, deadline, a readiness percentage (progress bar) and priority. It paginates at 10/20/30/50 records. Rows open the same regulation detail view as alerts.
+A table of every tracked regulation with regulator, status, deadline, latest assessed readiness (progress bar) and priority. It paginates at 10/20/30/50 records. Rows open the same regulation detail view as alerts, where analysts and admins can append an assessment with owner, status, evidence, rationale and next review date. The dashboard score averages the latest assessments only and shows the assessed/total denominator.
 
 Detailed doc: `../features/02-compliance/compliance-readiness.md`
 

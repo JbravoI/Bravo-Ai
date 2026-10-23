@@ -61,3 +61,19 @@ export interface ChatMessage {
   text: string;
   error?: boolean;
 }
+
+export const COMPLIANCE_ASSESSMENT_STATUSES = ["not_started", "in_progress", "blocked", "complete"] as const;
+export type ComplianceAssessmentStatus = (typeof COMPLIANCE_ASSESSMENT_STATUSES)[number];
+
+export interface ComplianceAssessment {
+  id: string;
+  regulationId: number;
+  owner: string;
+  assessmentStatus: ComplianceAssessmentStatus;
+  readiness: number;
+  evidenceReference?: string;
+  rationale: string;
+  nextReviewAt?: string;
+  assessedAt: string;
+  assessedBy: string;
+}

@@ -3,10 +3,11 @@
 import { useRegulationModal } from "@/context/RegulationModalContext";
 
 export default function StatsGrid() {
-  const { regulations } = useRegulationModal();
+  const { regulations, assessmentByRegulationId } = useRegulationModal();
   const highPriority = regulations.filter((regulation) => regulation.priority === "high").length;
   const pending = regulations.filter((regulation) => regulation.status !== "implemented").length;
-  const score = regulations.length ? Math.round(regulations.reduce((total, regulation) => total + regulation.readiness, 0) / regulations.length) : 0;
+  const assessments = regulations.map((regulation) => assessmentByRegulationId[regulation.id]).filter((assessment): assessment is NonNullable<typeof assessment> => Boolean(assessment));
+  const score = assessments.length ? Math.round(assessments.reduce((total, assessment) => total + assessment.readiness, 0) / assessments.length) : null;
   return (
     <div className="stats-grid">
       <div className="stat-card">
@@ -31,9 +32,9 @@ export default function StatsGrid() {
       <div className="stat-card">
         <div className="stat-label">Compliance Score</div>
         <div className="stat-value" style={{ color: "var(--success)" }}>
-          {score}%
+          {score === null ? "—" : `${score}%`}
         </div>
-        <div className="stat-delta">Average readiness</div>
+        <div className="stat-delta">{assessments.length} of {regulations.length} assessed</div>
       </div>
     </div>
   );

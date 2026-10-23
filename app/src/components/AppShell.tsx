@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import type { Regulation } from "@/lib/types";
+import type { ComplianceAssessment, Regulation } from "@/lib/types";
 import AuthSessionProvider from "./AuthSessionProvider";
 import RegulationModal from "./RegulationModal";
 import SessionTimeout from "./SessionTimeout";
@@ -13,7 +13,7 @@ import { RegulationModalProvider } from "@/context/RegulationModalContext";
 
 const PUBLIC_PATHS = new Set(["/", "/login", "/signup", "/forgot-password", "/reset-password", "/api-docs"]);
 
-export default function AppShell({ children, regulations, regulatorFilters = [] }: { children: ReactNode; regulations: Regulation[]; regulatorFilters?: string[] }) {
+export default function AppShell({ children, regulations, regulatorFilters = [], complianceAssessments = [], canAssessCompliance = false }: { children: ReactNode; regulations: Regulation[]; regulatorFilters?: string[]; complianceAssessments?: ComplianceAssessment[]; canAssessCompliance?: boolean }) {
   const pathname = usePathname();
 
   if (PUBLIC_PATHS.has(pathname)) return <>{children}</>;
@@ -21,7 +21,7 @@ export default function AppShell({ children, regulations, regulatorFilters = [] 
   return (
     <AuthSessionProvider>
       <SessionTimeout />
-      <RegulationModalProvider regulations={regulations} regulatorFilters={regulatorFilters}>
+      <RegulationModalProvider regulations={regulations} regulatorFilters={regulatorFilters} complianceAssessments={complianceAssessments} canAssessCompliance={canAssessCompliance}>
         <div className="app-shell">
           <TopBar />
           <MobileNav />

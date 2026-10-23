@@ -59,6 +59,7 @@ const spec = {
     { name: "Impact" },
     { name: "Jurisdictions" },
     { name: "Preferences" },
+    { name: "Compliance" },
     { name: "Scan" },
     { name: "Q&A" },
   ],
@@ -244,6 +245,48 @@ const spec = {
           },
           "400": { description: "Invalid request body", content: { "application/json": { schema: errorSchema } } },
           "401": { description: "Not signed in", content: { "application/json": { schema: errorSchema } } },
+        },
+      },
+    },
+    "/api/compliance-assessments": {
+      get: {
+        tags: ["Compliance"],
+        summary: "List the latest compliance assessments in the signed-in user's active jurisdiction",
+        security: [{ sessionCookie: [] }],
+        responses: {
+          "200": { description: "OK" },
+          "401": { description: "Not signed in", content: { "application/json": { schema: errorSchema } } },
+        },
+      },
+      post: {
+        tags: ["Compliance"],
+        summary: "Append a compliance assessment for a tracked regulation (analyst or administrator)",
+        security: [{ sessionCookie: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["regulationId", "owner", "assessmentStatus", "readiness", "rationale"],
+                properties: {
+                  regulationId: { type: "integer", minimum: 1 },
+                  owner: { type: "string" },
+                  assessmentStatus: { type: "string", enum: ["not_started", "in_progress", "blocked", "complete"] },
+                  readiness: { type: "integer", minimum: 0, maximum: 100 },
+                  evidenceReference: { type: "string" },
+                  rationale: { type: "string" },
+                  nextReviewAt: { type: "string", format: "date" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "201": { description: "Assessment recorded" },
+          "400": { description: "Invalid assessment", content: { "application/json": { schema: errorSchema } } },
+          "403": { description: "Viewer role cannot record assessments", content: { "application/json": { schema: errorSchema } } },
+          "404": { description: "Regulation is not in the active jurisdiction", content: { "application/json": { schema: errorSchema } } },
         },
       },
     },

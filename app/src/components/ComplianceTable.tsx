@@ -5,6 +5,8 @@ import { useRegulationModal } from "@/context/RegulationModalContext";
 import { formatDate } from "@/lib/dates";
 import PaginationControls, { usePagination } from "./PaginationControls";
 
+const ASSESSMENT_LABEL = { not_started: "NOT STARTED", in_progress: "IN PROGRESS", blocked: "BLOCKED", complete: "COMPLETE" } as const;
+
 const PRIORITY_BADGE: Record<Regulation["priority"], [string, string]> = {
   high: ["badge-high", "HIGH"],
   medium: ["badge-medium", "MEDIUM"],
@@ -17,7 +19,7 @@ const STATUS_BADGE: Record<Regulation["status"], [string, string] | null> = {
 };
 
 export default function ComplianceTable() {
-  const { regulations, openModal } = useRegulationModal();
+  const { regulations, openModal, assessmentByRegulationId } = useRegulationModal();
   const pagination = usePagination(regulations, regulations.map((regulation) => regulation.id).join(","));
 
   return (
@@ -30,12 +32,14 @@ export default function ComplianceTable() {
             <th>Status</th>
             <th>Deadline</th>
             <th>Readiness</th>
+            <th>Assessment</th>
             <th>Priority</th>
           </tr>
         </thead>
         <tbody>
           {pagination.pageItems.map((r) => {
-            const progressClass = r.readiness >= 70 ? "pf-green" : r.readiness >= 40 ? "pf-warn" : "pf-danger";
+            const assessment = assessmentByRegulationId[r.id];
+            const progressClass = assessment && assessment.readiness >= 70 ? "pf-green" : assessment && assessment.readiness >= 40 ? "pf-warn" : "pf-danger";
             const [priorityClass, priorityLabel] = PRIORITY_BADGE[r.priority];
             const statusBadge = STATUS_BADGE[r.status];
             return (
@@ -60,20 +64,21 @@ export default function ComplianceTable() {
                 <td>{statusBadge && <span className={`badge ${statusBadge[0]}`}>{statusBadge[1]}</span>}</td>
                 <td style={{ fontFamily: "var(--fm)", fontSize: 10 }}>{r.deadline === "Implemented" || r.deadline === "Immediate" ? r.deadline : formatDate(r.deadline)}</td>
                 <td style={{ minWidth: 120 }}>
-                  <div className="progress-wrap">
+                  {assessment ? <div className="progress-wrap">
                     <div className="progress-bar">
-                      <div className={`progress-fill ${progressClass}`} style={{ width: `${r.readiness}%` }} />
+                      <div className={`progress-fill ${progressClass}`} style={{ width: `${assessment.readiness}%` }} />
                     </div>
-                    <span className="progress-pct">{r.readiness}%</span>
-                  </div>
+                    <span className="progress-pct">{assessment.readiness}%</span>
+                  </div> : <span className="not-assessed">Not assessed</span>}
                 </td>
+                <td>{assessment ? <span className="pill">{ASSESSMENT_LABEL[assessment.assessmentStatus]}</span> : <span className="not-assessed">—</span>}</td>
                 <td>
                   <span className={`badge ${priorityClass}`}>{priorityLabel}</span>
                 </td>
               </tr>
             );
           })}
-          {!pagination.pageItems.length && <tr><td colSpan={6}>No regulations are available for this jurisdiction.</td></tr>}
+          {!pagination.pageItems.length && <tr><td colSpan={7}>No regulations are available for this jurisdiction.</td></tr>}
         </tbody>
       </table>
       <PaginationControls page={pagination.page} pageSize={pagination.pageSize} totalItems={pagination.totalItems} totalPages={pagination.totalPages} onPageChange={pagination.setPage} onPageSizeChange={pagination.setPageSize} />

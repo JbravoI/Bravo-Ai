@@ -12,6 +12,9 @@ Every document's shape matches the corresponding type in `app/src/lib/types.ts` 
 regulations         — id, regulator, source, priority, status, title, date, type,
                        summary, impact, tags[], deadline, readiness, sourceUrl?,
                        retrievedAt?, sourceId?, contentHash?
+compliance_assessments — append-only readiness history: regulationId, userId, assessedBy,
+                       owner, assessmentStatus (`not_started` | `in_progress` | `blocked` | `complete`),
+                       readiness (0–100), evidenceReference?, rationale, nextReviewAt?, assessedAt
 jurisdictions        — code, label, color, active (includes `NG` / Nigeria; `active` is the default preference, not proof of live connector coverage)
 audit_log            — ts, label, detail
 impact_rows          — reg, banking, invest, insure, comp, ops
@@ -37,6 +40,8 @@ scan_runs              — completed source-ingestion runs (Epic 05; built for F
                          { source, startedAt, completedAt, fetched, newRecords, changedRecords }
 qa_log                — completed Q&A exchanges (Epic 04; built)
                          { userId, userEmail, provider, model, question, answer, ts }
+compliance_assessments — latest record per regulation is selected by descending `assessedAt` for the active jurisdiction;
+                         every insert also appends an `audit_log` entry (Epic 10; built)
 ```
 
 ## Why Not Relational Joins
