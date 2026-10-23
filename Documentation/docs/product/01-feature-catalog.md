@@ -24,7 +24,7 @@ Detailed doc: `../features/03-analysis/search-and-qa.md`
 
 ## 5. Impact Map
 
-A table showing each regulation's impact level (High/Medium/Low/None) across five business areas: Banking, Investment, Insurance, Compliance, Operations.
+A table showing each regulation's impact level (High/Medium/Low/None) across five business areas: Banking, Investment, Insurance, Compliance and Operations. It supports business-area/minimum-impact filtering, sort by impact coverage or severity, and 10/20/30/50-row pagination.
 
 Detailed doc: `../features/03-analysis/impact-map.md`
 

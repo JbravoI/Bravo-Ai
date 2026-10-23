@@ -26,7 +26,7 @@ For agent/LLM navigation, read `AGENT_INDEX.md` first. For the fastest "what's a
 | [Epic 05](epic-05-real-ingestion/index.md) | Real Regulatory-Source Ingestion | `Pending` | `app/src/app/api/scan/route.ts`, scheduled job |
 | [Epic 06](epic-06-hardening/index.md) | Hardening | `Implemented` | Whole app — CSP, a11y, tests |
 | [Epic 07](epic-07-deploy-operate/index.md) | Deploy And Operate | `Pending` | Vercel project |
-| [Epic 08](epic-08-information-navigation/index.md) | Information Navigation, Filtering And Alert Acknowledgement | `Completed` | Dashboard, Alerts, Compliance, Audit Trail, `alert_reads` |
+| [Epic 08](epic-08-information-navigation/index.md) | Information Navigation, Filtering And Alert Acknowledgement | `Completed` | Dashboard, Alerts, Compliance, Impact Map, Audit Trail, `alert_reads` |
 
 ---
 

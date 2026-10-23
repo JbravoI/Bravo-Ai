@@ -127,10 +127,11 @@ Each phase should leave the app in a working, deployable state.
 - Basic monitoring: ingestion failures, API error rates, Q&A latency/cost.
 
 ### Phase 8 — Information navigation, filtering and alert acknowledgement
-- Introduce one reusable, accessible paginated-list pattern for the Dashboard feed, Alerts, Compliance Readiness and Audit Trail. Show items 1–10 by default and let the user choose 10, 20, 30, 50 (and, where safe, all) items per page. Preserve the current jurisdiction, filters, sort and page size while moving between pages.
+- Introduce one reusable, accessible paginated-list pattern for the Dashboard feed, Alerts, Compliance Readiness, Impact Map and Audit Trail. Show items 1–10 by default and let the user choose 10, 20, 30, 50 (and, where safe, all) items per page. Preserve the current jurisdiction, filters, sort and page size while moving between pages.
 - Add Dashboard feed controls that sort by newest/oldest publication date and risk (High, Medium, Low), and filter by regulator, status, deadline/review state and industry tag. Include a clear-all action and an explicit empty state so users can tell the difference between “no records” and “no records match these filters.”
 - Treat opening the Alerts area as an acknowledgement action: when a signed-in user navigates to `/alerts`, mark all currently unread alerts in their selected jurisdiction as viewed, persist that decision in `alert_reads`, and immediately set the Alerts badge to zero. New records arriving after that point remain unread. This must be an authenticated, auditable bulk operation and must not mark records in another jurisdiction as read.
 - Keep opening an individual card as an acknowledgement action too, so direct links and Dashboard card interactions remain consistent.
+- Give the Impact Map equivalent controls: sort by regulation, highest impact or breadth of affected business areas; filter by one business area and a minimum impact threshold; and provide the same clear action and explicit empty state.
 
 ### Phase 9 — Personalised product presentation and appearance
 - Expand the public landing page with a concise, non-marketing-only “What Bravo Ai does” article: explain the source scan → prioritisation → impact/review → audit workflow, what a new user sees after sign-in, and that source documents remain the authoritative reference. Keep it readable without exposing API documentation or secrets.
